@@ -1,0 +1,285 @@
+/* ═══ Ноябрьская страница: башня норм ═══════════════════════════════════════
+   Приём снят с linktr.ee и перемерен: там не бесконечная лента, а ШАГ С ОСТАНОВКОЙ.
+   Цикл 30 с делится на пять шагов, в каждом ~5,4 с хода и 0,6 с паузы. Пауза —
+   рабочая деталь: она даёт прочитать карточку, а не украшение.
+   Шаг вынесен в --card-step (высота карточки + зазор) — менять одной строкой.
+   Шестая карточка дублирует первую, поэтому возврат в ноль не виден.
+   Токены и цвета — из site.css / site-ru.css, здесь ни одного литерала цвета. */
+
+.nov-hero { display: flex; align-items: center; min-height: calc(100svh - var(--head-h, 4.5rem)); }
+.nov-hero > .wrap { width: 100%; }
+.nov-grid { display: grid; grid-template-columns: 1fr; gap: var(--s-6, 2rem); align-items: center; }
+@media (min-width: 1024px) { .nov-grid { grid-template-columns: 6fr 5fr; gap: var(--s-8, 3rem); } }
+
+.nov-lede { max-width: 34em; }
+.nov-actions { display: flex; flex-wrap: wrap; gap: var(--s-3, 0.75rem); margin-top: var(--s-5, 1.5rem); }
+
+/* ─── башня ─────────────────────────────────────────────────────────────── */
+.tower {
+  --card-h: 19rem;
+  --card-gap: 0.875rem;
+  --card-step: calc(var(--card-h) + var(--card-gap));
+  position: relative;
+  height: calc(var(--card-h) + 3.5rem);   /* карточка целиком + край следующей */
+  overflow: hidden;
+  /* низ растворяется, чтобы стопка читалась стопкой, а не обрезкой */
+  -webkit-mask-image: linear-gradient(180deg, #000 0, #000 76%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 0, #000 76%, transparent 100%);
+}
+.tower__strip {
+  display: flex; flex-direction: column; gap: var(--card-gap);
+  will-change: transform;
+  animation: nov-tower-up 30s ease-in-out infinite;
+}
+@keyframes nov-tower-up {
+  0%,   3% { transform: translateY(0); }
+  20%, 23% { transform: translateY(calc(-1 * var(--card-step))); }
+  40%, 43% { transform: translateY(calc(-2 * var(--card-step))); }
+  60%, 63% { transform: translateY(calc(-3 * var(--card-step))); }
+  80%, 83% { transform: translateY(calc(-4 * var(--card-step))); }
+  100%     { transform: translateY(calc(-5 * var(--card-step))); }
+}
+.tower:hover .tower__strip,
+.tower:focus-within .tower__strip { animation-play-state: paused; }
+
+/* ─── карточка нормы ────────────────────────────────────────────────────── */
+.norm {
+  height: var(--card-h);
+  display: flex; flex-direction: column;
+  padding: var(--s-5, 1.5rem);
+  border-radius: var(--r-tile);
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-line);
+  box-shadow: var(--tile-shadow);
+  /* светлая кромка сверху — приём Raycast, «парение» без неоморфизма */
+  position: relative; isolation: isolate;
+}
+.norm::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: inset 0 1px 0 var(--wash-3);
+}
+.norm__hy {
+  font-family: 'Noto Sans Armenian', var(--font-body);
+  font-weight: 400; font-size: 0.9375rem; line-height: 1.6;
+  color: var(--text-3); margin: 0;
+}
+.norm__num {
+  font-family: var(--font-display);
+  font-weight: var(--fw-h1); line-height: 1; letter-spacing: var(--ls-h1);
+  font-size: clamp(2.75rem, 6vw, 4rem);
+  color: var(--gold-text);
+  margin: auto 0 0.35em;
+}
+.norm__num small { display: block; font-size: 0.3em; letter-spacing: 0.02em; font-weight: var(--fw-h); }
+.norm__ru { margin: 0 0 var(--s-4, 1rem); color: var(--text-2); font-size: 1rem; line-height: 1.5; }
+.norm__src {
+  font-family: var(--font-mono); font-size: var(--fs-xs, 0.75rem);
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin: 0;
+}
+.norm__src b { color: var(--gold-text); font-weight: 500; }
+
+/* ─── без движения: башня разворачивается в обычный список ──────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .tower { height: auto; overflow: visible; -webkit-mask-image: none; mask-image: none; }
+  .tower__strip { animation: none; }
+  .tower__dup { display: none; }        /* дубль нужен только ради бесшовной петли */
+}
+
+/* ─── подзаголовок плитки: в системе такого класса не было ──────────────── */
+.tile__sub {
+  margin: 0 0 var(--s-3, 0.75rem);
+  color: var(--text-2);
+  font-size: 1.0625rem; line-height: 1.45;
+  text-wrap: balance;
+}
+.tile > p:not(.tile__meta):not(.tile__sub) { color: var(--text-2); }
+.tile .h3 { margin: 0 0 var(--s-2, 0.5rem); text-wrap: balance; }
+
+/* ═══ Фактура секции ═════════════════════════════════════════════════════
+   Картинки не пережимаются: гасит прозрачность. Разброс светлоты 36 единиц
+   при opacity 0.14 даёт на экране ~5 — ровно цель для фона под текстом,
+   и золотые блики уменьшаются пропорционально, а не пропадают.
+   Ветки темы повторяют контракт site-ru.css: светлая по умолчанию,
+   тёмная системная и тёмная ручным выбором. */
+.nov-art {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background-image: var(--tex-khachkar); background-size: cover; background-position: center;
+  opacity: var(--nov-art-opacity, 0.12);
+}
+.nov-art--stone     { background-image: var(--tex-stone); }
+.nov-art--guilloche { background-image: var(--tex-guilloche); }
+.nov-art--paper     { background-image: var(--tex-paper); }
+.nov-art::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, var(--bg) 0%, transparent 22%, transparent 78%, var(--bg) 100%);
+}
+:root {
+  --tex-khachkar:  url("../../assets/patterns/khachkar.png");
+  --tex-stone:     url("../../assets/patterns/stone.png");
+  --tex-guilloche: url("../../assets/patterns/guilloche.png");
+  --tex-paper:     url("../../assets/patterns/paper.png");
+  --nov-art-opacity: 0.10;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-skin="ru"]:not([data-theme="light"]) {
+    --tex-khachkar:  url("../../assets/patterns/khachkar_n.png");
+    --tex-stone:     url("../../assets/patterns/stone_n.png");
+    --tex-guilloche: url("../../assets/patterns/guilloche_n.png");
+    --tex-paper:     url("../../assets/patterns/paper_n.png");
+    --nov-art-opacity: 0.10;
+  }
+}
+:root[data-skin="ru"][data-theme="dark"] {
+  --tex-khachkar:  url("../../assets/patterns/khachkar_n.png");
+  --tex-stone:     url("../../assets/patterns/stone_n.png");
+  --tex-guilloche: url("../../assets/patterns/guilloche_n.png");
+  --tex-paper:     url("../../assets/patterns/paper_n.png");
+  --nov-art-opacity: 0.10;
+}
+
+/* таблица «сегодня / с 1 ноября» — плитка 9 */
+.cmp { width: 100%; border-collapse: collapse; margin: var(--s-3,0.75rem) 0 0; font-size: 0.9375rem; }
+.cmp th, .cmp td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+.cmp thead th { font-family: var(--font-mono); font-size: var(--fs-xs,0.75rem); letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-3); font-weight: 500; }
+.cmp tbody th { font-weight: 500; color: var(--text-2); width: 30%; }
+.cmp td b { color: var(--gold-text); font-weight: 500; }
+.cmp tr:last-child th, .cmp tr:last-child td { border-bottom: 0; }
+
+/* список «что становится легче» */
+.gains { list-style: none; margin: var(--s-3,0.75rem) 0 0; padding: 0; display: grid; gap: 0.7rem; }
+@media (min-width: 768px) { .gains { grid-template-columns: 1fr 1fr; gap: 0.7rem var(--s-5,1.5rem); } }
+.gains li { padding-left: 1.4em; position: relative; color: var(--text-2); line-height: 1.5; }
+.gains li::before { content: '+'; position: absolute; left: 0; top: 0; color: var(--gold-text);
+  font-family: var(--font-mono); font-weight: 500; }
+.gains b { color: var(--text); font-weight: 600; }
+
+/* ГРАФИТ ВЫКЛЮЧЕН по просьбе 04.09. Чтобы вернуть — снять обёртку /* ... */ ниже.
+(* ═══ Графит вместо синевы ════════════════════════════════════════════════
+   Тон H216 сохранён — тёмная тема остаётся синей, но насыщенность падает
+   с 44-66 до 20-26. По Иттену это включает шестой контраст (насыщенности):
+   разница с золотом S87 растёт с 21 до ~65 и становится ведущей, а
+   симультанное дрожание синего с золотом исчезает — порождать дополнение
+   больше нечему. Контраст золота на фоне при этом НЕ падает: 10,21 -> 10,68.
+   Область действия — только эта страница (body.nov), общий контракт не тронут. *)
+@media (prefers-color-scheme: dark) {
+  :root[data-skin="ru"]:not([data-theme="light"]) body.nov {
+    --bg: #131820; --bg-2: #10151C; --bg-void: #0B0F14;
+    --surface: #1D242F; --surface-2: #28313E; --surface-3: #354050;
+    --line: rgba(250, 224, 162, 0.12);
+    --line-strong: rgba(250, 224, 162, 0.26);
+    --tile-bg: linear-gradient(180deg, rgba(29, 36, 47, 0.92) 0%, rgba(19, 24, 32, 0.96) 100%);
+    --tile-line: rgba(250, 224, 162, 0.13);
+    --glass-bg: rgba(19, 24, 32, 0.72);
+    --ru-grid-line: transparent;
+    --ru-glow-blob: rgba(242, 194, 73, 0.06);
+  }
+}
+:root[data-skin="ru"][data-theme="dark"] body.nov {
+  --bg: #131820; --bg-2: #10151C; --bg-void: #0B0F14;
+  --surface: #1D242F; --surface-2: #28313E; --surface-3: #354050;
+  --line: rgba(250, 224, 162, 0.12);
+  --line-strong: rgba(250, 224, 162, 0.26);
+  --tile-bg: linear-gradient(180deg, rgba(29, 36, 47, 0.92) 0%, rgba(19, 24, 32, 0.96) 100%);
+  --tile-line: rgba(250, 224, 162, 0.13);
+  --glass-bg: rgba(19, 24, 32, 0.72);
+  --ru-grid-line: transparent;
+  --ru-glow-blob: rgba(242, 194, 73, 0.06);
+}
+
+*/
+
+/* ─── золото видно там, где число ───────────────────────────────────────
+   Не на рамках и не на подложках: только на цифре и на действии.
+   Так бюджет площади остаётся в 1-2 %, а золото читается как золото. */
+.tile p b, .nov-figs b { color: var(--gold-text); font-weight: 600; }
+.gains b { color: var(--text); }                 /* зачины пунктов — не золото */
+.cmp tbody th { color: var(--text-2); }
+
+/* Сетка секций гасится на всей странице, в обеих темах: под фактурой два фона
+   спорят между собой. Свойство наследуемое, поэтому хватает объявления на body. */
+body.nov { --ru-grid-line: transparent; }
+
+/* ═══ Золото, которое видно ═══════════════════════════════════════════════
+   Замер: золото буквой на светлом фоне даёт 1,66:1 и нечитаемо, поэтому
+   в светлой теме --gold-text намеренно сделан коричневым #593E10 (9,9:1) —
+   и золотом не выглядит. Выход: в светлой теме золото становится ЗАЛИВКОЙ
+   под тёмным текстом (9,57:1) — подчерк маркером. В тёмной теме наоборот,
+   буква: #FAE0A2 на графите читается как металл. Один цвет, две роли. */
+.tile p:not(.tile__meta) b,
+.gains b,
+.cmp td b {
+  color: var(--text-strong);
+  background-image: var(--gold-fill);
+  background-repeat: no-repeat;
+  background-position: 0 92%;
+  background-size: 100% 0.34em;
+  -webkit-box-decoration-break: clone;
+          box-decoration-break: clone;
+  padding-inline: 0.12em;
+  font-weight: 600;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-skin="ru"]:not([data-theme="light"]) .tile p:not(.tile__meta) b,
+  :root[data-skin="ru"]:not([data-theme="light"]) .gains b,
+  :root[data-skin="ru"]:not([data-theme="light"]) .cmp td b {
+    color: var(--gold-text); background-image: none; padding-inline: 0;
+  }
+}
+:root[data-skin="ru"][data-theme="dark"] .tile p:not(.tile__meta) b,
+:root[data-skin="ru"][data-theme="dark"] .gains b,
+:root[data-skin="ru"][data-theme="dark"] .cmp td b {
+  color: var(--gold-text); background-image: none; padding-inline: 0;
+}
+
+/* ═══ Фактура на тёмном ═══════════════════════════════════════════════════
+   Тёмная картинка (L 10-15) поверх тёмного фона через прозрачность не читается
+   в принципе: разница светлот меньше единицы. Приём другой — screen: чёрные
+   участки уходят в ноль и фон не сереет, а светлые (рельеф, золотая нить)
+   проступают. Поэтому в тёмной теме прозрачность выше, а вклад всё равно мал. */
+@media (prefers-color-scheme: dark) {
+  :root[data-skin="ru"]:not([data-theme="light"]) .nov-art {
+    mix-blend-mode: screen; opacity: 0.42;
+  }
+  :root[data-skin="ru"]:not([data-theme="light"]) .nov-art::after { mix-blend-mode: normal; }
+}
+:root[data-skin="ru"][data-theme="dark"] .nov-art {
+  mix-blend-mode: screen; opacity: 0.42;
+}
+:root[data-skin="ru"][data-theme="dark"] .nov-art::after { mix-blend-mode: normal; }
+
+/* ─── переключатель тем на странице ─────────────────────────────────────── */
+.nov-themer { display: inline-flex; gap: 2px; padding: 3px; margin-left: auto;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--wash-1); }
+.nov-themer button { appearance: none; border: 0; background: transparent; cursor: pointer;
+  font: 500 0.8125rem/1 var(--font-body); color: var(--text-3);
+  padding: 0.5rem 0.8rem; border-radius: 999px; min-height: 2.25rem; }
+.nov-themer button[aria-pressed="true"] { background: var(--surface-3); color: var(--text); }
+.nov-themer button:hover { color: var(--text); }
+
+/* ═══ Полосы: фактура через одну ══════════════════════════════════════════
+   Приём снят с apple.com: там чёрные секции занимают площадь 5710 при белых
+   7166 — светлое и тёмное чередуются внутри одной страницы. У нас чередуются
+   не темы, а поверхности: секция с фактурой стоит на основном фоне, секция
+   без фактуры — на приподнятом. Глаз получает ритм и отдых через один. */
+body.nov .section--stone { background: var(--bg-2); }
+body.nov .section--stone + .section--art,
+body.nov .section--art + .section--stone { border-top: 1px solid var(--line); }
+
+/* ═══ Башня: остановка по текстовому блоку ═══════════════════════════════
+   Карточка в покое встаёт верхом по верху заголовка и низом по низу лида —
+   замерено: текстовый блок 333..658, высота 325. Поэтому колонка выравнивается
+   по началу строки (align-items: start) и опускается на высоту киккера с его
+   отбивкой, а высота карточки взята под тот же размер.
+   Окно выше карточки — чтобы снизу выглядывала следующая и стопка читалась
+   стопкой; края растворяет маска. */
+@media (min-width: 1024px) {
+  .nov-grid { align-items: start; }
+  .tower {
+    --card-h: clamp(18rem, 20.3rem, 22rem);
+    margin-top: 2.2rem;                       /* киккер 19px + отбивка 16px */
+    height: calc(var(--card-h) + 8rem);
+    -webkit-mask-image: linear-gradient(180deg, #000 0, #000 72%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 0, #000 72%, transparent 100%);
+  }
+}

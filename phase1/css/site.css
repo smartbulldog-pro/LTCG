@@ -1,0 +1,1377 @@
+/* ============================================================
+   LTCG — site.css · «одна система, три кожи»: общий каркас
+   Токены-контракт (имена), сетка 8 px, компоненты, доступность.
+   Значения токенов задают кожи: site-ru.css / site-hy.css / site-en.css
+   через [data-skin].
+   Документ: docs/style_system.md · планка: docs/vkv_bar.md
+   ============================================================ */
+
+/* ═════════════════════════════════════════════════════════════
+   0. КОНТРАКТ ТОКЕНОВ · ДВЕ ТЕМЫ
+
+   Порядок объявления — закон файла:
+     0.1  метрики (не цвет) — один раз, на :where(html);
+     0.2  ЦВЕТ · СВЕТЛАЯ ТЕМА — БАЗА, на голом :root;
+     0.3  ЦВЕТ · ТЁМНАЯ ТЕМА — тот же список ДВАЖДЫ:
+            @media (prefers-color-scheme: dark) :root:not([data-theme="light"])
+            :root[data-theme="dark"]
+          Первый блок ловит системную тему, второй — ручной выбор.
+          Оба перебивают кожу по специфичности (0-2-0 против 0-1-0),
+          поэтому кожа задаёт СВЕТЛЫЕ значения на голом [data-skin], а
+          тёмные — на :root[data-skin][data-theme] (0-3-0).
+
+   ⚠ НИ ОДИН ЦВЕТ НЕ ИМЕЕТ ЕДИНСТВЕННОГО ОБЪЯВЛЕНИЯ ВНУТРИ МЕДИАЗАПРОСА.
+     Каждое значение из §0.3 обязано иметь пару в §0.2. Иначе при
+     data-theme="light" на системно-тёмной машине токен уехал бы в inherit.
+
+   ⚠ ЗОЛОТО #F2C249 ТЕКСТОМ НА БУМАГЕ — 1.49:1. Нелегально.
+     На светлой теме текст и ссылки берут --gold-text = --gold-dark #593E10
+     (8.84:1 на --bg, 9.56:1 на --surface). Золото на светлой остаётся
+     ЗАЛИВКОЙ (кнопка: #0C1B3A на #F2C249 = 10.21:1), а не краской букв.
+     Числа — пересчёт 04.09.2026, порог 4.5:1 текст / 3:1 крупное и границы.
+
+   ⚠ ОСТРОВОК ТЕМЫ. К светлой базе и к ручной тёмной дописан селектор
+     [data-theme-scope="light|dark"]. Он вешается на КОНТЕЙНЕР и даёт внутри
+     него полный контракт токенов — так каталог phase1/canon.html показывает
+     один блок в обеих темах рядом. Значения НЕ продублированы третий раз:
+     список объявлен ровно там же, где для <html>, поэтому паритет тем
+     нельзя нарушить в одной из копий — копии нет.
+   ═════════════════════════════════════════════════════════════ */
+
+/* ── 0.1 Метрики: типографика, сетка, радиусы, движение ─────── */
+:where(html) {
+  --btn-h: 3rem;
+
+  --font-display: 'Onest', 'Segoe UI', Tahoma, sans-serif;
+  --font-body: 'Golos Text', 'Segoe UI', Tahoma, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --fw-h1: 640;
+  --fw-h: 600;
+  --lh-h1: 1.05;
+  --ls-h1: -0.028em;
+  --ls-h: -0.02em;
+  --fs-body: 1rem;
+
+  /* шкала — clamp(), минимум 1rem для body (iOS не зумит) */
+  --fs-meta: clamp(0.75rem, 0.7rem + 0.2vw, 0.8125rem);   /* метки и подписи: ≥ 12 px на телефоне (web-design-guidelines) */
+  --fs-xs: var(--fs-meta);
+  --fs-sm: 0.8125rem;
+  --fs-md: 0.9375rem;
+  --fs-lg: clamp(1rem, 0.93rem + 0.3vw, 1.125rem);
+  --fs-h4: 1.125rem;
+  --fs-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --fs-h2: clamp(1.75rem, 1.2rem + 2.2vw, 2.875rem);
+  --fs-h1: clamp(2.125rem, 1.15rem + 3.8vw, 4rem);
+  --fs-num: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  /* крупное число ветки: цена, срок, порог. Добавлено в ШКАЛУ, а не задано
+     на месте — исключений из шкалы система не допускает (style_system §3).
+     Две ступени: --fs-big для одиночного числа во всю колонку,
+     --fs-big-2 для ряда из трёх (иначе «1 000 000» ломается на две строки
+     и ряд теряет общую базовую линию — проверено 04.09.2026). */
+  --fs-big: clamp(2.75rem, 1.7rem + 4.2vw, 5rem);
+  --fs-big-2: clamp(2rem, 1.25rem + 2.4vw, 3rem);
+
+  --kicker-font: 500 var(--fs-xs)/1.45 var(--font-mono);
+  --kicker-ls: 0.14em;
+  --kicker-transform: uppercase;
+  --kicker-color: var(--gold-text);
+
+  --r-tile: 22px;
+  --r-card: 16px;
+  --r-btn: 10px;
+  --r-field: 10px;
+  --r-chip: 6px;
+
+  --tile-pad: 1.5rem;
+  --glass-blur: 22px;
+
+  /* движение — словарь, не вкус (docs/vkv_bar.md §1.8) */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 180ms;
+  --t-base: 240ms;
+  --t-slow: 320ms;
+
+  /* сетка: лестница 8 px */
+  --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.25rem;
+  --s-6: 1.5rem; --s-8: 2rem; --s-10: 2.5rem; --s-12: 3rem; --s-16: 4rem; --s-20: 5rem; --s-24: 6rem;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --gap: 0.75rem;
+  --max-width: 1280px;
+  --header-h: 4rem;
+  --section-pad: clamp(4rem, 10vh, 7.5rem);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+/* ── 0.2 ЦВЕТ · СВЕТЛАЯ ТЕМА (база) ──────────────────────────
+   Тёплая бумага и чернила navy. Контрасты на --bg #F4F2EC:
+     --text        #1A2438  13.86:1     --text-2      #414B60   7.82:1
+     --text-3      #5A6274   5.46:1     --text-strong #0C1B3A  15.21:1
+     --gold-text   #593E10   8.84:1     --gold        #A87A1E   3.43:1 (иконки, линейки)
+     --control-line 0.52 navy: 3.45:1 на --bg, 3.55:1 на белом поле      */
+:root,
+[data-theme-scope="light"] {
+  color-scheme: light;
+
+  --bg: #F4F2EC;
+  --bg-2: #EDEAE1;
+  --bg-void: #E5E1D5;
+  --surface: #FCFBF7;
+  --surface-2: #F0EDE4;
+  --surface-3: #E3DFD3;
+
+  --text: #1A2438;
+  --text-2: #414B60;
+  --text-3: #5A6274;
+  --text-strong: #0C1B3A;
+
+  --line: rgba(12, 27, 58, 0.14);
+  --line-strong: rgba(12, 27, 58, 0.30);
+  /* граница ЭЛЕМЕНТА УПРАВЛЕНИЯ — отдельный токен: у неё порог 3:1,
+     а у декоративной линейки порога нет. Раньше поля, чекбоксы и
+     кнопка-контур брали --line-strong и давали 2.30:1 на тёмной теме. */
+  --control-line: rgba(12, 27, 58, 0.52);
+
+  --gold: #A87A1E;
+  --gold-light: #F2C249;
+  --gold-mid: #C4922B;
+  --gold-dark: #593E10;
+  --gold-text: #593E10;
+  --gold-line: rgba(138, 100, 20, 0.45);
+  --gold-fill: linear-gradient(180deg, #FAE0A2 0%, #F2C249 100%);
+  --gold-fill-text: #0C1B3A;
+  --gold-glow: rgba(196, 146, 43, 0.30);
+
+  --btn-primary-bg: var(--gold-fill);
+  --btn-primary-text: var(--gold-fill-text);
+  --btn-outline-line: var(--control-line);
+  --btn-outline-text: var(--text-strong);
+  --btn-outline-hover-bg: rgba(196, 146, 43, 0.12);
+
+  --tile-bg: var(--surface);
+  --tile-line: var(--line);
+  --tile-shadow: 0 18px 44px -30px rgba(12, 27, 58, 0.30);
+
+  --field-bg: #FFFFFF;
+  --field-line: var(--control-line);
+  --focus: #593E10;
+
+  --glass-bg: rgba(244, 242, 236, 0.86);
+  --glass-line: rgba(12, 27, 58, 0.12);
+
+  /* washes — заливки-подложки. На светлой это чернила по бумаге,
+     на тёмной — свет по navy. Раньше стояли литералом rgba(255,255,255,…)
+     прямо в правилах: на бумаге получалось белое по белому, то есть ничего. */
+  --wash-1: rgba(12, 27, 58, 0.030);
+  --wash-2: rgba(12, 27, 58, 0.050);
+  --wash-3: rgba(12, 27, 58, 0.070);
+  --ring: rgba(196, 146, 43, 0.34);          /* кольцо у отмеченного и сфокусированного */
+  --sel-bg: rgba(242, 194, 73, 0.42);
+  --sel-text: #0C1B3A;
+
+  /* скрим под фоновым артом — тот же цвет, что --bg, но долями для rgb() */
+  --scrim: 244 242 236;
+
+  /* стрелка нативного select: она обязана быть видна в своей теме */
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%23593E10' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* знак в шапке: золотой локап живёт только на тёмном, на бумаге он 1.5:1 */
+  --logo-gold: none;
+  --logo-ink: block;
+}
+
+/* ── 0.3 ЦВЕТ · ТЁМНАЯ ТЕМА · системная ──────────────────────
+   Контрасты на --bg #0C1B3A:
+     --text 14.53:1 · --text-2 8.83:1 · --text-3 5.73:1 · --text-strong 17.02:1
+     --gold-text #FAE0A2 13.17:1 · --gold #F2C249 10.21:1
+     --control-line 0.45: 3.64:1 на фоне, 3.38:1 на поле ввода            */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #0C1B3A;
+    --bg-2: #0A1631;
+    --bg-void: #07122A;
+    --surface: #112240;
+    --surface-2: #1A3050;
+    --surface-3: #243B5C;
+
+    --text: rgba(255, 255, 255, 0.92);
+    --text-2: rgba(255, 255, 255, 0.70);
+    --text-3: rgba(255, 255, 255, 0.54);
+    --text-strong: #FFFFFF;
+
+    --line: rgba(250, 224, 162, 0.14);
+    --line-strong: rgba(250, 224, 162, 0.30);
+    --control-line: rgba(250, 224, 162, 0.45);
+
+    --gold: #F2C249;
+    --gold-light: #FAE0A2;
+    --gold-mid: #C4922B;
+    --gold-dark: #593E10;
+    --gold-text: #FAE0A2;
+    --gold-line: rgba(250, 224, 162, 0.32);
+    --gold-fill: linear-gradient(180deg, #FAE0A2 0%, #F2C249 100%);
+    --gold-fill-text: #0C1B3A;
+    --gold-glow: rgba(242, 194, 73, 0.55);
+
+    --btn-primary-bg: var(--gold-fill);
+    --btn-primary-text: var(--gold-fill-text);
+    --btn-outline-line: var(--control-line);
+    --btn-outline-text: var(--text-strong);
+    --btn-outline-hover-bg: rgba(242, 194, 73, 0.10);
+
+    --tile-bg: var(--surface);
+    --tile-line: var(--line);
+    --tile-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.65);
+
+    --field-bg: rgba(255, 255, 255, 0.04);
+    --field-line: var(--control-line);
+    --focus: #FAE0A2;
+
+    --glass-bg: rgba(12, 27, 58, 0.72);
+    --glass-line: rgba(250, 224, 162, 0.12);
+
+    --wash-1: rgba(255, 255, 255, 0.030);
+    --wash-2: rgba(255, 255, 255, 0.050);
+    --wash-3: rgba(255, 255, 255, 0.070);
+    --ring: rgba(242, 194, 73, 0.20);
+    --sel-bg: rgba(242, 194, 73, 0.32);
+    --sel-text: #FFFFFF;
+
+    --scrim: 12 27 58;
+
+    --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%23FAE0A2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+    --logo-gold: block;
+    --logo-ink: none;
+  }
+}
+
+/* ── 0.3-бис ЦВЕТ · ТЁМНАЯ ТЕМА · ручной выбор ───────────────
+   Тот же список слово в слово. Дублирование намеренное: переключатель
+   обязан побеждать в обе стороны, а @media не умеет «включиться» руками. */
+:root[data-theme="dark"],
+[data-theme-scope="dark"] {
+  color-scheme: dark;
+
+  --bg: #0C1B3A;
+  --bg-2: #0A1631;
+  --bg-void: #07122A;
+  --surface: #112240;
+  --surface-2: #1A3050;
+  --surface-3: #243B5C;
+
+  --text: rgba(255, 255, 255, 0.92);
+  --text-2: rgba(255, 255, 255, 0.70);
+  --text-3: rgba(255, 255, 255, 0.54);
+  --text-strong: #FFFFFF;
+
+  --line: rgba(250, 224, 162, 0.14);
+  --line-strong: rgba(250, 224, 162, 0.30);
+  --control-line: rgba(250, 224, 162, 0.45);
+
+  --gold: #F2C249;
+  --gold-light: #FAE0A2;
+  --gold-mid: #C4922B;
+  --gold-dark: #593E10;
+  --gold-text: #FAE0A2;
+  --gold-line: rgba(250, 224, 162, 0.32);
+  --gold-fill: linear-gradient(180deg, #FAE0A2 0%, #F2C249 100%);
+  --gold-fill-text: #0C1B3A;
+  --gold-glow: rgba(242, 194, 73, 0.55);
+
+  --btn-primary-bg: var(--gold-fill);
+  --btn-primary-text: var(--gold-fill-text);
+  --btn-outline-line: var(--control-line);
+  --btn-outline-text: var(--text-strong);
+  --btn-outline-hover-bg: rgba(242, 194, 73, 0.10);
+
+  --tile-bg: var(--surface);
+  --tile-line: var(--line);
+  --tile-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.65);
+
+  --field-bg: rgba(255, 255, 255, 0.04);
+  --field-line: var(--control-line);
+  --focus: #FAE0A2;
+
+  --glass-bg: rgba(12, 27, 58, 0.72);
+  --glass-line: rgba(250, 224, 162, 0.12);
+
+  --wash-1: rgba(255, 255, 255, 0.030);
+  --wash-2: rgba(255, 255, 255, 0.050);
+  --wash-3: rgba(255, 255, 255, 0.070);
+  --ring: rgba(242, 194, 73, 0.20);
+  --sel-bg: rgba(242, 194, 73, 0.32);
+  --sel-text: #FFFFFF;
+
+  --scrim: 12 27 58;
+
+  --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%23FAE0A2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  --logo-gold: block;
+  --logo-ink: none;
+}
+
+/* явный светлый выбор: color-scheme обязан следовать за темой, иначе
+   нативные скроллбары и выпадающие списки остаются тёмными на бумаге */
+:root[data-theme="light"] { color-scheme: light; }
+
+/* ── 1. Сброс ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; scroll-behavior: auto; }
+body {
+  min-height: 100vh;
+  font: 400 var(--fs-body)/1.6 var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  overflow-x: clip;
+}
+img, svg, video, picture { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: 0; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+ul[role="list"], ol[role="list"] { list-style: none; }
+strong, b { font-weight: 500; color: var(--text-strong); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+::selection { background: var(--sel-bg); color: var(--sel-text); }
+[hidden] { display: none !important; }
+
+/* ── 2. Сетка и секции ───────────────────────────────────────── */
+.wrap { width: 100%; max-width: var(--max-width); margin-inline: auto; padding-inline: var(--gutter); }
+.section { position: relative; padding-block: var(--section-pad); scroll-margin-top: calc(var(--header-h) + 0.5rem); }
+.section--art { isolation: isolate; overflow: hidden; }
+.section__head { max-width: 64ch; margin-bottom: clamp(2rem, 5vh, 3.5rem); }
+.section__head .lead { margin-top: var(--s-4); }
+.section__head--wide { max-width: none; }
+.section__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-5); margin-top: clamp(2rem, 4vh, 3rem); }
+.section__foot .small { flex-basis: 100%; }
+
+.bento { display: grid; grid-template-columns: 1fr; gap: var(--gap); }
+.bento > * { min-width: 0; }
+
+/* фон-арт секции: <picture> под скримом, только декор */
+.art { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.art img { width: 100%; height: 100%; object-fit: cover; opacity: var(--art-opacity, 0.22); }
+.art::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, var(--bg) 0%, transparent 28%, transparent 70%, var(--bg) 100%),
+    linear-gradient(90deg, var(--bg) 0%, rgb(var(--scrim) / 0.55) 45%, transparent 100%);
+}
+.art--right::after {
+  background:
+    linear-gradient(180deg, var(--bg) 0%, transparent 25%, transparent 75%, var(--bg) 100%),
+    linear-gradient(270deg, var(--bg) 0%, rgb(var(--scrim) / 0.5) 45%, transparent 100%);
+}
+.art--center::after {
+  background:
+    linear-gradient(180deg, var(--bg) 0%, rgb(var(--scrim) / 0.35) 40%, rgb(var(--scrim) / 0.35) 60%, var(--bg) 100%);
+}
+
+/* ── 3. Типографика ──────────────────────────────────────────── */
+.h1, .h2, .h3, .h4 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-h);
+  color: var(--text-strong);
+  text-wrap: balance;
+  letter-spacing: var(--ls-h);
+}
+.h1 { font-size: var(--fs-h1); font-weight: var(--fw-h1); line-height: var(--lh-h1); letter-spacing: var(--ls-h1); max-width: 18ch; }
+.h2 { font-size: var(--fs-h2); line-height: 1.08; max-width: 24ch; }
+.h3 { font-size: var(--fs-h3); line-height: 1.22; letter-spacing: -0.012em; }
+.h4 { font-size: var(--fs-h4); line-height: 1.35; letter-spacing: -0.006em; }
+.lead { font-size: var(--fs-lg); line-height: 1.55; color: var(--text-2); max-width: 54ch; text-wrap: pretty; }
+.small { font-size: var(--fs-sm); line-height: 1.5; color: var(--text-3); }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.measure { max-width: 62ch; text-wrap: pretty; }
+p + p { margin-top: 0.75em; }
+.h1 em, .h2 em { font-style: normal; }
+
+.kicker {
+  display: flex; align-items: center; gap: var(--s-3);
+  font: var(--kicker-font);
+  letter-spacing: var(--kicker-ls);
+  text-transform: var(--kicker-transform);
+  color: var(--kicker-color);
+  margin-bottom: var(--s-4);
+}
+.kicker::before { content: ''; flex: 0 0 auto; width: 1.5rem; height: 1px; background: var(--gold); transform: scaleX(var(--kw, 1)); transform-origin: left; }
+.kicker .kicker__no { color: var(--text-3); }
+
+/* слот — совместимость с разметкой хиро: текст, которого нет до подтверждения */
+.slot { font-family: var(--font-mono); font-size: 0.92em; color: var(--gold-text); border-bottom: 1px dashed var(--gold-line); overflow-wrap: anywhere; }
+
+/* «уточняем» — то, чего на странице нет до подтверждения клиентом.
+   Не {фигурные скобки}: мягкая метка с иконкой ожидания. */
+.tbc {
+  display: inline-flex; align-items: center; gap: 0.35em;
+  font-family: var(--font-mono); font-size: 0.86em; font-weight: 500; letter-spacing: 0.01em;
+  color: var(--gold-text);
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+.tbc svg { width: 0.95em; height: 0.95em; flex: 0 0 auto; opacity: 0.85; }
+.tbc--quiet { color: var(--text-3); }
+.tbc--big { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-num); letter-spacing: -0.01em; }
+.tbc--big svg { width: 0.7em; height: 0.7em; }
+
+.lnk { color: var(--text); text-decoration: underline; text-decoration-color: var(--gold-line); text-underline-offset: 0.22em; text-decoration-thickness: 1px; transition: color var(--t-base) var(--ease), text-decoration-color var(--t-base) var(--ease); }
+.lnk:hover { color: var(--gold-text); text-decoration-color: currentColor; }
+
+/* ── 4. Кнопки ───────────────────────────────────────────────── */
+.btn,
+.icon-btn {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: var(--btn-h); padding: 0.6rem 1.35rem;
+  border: 1px solid transparent; border-radius: var(--r-btn);
+  font-family: var(--font-display); font-weight: 600; font-size: var(--fs-md); line-height: 1.2; letter-spacing: -0.004em;
+  text-align: center; cursor: pointer; white-space: normal;
+  transition: background-color var(--t-slow) var(--ease), border-color var(--t-slow) var(--ease), color var(--t-slow) var(--ease), box-shadow var(--t-slow) var(--ease), transform var(--t-fast) var(--ease);
+}
+.btn svg,
+.icon-btn svg { width: 1.1em; height: 1.1em; flex: 0 0 auto; transition: transform var(--t-slow) var(--ease-spring); }
+.btn--primary { background: var(--btn-primary-bg); color: var(--btn-primary-text); }
+.btn--outline { border-color: var(--btn-outline-line); color: var(--btn-outline-text); background: var(--wash-1); }
+.btn--outline:hover { background: var(--btn-outline-hover-bg); border-color: var(--line-strong); }
+.btn--ghost,
+.icon-btn { color: var(--text); padding-inline: 0.75rem; }
+.btn--ghost:hover,
+.icon-btn:hover { color: var(--gold-text); background: var(--wash-2); }
+.btn--link { min-height: 2.75rem; padding-inline: 0.25rem; border-radius: 4px; color: var(--text); text-decoration: underline; text-decoration-color: var(--gold-line); text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
+.btn--link:hover { color: var(--gold-text); text-decoration-color: currentColor; }
+.btn--sm { min-height: 2.75rem; padding: 0.4rem 0.95rem; font-size: 0.875rem; }
+.btn--icon,
+.icon-btn { width: 2.75rem; min-height: 2.75rem; padding: 0; }
+.btn--icon svg,
+.icon-btn svg { width: 1.25rem; height: 1.25rem; }
+.btn:active,
+.icon-btn:active { transform: translateY(0); transition-duration: 60ms; }
+.btn-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
+@media (hover: hover) {
+  .btn--primary:hover svg, .btn--outline:hover svg, .btn--link:hover svg { transform: translateX(3px); }
+}
+
+/* ── 5. Плитка, состояние, чипы ──────────────────────────────── */
+.tile {
+  position: relative;
+  display: flex; flex-direction: column; gap: var(--s-4);
+  padding: var(--tile-pad);
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-line);
+  border-radius: var(--r-tile);
+  box-shadow: var(--tile-shadow);
+  isolation: isolate;
+  min-width: 0;
+}
+.tile > * { position: relative; z-index: 1; }
+.tile__foot { margin-top: auto; padding-top: var(--s-2); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-2) var(--s-4); }
+.tile__meta { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); display: flex; gap: 0.6em; align-items: baseline; }
+.tile__meta b { color: var(--gold-text); font-weight: 500; }
+.tile--hero .state__name { font-size: clamp(1.625rem, 1.25rem + 1.4vw, 2.25rem); letter-spacing: -0.02em; max-width: 16ch; }
+.tile--hero .state__recog { font-size: var(--fs-lg); max-width: 44ch; }
+.tile--hero .state__fork { grid-template-columns: auto 1fr; gap: var(--s-3); max-width: 56ch; }
+.tile--quiet { background: transparent; box-shadow: none; border-style: dashed; }
+
+.state { gap: var(--s-3); }
+.state__name { font-family: var(--font-display); font-weight: var(--fw-h); font-size: var(--fs-h3); line-height: 1.2; letter-spacing: -0.014em; color: var(--text-strong); text-wrap: balance; }
+.state__recog { color: var(--text); text-wrap: pretty; }
+.state__fork { display: grid; grid-template-columns: 1fr; gap: var(--s-1); padding-top: var(--s-3); border-top: 1px solid var(--line); font-size: var(--fs-md); color: var(--text-2); text-wrap: pretty; }
+.state__fork b { font-family: var(--font-mono); font-weight: 500; font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-text); padding-top: 0.35em; }
+.state.is-on, .state:target { border-color: var(--gold-line); }
+.state.is-on .tile__meta b::after { content: ' · выбрано'; color: var(--text-3); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+.chip {
+  display: inline-flex; align-items: center; min-height: 1.75rem; padding: 0.15rem 0.6rem;
+  border: 1px solid var(--line); border-radius: var(--r-chip);
+  font-size: var(--fs-sm); line-height: 1.3; color: var(--text-2);
+  background: var(--wash-1);
+}
+.chip--gold { border-color: var(--gold-line); color: var(--gold-text); }
+.tile:not(.tile--hero) .chips { gap: 0.25rem 0; }
+.tile:not(.tile--hero) .chip { border: 0; background: none; padding: 0; min-height: 0; font-size: var(--fs-sm); color: var(--text-3); }
+.tile:not(.tile--hero) .chip + .chip::before { content: '·'; margin-inline: 0.45rem; color: var(--text-3); }
+
+/* ── 5-бис. Датированный вход: не момент жизни, а СРОК ──────────────────
+   Седьмой вход отличается по природе, поэтому и регистр другой: не карточка, а полоса.
+   Канон: другой род — другой регистр, а не другая яркость. Полоса заодно решает и
+   арифметику экрана: семь полноценных карточек в один экран не помещаются, а полоса
+   занимает одну строку. Подробный разбор живёт на своём экране, здесь только вход. */
+.state--dated {
+  display: flex; flex-direction: row; flex-wrap: wrap; align-items: baseline;
+  gap: var(--s-2) var(--s-4);
+  padding: var(--s-4) var(--s-5);
+  background: transparent; box-shadow: none;
+  border-style: dashed; border-color: var(--gold-line);
+  color: inherit; text-decoration: none;
+  min-height: 0;
+}
+.dated__no { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.1em; color: var(--gold-text); }
+.dated__when { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+.dated__name { font-size: var(--fs-lg); line-height: 1.25; }
+.dated__note { flex: 1 1 22ch; min-width: 0; font-size: var(--fs-md); color: var(--text-2); text-wrap: pretty; }
+.dated__go { display: inline-flex; align-items: center; gap: 0.4em; font-size: var(--fs-md); color: var(--gold-text); white-space: nowrap; }
+.dated__go svg { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 1.6; transition: transform var(--t-fast) var(--ease); }
+a.state--dated:hover .dated__go svg { transform: translateX(3px); }
+@media (hover: hover) { a.state--dated:hover { border-color: var(--control-line); } }
+@media (max-width: 47.99rem) {
+  .state--dated { flex-direction: column; align-items: flex-start; gap: var(--s-2); }
+  .dated__note { flex: none; }
+}
+
+/* ── 5-тер. Рейка разделов справа ─────────────────────────────────────────
+   Сайт идёт экранами, и человеку нужно видеть, где он и сколько осталось.
+   Канон: точки, а не кнопки; подпись только по наведению и по фокусу; золото — только
+   на текущем разделе. Ширины хватает, только когда поля контейнера её вмещают, поэтому
+   ниже 1024 px рейки нет вовсе — на узком она отнимала бы у содержания. */
+.railnav {
+  position: fixed; z-index: 40;
+  inset-inline-end: clamp(0.75rem, 1.6vw, 1.5rem);
+  inset-block-start: 50%; transform: translateY(-50%);
+  display: none;
+}
+.railnav__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.85rem; align-items: flex-end; }
+.railnav__item {
+  position: relative;
+  display: flex; align-items: center; justify-content: flex-end;
+  /* цель размером с палец, а точка внутри маленькая: 7 px кликать нельзя */
+  min-width: 2rem; min-height: 1.75rem;
+  text-decoration: none; color: var(--text-3);
+  outline-offset: 4px;
+}
+.railnav__dot {
+  flex: none; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--line-strong);
+  transition: background var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+/* Подпись вынесена ИЗ ПОТОКА. Иначе невидимые подписи растягивали рейку на 165 px,
+   и вдоль правого края страницы стояла прозрачная полоса, перехватывающая клики по содержанию. */
+.railnav__label {
+  position: absolute; inset-inline-end: 100%; margin-inline-end: 0.6rem;
+  display: flex; align-items: baseline; gap: 0.5em;
+  font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.08em;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transform: translateX(6px);
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+.railnav__no { color: var(--gold-text); }
+.railnav__item:hover .railnav__label,
+.railnav__item:focus-visible .railnav__label { opacity: 1; transform: none; }
+.railnav__item:hover .railnav__dot { background: var(--gold-text); transform: scale(1.15); }
+.railnav__item[aria-current="true"] .railnav__dot {
+  background: var(--gold-text);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+.railnav__item[aria-current="true"] .railnav__label { opacity: 1; transform: none; color: var(--text-2); }
+@media (min-width: 1024px) { .railnav { display: block; } }
+@media (prefers-reduced-motion: reduce) {
+  .railnav__label, .railnav__dot { transition: none; }
+}
+@media print { .railnav { display: none; } }
+
+.rule { height: 1px; border: 0; background: linear-gradient(90deg, var(--line-strong), var(--line) 60%, transparent); }
+
+/* примечание-рамка */
+.note { padding: var(--s-4) var(--s-5); border-left: 2px solid var(--gold-mid); background: var(--wash-1); border-radius: 0 var(--r-card) var(--r-card) 0; color: var(--text-2); font-size: var(--fs-md); text-wrap: pretty; }
+.note b { color: var(--text); }
+
+/* ── 6. Шапка ────────────────────────────────────────────────── */
+.hdr,
+.site-header {
+  position: fixed; inset: 0 0 auto 0; z-index: 60;
+  transform: translateY(-110%);
+  transition: transform 480ms var(--ease);
+}
+/* композитный слой — только на время перехода (docs/vkv_bar.md §3.2) */
+.hdr.is-animating,
+.site-header.is-animating { will-change: transform; }
+.hdr.is-shown,
+.site-header.is-shown { transform: none; }
+.no-js .hdr,
+.no-js .site-header { position: sticky; top: 0; transform: none; }
+.hdr__in,
+.site-header__row { display: flex; align-items: center; gap: var(--s-3); min-height: var(--header-h); }
+/* flex: none — знак не участвует в сжатии строки шапки. Без этого при одной строке (≥1440,
+   контейнер 1280) строка «нав + телефон + CTA + три языка» не влезает, и флекс отбирал ширину
+   именно у знака: на старой разметке .brand ужимался до 58.9 px, а .brand__mark внутри — до НУЛЯ,
+   то есть эмблемы в шапке не было вовсе. Проверено в браузере 04.09.2026. */
+.brand { display: inline-flex; align-items: center; gap: 0.6rem; min-height: 2.75rem; margin-right: auto; flex: none; }
+.brand__mark { width: 2.5rem; aspect-ratio: 875 / 330; height: auto; }
+.brand__name { font-family: var(--font-display); font-weight: 600; font-size: 1.0625rem; letter-spacing: 0.08em; color: var(--text-strong); }
+/* Настоящий логотип компании в шапке (assets/logo/, растр из прозрачного PNG 2048).
+   width и height заданы обе — коробка известна до прихода картинки, сдвига вёрстки нет.
+   Файл выбирается по ТЕМЕ, а не по коже (было наоборот, до 04.09.2026 — тогда у
+   страниц была одна тема на всех):
+     тёмная  → ltcg-lockup      золото #F2C249, 10.2:1 на navy
+     светлая → ltcg-lockup-ink  бронза --gold-dark #593E10, 8.8:1 на бумаге
+   Золото на бумаге дало бы 1.5:1. Переключение — через --logo-gold / --logo-ink
+   из §0, а не через свой @media: иначе цвет знака разошёлся бы с цветом шапки.
+   Разметка обязана нести ОБА <picture> с data-logo="gold" и data-logo="ink";
+   где второго нет (черновики HY/EN), знак остаётся тем, что стоит в разметке. */
+.brand picture { display: block; flex: none; }   /* иначе знак сжимается вместе с флекс-строкой шапки */
+.brand picture[data-logo="gold"] { display: var(--logo-gold); }
+.brand picture[data-logo="ink"]  { display: var(--logo-ink); }
+.brand .brand-logo { display: block; width: 57px; height: 38px; object-fit: contain; }
+
+/* ── переключатель темы: авто · светлая · тёмная ──────────────
+   Три состояния, а не два: «как в системе» — не то же самое, что «светлая».
+   Без JS группа остаётся hidden — мёртвых кнопок на экране нет (тот же приём,
+   что в hero-slice.html). Ключ хранения — localStorage 'ltcg-theme'. */
+.themer { display: inline-flex; align-items: center; gap: 2px; padding: 2px; border: 1px solid var(--line); border-radius: var(--r-btn); background: var(--wash-1); }
+.themer__btn { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: calc(var(--r-btn) - 3px); color: var(--text-3); transition: color var(--t-base) var(--ease), background-color var(--t-base) var(--ease); }
+.themer__btn svg { width: 1.125rem; height: 1.125rem; }
+.themer__btn:hover { color: var(--text); background: var(--wash-2); }
+.themer__btn[aria-pressed="true"] { color: var(--gold-text); background: var(--wash-3); }
+/* цель нажатия 44 px там, где палец: сама кнопка 36 px, добор — псевдоэлементом */
+.themer__btn::after { content: ''; position: absolute; }
+.themer__btn { position: relative; }
+@media (pointer: coarse) {
+  .themer__btn::after { inset: -4px; }
+}
+.menu .themer { margin-top: var(--s-6); }
+.hdr__nav,
+.nav { display: none; }
+.hdr__nav a,
+.nav a { display: inline-flex; align-items: center; min-height: 2.75rem; padding-inline: 0.7rem; border-radius: 6px; font-size: var(--fs-md); color: var(--text-2); position: relative; white-space: nowrap; transition: color var(--t-base) var(--ease); }
+.hdr__nav a::after,
+.nav a::after { content: ''; position: absolute; left: 0.7rem; right: 0.7rem; bottom: 0.45rem; height: 1px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform var(--t-slow) var(--ease); }
+.hdr__nav a:hover, .hdr__nav a[aria-current="true"],
+.nav a:hover, .nav a[aria-current="true"] { color: var(--text-strong); }
+.hdr__nav a:hover::after, .hdr__nav a[aria-current="true"]::after,
+.nav a:hover::after, .nav a[aria-current="true"]::after { transform: scaleX(1); }
+.hdr__contacts,
+.header__contacts { display: none; align-items: center; gap: 0.15rem; }
+.hdr__phone,
+.header__phone { display: inline-flex; align-items: center; min-height: 2.75rem; padding-inline: 0.6rem; font-family: var(--font-mono); font-size: 0.875rem; letter-spacing: 0.01em; color: var(--text); border-radius: 6px; white-space: nowrap; }
+.hdr__phone:hover,
+.header__phone:hover { color: var(--gold-text); }
+.hdr__phone-ico { display: none; }
+.hdr__cta,
+.header__cta { display: none; }
+.lang { display: none; align-items: center; gap: 0.125rem; }
+.lang a { position: relative; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 0.6rem; border-radius: 6px; font-size: var(--fs-sm); font-weight: 500; color: var(--text-2); transition: color var(--t-base) var(--ease); }
+.lang a::after { content: ''; position: absolute; left: 0.6rem; right: 0.6rem; bottom: 0.5rem; height: 1px; background: var(--gold); opacity: 0; transition: opacity var(--t-base) var(--ease); }
+.lang a .lang__code { font: 500 var(--fs-xs)/1 var(--font-mono); letter-spacing: 0.12em; color: var(--text-3); }
+.lang a:hover { color: var(--text-strong); }
+.lang a[aria-current="page"] { color: var(--text-strong); }
+.lang a[aria-current="page"]::after { opacity: 1; }
+.lang a[aria-current="page"] .lang__code { color: var(--gold-text); }
+/* шапка хиро (.site-head из hero.css) уступает место полной шапке */
+.hdr-on .site-head { opacity: 0; pointer-events: none; transition: opacity var(--t-slow) var(--ease); }
+.hdr-on .site-head .site-head__brand, .hdr-on .site-head .site-head__lang { pointer-events: none; }
+.burger { display: inline-grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 8px; color: var(--text); }
+.burger svg { width: 1.375rem; height: 1.375rem; }
+.burger [data-ico="close"] { display: none; }
+.burger[aria-expanded="true"] [data-ico="close"] { display: block; }
+.burger[aria-expanded="true"] [data-ico="menu"] { display: none; }
+
+/* полоса «вы выбрали» — десктоп после #where */
+.hdr__chosen { display: none; }
+
+/* мобильное меню */
+.menu { position: fixed; inset: var(--header-h) 0 0 0; z-index: 55; overflow: auto; padding: var(--s-6) var(--gutter) calc(var(--s-8) + var(--safe-b)); }
+.menu__list { display: grid; gap: var(--s-1); }
+.menu__list a { display: flex; align-items: center; min-height: 3rem; padding-inline: var(--s-2); border-radius: 8px; font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; color: var(--text); }
+.menu__list a:hover { color: var(--gold-text); }
+.menu__row,
+.menu__contacts { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); margin-top: var(--s-6); }
+.menu__langs { display: flex; gap: var(--s-1); margin-top: var(--s-6); padding-top: var(--s-4); border-top: 1px solid var(--line); }
+.menu__langs a { display: inline-flex; align-items: center; min-height: 2.75rem; padding-inline: 0.75rem; border-radius: 6px; color: var(--text-2); }
+.menu__langs a[aria-current="page"] { color: var(--gold-text); }
+
+/* мобильный док — четыре действия после хиро */
+.dock,
+.bottombar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 58; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.25rem; padding: 0.5rem var(--s-3) calc(0.5rem + var(--safe-b)); transform: translateY(110%); transition: transform 480ms var(--ease); }
+.dock.is-shown,
+.bottombar.is-shown { transform: none; }
+.hdr-on body { padding-bottom: calc(4.25rem + var(--safe-b)); }
+.dock a,
+.bottombar a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.2rem; min-height: 3rem; border-radius: 8px; font-size: var(--fs-xs); letter-spacing: 0.02em; color: var(--text-2); }
+.dock a svg,
+.bottombar a svg { width: 1.25rem; height: 1.25rem; }
+.dock a.is-primary,
+.bottombar a.is-primary { color: var(--gold-fill-text); background: var(--gold-fill); font-weight: 600; }
+
+/* ── 8. Калькулятор ──────────────────────────────────────────── */
+.calc { display: grid; grid-template-columns: 1fr; gap: var(--gap); align-items: start; }
+.calc__mods,
+.calc__modules { display: grid; grid-template-columns: 1fr; gap: var(--gap); }
+.mod,
+.module { cursor: pointer; gap: var(--s-3); transition: border-color var(--t-slow) var(--ease), transform var(--t-fast) var(--ease), box-shadow var(--t-slow) var(--ease); }
+.mod__top,
+.module__row { display: flex; align-items: flex-start; gap: var(--s-3); }
+.mod__box { flex: 0 0 auto; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; margin-top: 0.15rem; border: 1px solid var(--control-line); border-radius: var(--r-chip); background: var(--field-bg); transition: background-color var(--t-base) var(--ease), border-color var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease); }
+.mod__box svg { width: 0.9rem; height: 0.9rem; color: var(--gold-fill-text); opacity: 0; transform: scale(0.6); transition: opacity var(--t-fast) var(--ease), transform var(--t-slow) var(--ease-spring); }
+.mod input,
+.module input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.mod input:checked ~ .mod__top .mod__box,
+.module input:checked ~ .mod__top .mod__box,
+.mod input:checked ~ .module__row .mod__box { background: var(--gold-fill); border-color: transparent; box-shadow: 0 0 0 4px var(--ring); }
+.mod input:checked ~ .mod__top .mod__box svg,
+.module input:checked ~ .mod__top .mod__box svg,
+.mod input:checked ~ .module__row .mod__box svg { opacity: 1; transform: scale(1); }
+.mod input:focus-visible ~ .mod__top .mod__box,
+.module input:focus-visible ~ .mod__top .mod__box,
+.mod input:focus-visible ~ .module__row .mod__box { outline: 2px solid var(--focus); outline-offset: 3px; }
+.mod.is-on, .mod:has(input:checked),
+.module.is-on, .module:has(input:checked) { border-color: var(--gold-line); }
+.mod__name,
+.module__name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); line-height: 1.3; color: var(--text-strong); }
+.mod__unit { font-size: var(--fs-sm); color: var(--text-3); margin-top: 0.15rem; }
+.mod__price,
+.module__price { margin-left: auto; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--fs-md); color: var(--text); white-space: nowrap; }
+.mod__price .tbc,
+.module__price .tbc { font-size: 0.875rem; }
+.mod__more { border-top: 1px solid var(--line); padding-top: var(--s-2); font-size: var(--fs-sm); color: var(--text-2); }
+.mod__more summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.4rem; min-height: 2.75rem; color: var(--text-3); }
+.mod__more summary::-webkit-details-marker { display: none; }
+.mod__more summary svg { width: 0.9rem; height: 0.9rem; transition: transform var(--t-slow) var(--ease); }
+.mod__more[open] summary svg { transform: rotate(90deg); }
+.mod__more ul { padding-left: 1.1em; margin-top: 0.35rem; display: grid; gap: 0.25rem; }
+.mod__more ul li::marker { color: var(--gold-mid); }
+
+.total { gap: var(--s-4); }
+.total__title { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); color: var(--text-strong); }
+.total__rows { display: grid; border-top: 1px solid var(--line); }
+.total__row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4); padding: var(--s-3) 0; border-bottom: 1px solid var(--line); }
+.total__row dt { font-size: var(--fs-md); color: var(--text-2); }
+.total__row dd { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-num); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; color: var(--text-strong); text-align: right; }
+.total__row dd .cur { font-family: var(--font-mono); font-weight: 500; font-size: 0.55em; color: var(--text-3); margin-left: 0.3em; letter-spacing: 0.02em; }
+.total__list,
+.total__chosen { display: flex; flex-wrap: wrap; gap: 0.375rem; min-height: 1.75rem; }
+.total__list .chip,
+.total__chosen .chip { color: var(--text); }
+.total__empty { color: var(--text-3); font-size: var(--fs-sm); }
+.total__meta { display: grid; gap: 0.35rem; font-size: var(--fs-sm); color: var(--text-3); }
+.total__meta b { color: var(--text-2); font-weight: 400; }
+.total__cta { display: grid; gap: var(--s-2); }
+.total__cta .btn,
+.total__cta .icon-btn { width: 100%; }
+.total__preview { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold-text); padding: 0.35rem 0.6rem; border: 1px dashed var(--gold-line); border-radius: var(--r-chip); justify-self: start; }
+
+/* ── 9. Таймлайн ─────────────────────────────────────────────── */
+.tl,
+.steps { display: grid; grid-template-columns: 1fr; gap: var(--s-5); counter-reset: step; position: relative; }
+.tl__step { position: relative; padding-left: 2.25rem; display: grid; gap: 0.5rem; }
+.tl__step::before { content: ''; position: absolute; left: 0.4375rem; top: 1.25rem; bottom: -1.5rem; width: 1px; background: linear-gradient(180deg, var(--line-strong), var(--line)); }
+.tl__step:last-child::before { display: none; }
+.tl__dot { position: absolute; left: 0; top: 0.35rem; width: 0.9375rem; height: 0.9375rem; border-radius: 50%; background: var(--bg); border: 1px solid var(--gold-mid); box-shadow: inset 0 0 0 3px var(--bg), inset 0 0 0 5px var(--gold); transition: box-shadow var(--t-slow) var(--ease); }
+.tl__step:hover .tl__dot { box-shadow: inset 0 0 0 3px var(--bg), inset 0 0 0 5px var(--gold), 0 0 18px var(--gold-glow); }
+.tl__no,
+.steps__n { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-text); }
+.tl__title { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); line-height: 1.3; color: var(--text-strong); text-wrap: balance; }
+.tl__who { display: grid; gap: 0.3rem; font-size: var(--fs-sm); color: var(--text-2); }
+.tl__who span b { font-weight: 500; color: var(--text-3); margin-right: 0.35em; }
+.tl__days { font-size: var(--fs-sm); color: var(--text-3); }
+
+.oath { display: grid; grid-template-columns: 1fr; gap: var(--gap); margin-top: clamp(2.5rem, 6vh, 4rem); }
+.oath .tile { gap: var(--s-2); }
+.oath__no { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.12em; color: var(--text-3); }
+.oath__t { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); color: var(--text-strong); line-height: 1.3; text-wrap: balance; }
+.oath__d { font-size: var(--fs-sm); color: var(--text-2); }
+
+/* ── 10. Банки: названные ловушки (dl) ───────────────────────── */
+.traps { display: grid; grid-template-columns: 1fr; gap: var(--gap); }
+.trap { gap: var(--s-3); }
+.trap__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); }
+.trap__no { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.12em; color: var(--text-3); }
+.trap__tag { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); white-space: nowrap; }
+.trap__tag--fix { color: var(--gold-text); }
+.trap dt { display: grid; gap: var(--s-3); }
+.trap__title { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); line-height: 1.3; color: var(--text-strong); text-wrap: balance; }
+.trap dd { font-size: var(--fs-md); color: var(--text-2); text-wrap: pretty; }
+.trap dd + dd { padding-top: var(--s-2); border-top: 1px solid var(--line); }
+.trap dd b { font-family: var(--font-mono); font-weight: 500; font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-text); margin-right: 0.5em; }
+.bank__aside { display: grid; gap: var(--gap); margin-top: var(--gap); }
+.sign { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-4); font-size: var(--fs-sm); color: var(--text-3); }
+.sign span { display: inline-flex; align-items: center; gap: 0.4em; }
+
+/* ── 11. Таблица DIY ─────────────────────────────────────────── */
+.diy { width: 100%; border-collapse: collapse; }
+.diy caption { text-align: left; font-size: var(--fs-sm); color: var(--text-3); padding-bottom: var(--s-3); }
+.diy th, .diy td { text-align: left; vertical-align: top; padding: var(--s-4) var(--s-3); border-top: 1px solid var(--line); font-size: var(--fs-md); }
+.diy thead th { font-family: var(--font-mono); font-weight: 500; font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); border-top: 0; padding-top: 0; }
+.diy tbody th { font-family: var(--font-display); font-weight: 600; color: var(--text-strong); white-space: nowrap; }
+.diy td { color: var(--text-2); text-wrap: pretty; }
+.diy .yes, .diy .part { font-family: var(--font-mono); font-size: var(--fs-sm); white-space: nowrap; }
+.diy .yes { color: var(--text); }
+.diy .part { color: var(--gold-text); }
+.diy td.us { color: var(--text); }
+.diy-wrap { border: 1px solid var(--line); border-radius: var(--r-tile); padding: var(--tile-pad); background: var(--tile-bg); box-shadow: var(--tile-shadow); overflow: hidden; }
+/* мобильный: строки становятся карточками */
+.diy thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.diy tr { display: grid; gap: 0.4rem; padding: var(--s-4) 0; border-top: 1px solid var(--line); }
+.diy tr:first-child { border-top: 0; padding-top: 0; }
+.diy th, .diy td { border: 0; padding: 0; }
+.diy td::before { content: attr(data-l); display: block; font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.15rem; }
+
+/* ── 12. Услуги ──────────────────────────────────────────────── */
+.svc { gap: var(--s-3); transition: border-color var(--t-slow) var(--ease), transform var(--t-fast) var(--ease); }
+.svc__name { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); line-height: 1.3; color: var(--text-strong); text-wrap: balance; }
+.svc__for { font-size: var(--fs-md); color: var(--text-2); text-wrap: pretty; }
+.svc__price { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--text); display: flex; align-items: baseline; gap: 0.4em; }
+.svc__price span:first-child { color: var(--text-3); }
+.svc .chips .chip { font-size: var(--fs-xs); }
+.path { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); margin-top: var(--s-8); font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); color: var(--text-strong); }
+.path svg { width: 1.1rem; height: 1.1rem; color: var(--gold); }
+.path .small { flex-basis: 100%; font-family: var(--font-body); font-weight: 400; }
+.notdo { margin-top: var(--gap); }
+.notdo ul { display: flex; flex-wrap: wrap; gap: 0.375rem 1rem; color: var(--text-2); font-size: var(--fs-md); }
+.notdo ul li::before { content: '—'; color: var(--gold-mid); margin-right: 0.5em; }
+
+/* последний ряд услуг: служебная плитка «Не нашли?» на всю ширину — без сироты в сетке */
+.svc-more { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-3) var(--s-6); }
+.svc-more p { max-width: 52ch; }
+
+/* ── 13. FAQ — нативный details ──────────────────────────────── */
+.faq { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--s-4); min-height: 3.5rem; padding: var(--s-4) 0; font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); line-height: 1.3; color: var(--text-strong); text-wrap: balance; transition: color var(--t-base) var(--ease); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { color: var(--gold-text); }
+.faq summary svg { width: 1.25rem; height: 1.25rem; color: var(--gold); transition: transform var(--t-slow) var(--ease); }
+.faq details[open] summary svg { transform: rotate(45deg); }
+.faq__a { padding: 0 0 var(--s-5); max-width: 64ch; color: var(--text-2); text-wrap: pretty; }
+.faq__a p + p { margin-top: 0.6em; }
+.faq__a .small { margin-top: var(--s-1); display: flex; flex-wrap: wrap; gap: 0 var(--s-4); }
+.faq__a .small a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+/* ── 14. Контакт и форма ─────────────────────────────────────── */
+.contact { display: grid; grid-template-columns: 1fr; gap: var(--gap); align-items: start; }
+.ways,
+.contact__ways { display: grid; grid-template-columns: 1fr; gap: var(--s-2); }
+.way { display: flex; align-items: center; gap: var(--s-3); min-height: 3.25rem; padding: 0.5rem 0.9rem; border: 1px solid var(--line); border-radius: var(--r-card); color: var(--text); font-family: var(--font-display); font-weight: 600; font-size: var(--fs-md); transition: border-color var(--t-slow) var(--ease), background-color var(--t-slow) var(--ease), transform var(--t-fast) var(--ease); }
+.way svg { width: 1.25rem; height: 1.25rem; color: var(--gold-text); flex: 0 0 auto; }
+.way small { font-family: var(--font-body); font-weight: 400; color: var(--text-3); margin-left: auto; font-size: var(--fs-sm); }
+.way:hover { border-color: var(--line-strong); background: var(--wash-1); transform: translateY(-1px); }
+
+.form { display: grid; gap: var(--s-4); }
+.form__row { display: grid; grid-template-columns: 1fr; gap: var(--s-4); }
+.field { display: grid; gap: 0.375rem; }
+.field__label { font-size: var(--fs-sm); color: var(--text-2); }
+.field__label small { color: var(--text-3); }
+.field__input, .field select, .field textarea {
+  width: 100%; min-height: var(--btn-h); padding: 0.6rem 0.875rem;
+  background: var(--field-bg); border: 1px solid var(--field-line); border-radius: var(--r-field);
+  color: var(--text-strong);
+  transition: border-color var(--t-base) var(--ease), box-shadow var(--t-base) var(--ease), background-color var(--t-base) var(--ease);
+}
+.field select { appearance: none; -webkit-appearance: none; background-image: var(--select-arrow); background-repeat: no-repeat; background-position: right 0.75rem center; background-size: 1rem; padding-right: 2.5rem; }
+/* выпадающий список рисует ОС: белый лист с чернилами читается в обеих темах */
+.field select option { color: #0C1B3A; background: #fff; }
+.field__input::placeholder, .field textarea::placeholder { color: var(--text-3); }
+.field__input:hover, .field select:hover, .field textarea:hover { border-color: var(--line-strong); }
+.field__input:focus-visible, .field select:focus-visible, .field textarea:focus-visible { outline: none; border-color: var(--focus); box-shadow: 0 0 0 3px var(--ring); background: var(--wash-2); }
+.field textarea { min-height: 6.5rem; resize: vertical; }
+.check { display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; font-size: var(--fs-sm); color: var(--text-2); }
+.check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.check__box { flex: 0 0 auto; display: grid; place-items: center; width: 1.375rem; height: 1.375rem; margin-top: 0.1rem; border: 1px solid var(--control-line); border-radius: var(--r-chip); background: var(--field-bg); transition: background-color var(--t-base) var(--ease), border-color var(--t-base) var(--ease); }
+.check__box svg { width: 0.875rem; height: 0.875rem; color: var(--gold-fill-text); opacity: 0; transition: opacity var(--t-fast) var(--ease); }
+.check input:checked + .check__box { background: var(--gold-fill); border-color: transparent; }
+.check input:checked + .check__box svg { opacity: 1; }
+.check input:focus-visible + .check__box { outline: 2px solid var(--focus); outline-offset: 3px; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3) var(--s-4); }
+.form__foot .lnk, .total .lnk, .notdo .lnk { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.form__msg { font-size: var(--fs-sm); color: var(--gold-text); min-height: 1.5em; }
+.form__done { display: grid; gap: var(--s-3); }
+.next,
+.contact__next { display: grid; gap: var(--s-3); counter-reset: n; }
+.next li,
+.contact__next li { display: grid; grid-template-columns: auto 1fr; gap: var(--s-3); font-size: var(--fs-md); color: var(--text-2); }
+.next li::before,
+.contact__next li::before { counter-increment: n; content: counter(n, decimal-leading-zero); font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 0.1em; color: var(--gold-text); padding-top: 0.4em; }
+.next li b,
+.contact__next li b { display: block; color: var(--text-strong); }
+
+/* ── 15. Футер ───────────────────────────────────────────────── */
+.ftr,
+.site-footer { position: relative; padding: clamp(3rem, 8vh, 5rem) 0 calc(2rem + var(--safe-b)); background: linear-gradient(180deg, var(--bg) 0%, var(--bg-void) 100%); }
+.ftr::before,
+.site-footer::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-line) 30%, var(--gold-line) 70%, transparent); }
+.ftr__grid,
+.site-footer__row { display: grid; grid-template-columns: 1fr; gap: var(--s-8); }
+.ftr__brand { display: grid; gap: var(--s-4); }
+.ftr__brand .brand { margin: 0; }
+.ftr__brand address { font-style: normal; display: grid; gap: 0; font-size: var(--fs-sm); color: var(--text-2); }
+.ftr__brand address > * { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.4em; min-height: 2.75rem; }
+.ftr__brand address a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+.ftr__brand address a { color: var(--text); }
+.ftr__brand address a:hover { color: var(--gold-text); }
+.ftr h2,
+.site-footer h2 { font-family: var(--font-mono); font-weight: 500; font-size: var(--fs-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: var(--s-3); }
+.ftr ul,
+.site-footer ul { display: grid; gap: 0; }
+.ftr ul a,
+.site-footer ul a { display: inline-flex; align-items: center; min-height: 2.75rem; font-size: var(--fs-sm); color: var(--text-2); transition: color var(--t-base) var(--ease); }
+.ftr ul a:hover,
+.site-footer ul a:hover { color: var(--gold-text); }
+.ftr__bottom,
+.site-footer__bottom { display: grid; gap: var(--s-4); margin-top: var(--s-10); padding-top: var(--s-5); border-top: 1px solid var(--line); font-size: var(--fs-sm); color: var(--text-3); }
+.ftr__bottom p,
+.site-footer__bottom p { max-width: 70ch; text-wrap: pretty; }
+.ftr__langs { display: flex; flex-wrap: wrap; gap: var(--s-1); }
+.ftr__langs a { display: inline-flex; align-items: center; min-height: 2.75rem; padding-inline: 0.6rem; border-radius: 6px; color: var(--text-2); }
+.ftr__langs a[aria-current="page"] { color: var(--gold-text); }
+.ftr__langs a:hover { color: var(--text-strong); }
+
+/* ── 16. Доступность ─────────────────────────────────────────── */
+.skip { position: absolute; left: -999px; top: 0; z-index: 100; }
+/* заливка кнопки, а не --gold: на бумаге navy на #A87A1E давал 4.43:1, на заливке — 10.21:1 */
+.skip:focus { left: 1rem; top: 1rem; padding: 0.6rem 1rem; background: var(--btn-primary-bg); color: var(--btn-primary-text); border-radius: var(--r-btn); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ── 17. Брейкпоинты 640 / 768 / 1024 / 1440 ─────────────────── */
+@media (min-width: 640px) {
+  :where(html) { --gap: 1rem; }
+  .form__row { grid-template-columns: 1fr 1fr; }
+  .ways,
+.contact__ways { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .way small { display: none; }
+  .calc__mods,
+.calc__modules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .traps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .oath { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ftr__grid,
+.site-footer__row { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 768px) {
+  :where(html) { --tile-pad: 1.75rem; --header-h: 4.5rem; }
+  .bento { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .bento > [data-span="3"] { grid-column: span 3; }
+  .bento > [data-span="4"] { grid-column: span 3; }
+  .bento > [data-span="6"], .bento > [data-span="8"], .bento > [data-span="12"] { grid-column: span 6; }
+  .hdr__contacts,
+.header__contacts { display: flex; }
+  .lang { display: flex; }
+  /* таблица DIY возвращается таблицей */
+  .diy thead { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
+  .diy tr { display: table-row; padding: 0; border: 0; }
+  .diy th, .diy td { display: table-cell; padding: var(--s-4) var(--s-3); border-top: 1px solid var(--line); }
+  .diy thead th { border-top: 0; padding-top: 0; }
+  .diy td::before { display: none; }
+  .diy th:first-child, .diy td:first-child { padding-left: 0; }
+  .diy th:last-child, .diy td:last-child { padding-right: 0; }
+  .diy col.c-step { width: 18%; } .diy col.c-diy { width: 12%; } .diy col.c-break { width: 35%; } .diy col.c-us { width: 35%; }
+  .ftr__grid,
+.site-footer__row { grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+  .ftr__bottom,
+.site-footer__bottom { grid-template-columns: 1fr auto; align-items: center; }
+}
+@media (min-width: 1024px) {
+  :where(html) { --gap: 1.25rem; --tile-pad: 2rem; }
+  .tl,
+.steps { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-4); }
+  .tl__step { padding-left: 0; padding-top: 1.75rem; }
+  .tl__step::before { left: 0.9375rem; right: -1rem; top: 0.4375rem; bottom: auto; height: 1px; width: auto; background: linear-gradient(90deg, var(--line-strong), var(--line)); }
+  .tl__dot { top: 0; }
+
+  .bento { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .bento > [data-span="3"] { grid-column: span 3; }
+  .bento > [data-span="4"] { grid-column: span 4; }
+  .bento > [data-span="6"] { grid-column: span 6; }
+  .bento > [data-span="8"] { grid-column: span 8; }
+  .bento > [data-span="12"] { grid-column: span 12; }
+  .bento > [data-rows="2"] { grid-row: span 2; }
+  .hdr__nav,
+.nav { display: flex; gap: 0.1rem; }
+  .hdr__cta,
+.header__cta { display: inline-flex; }
+  .burger { display: none; }
+  .menu { display: none !important; }
+  .dock,
+.bottombar { display: none; }
+  .hdr-on body { padding-bottom: 0; }
+  .hdr__chosen { display: flex; align-items: center; gap: var(--s-4); min-height: 2.5rem; font-size: var(--fs-sm); color: var(--text-2); border-top: 1px solid var(--line); }
+  .hdr__chosen b { color: var(--gold-text); font-weight: 500; }
+  .hdr__chosen a { color: var(--text); text-decoration: underline; text-decoration-color: var(--gold-line); text-underline-offset: 0.22em; min-height: 2.5rem; display: inline-flex; align-items: center; }
+  .hdr__chosen a:hover { color: var(--gold-text); }
+  .calc { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+  .total { position: sticky; top: calc(var(--header-h) + 1.25rem); }
+  .contact { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+  .oath { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .bank__aside { grid-template-columns: 1fr 1fr; }
+  .section__head--split { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s-8); align-items: end; max-width: none; }
+  .section__head--split .lead { margin-top: 0; }
+}
+@media (min-width: 768px) and (max-width: 1439px) {
+  .hdr__phone,
+.header__phone { display: none; }
+  .hdr__phone-ico { display: inline-flex; }
+  .lang a { padding-inline: 0.6rem; }
+  .lang a .lang__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .lang a .lang__code { color: inherit; font-size: var(--fs-sm); letter-spacing: 0.08em; }
+  .lang a[aria-current="page"] .lang__code { color: var(--text-strong); }
+}
+@media (min-width: 1440px) {
+  /* 0.6rem, а не 0.85rem: одна строка шапки не влезала в контейнер 1280 (по содержимому
+     1237 px при доступных 1200), и флекс отбирал недостающие 37 px у знака и у CTA.
+     Пять пунктов × 2 × 0.25rem = 40 px — ровно та недостача. Знак и кнопка теперь flex: none,
+     строка помещается целиком. Замерено 04.09.2026 при vw 1440. */
+  .hdr__nav a,
+.nav a { padding-inline: 0.6rem; }
+}
+
+/* ── 18. Движение: только при разрешении, без !important ─────── */
+@media (prefers-reduced-motion: reduce) {
+  .hdr, .dock,
+.site-header, .dock,
+.hdr, .bottombar { transition: none; }
+  .btn, .tile, .mod, .svc, .way, .faq summary svg, .mod__more summary svg,
+.icon-btn, .tile, .mod, .svc, .way, .faq summary svg, .mod__more summary svg,
+.btn, .tile, .module, .svc, .way, .faq summary svg, .mod__more summary svg { transition-duration: 0.01ms; }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   19. СЛОВАРЬ ПРЕВЬЮ hy/en — недостающая раскладка
+
+   home-hy.html и home-en.html написаны на словаре классов из theme-base.css,
+   которого в проекте нет и не было: страницы подключали три несуществующих
+   файла и рендерились голым HTML. Починка 04.09.2026 — две части:
+     1) у существующих правил выше добавлены СЕЛЕКТОРЫ-ПСЕВДОНИМЫ
+        (.site-header = .hdr, .module = .mod, .bottombar = .dock, .steps = .tl,
+         .site-footer = .ftr, .icon-btn = .btn.btn--icon.btn--ghost и т. д.) —
+        ни одной новой декларации;
+     2) здесь — то, чему пары среди компонентов нет.
+   Всё на токенах контракта: обе темы работают без единого литерала.
+   Когда hy/en будут пересобраны на словаре RU, этот раздел удаляется целиком.
+   ═════════════════════════════════════════════════════════════ */
+
+/* заглушка хиро: первый экран до сборки скролл-хиро */
+.hero-stub {
+  position: relative; display: grid; place-items: center; gap: var(--s-4);
+  min-height: 78svh; padding: var(--s-16) var(--gutter) var(--s-20);
+  text-align: center; overflow: clip; background: var(--bg-2);
+}
+.hero-stub__art { position: absolute; inset: 0; z-index: 0; overflow: clip; }
+.hero-stub__art img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+/* Скрим только там, где он нужен: низ уходит в фон страницы, верх остаётся фотографией.
+   Ноль объявлен как rgb(var(--scrim) / 0), а не transparent: transparent = прозрачный ЧЁРНЫЙ,
+   и градиент к нему даёт серую грязь на светлой теме. Текст поверх фотографии читаем не за
+   счёт общего осветления кадра, а за счёт собственной подложки у надписи (ниже). */
+.hero-stub__art::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgb(var(--scrim) / 0) 0%, rgb(var(--scrim) / 0.06) 40%,
+    rgb(var(--scrim) / 0.55) 78%, var(--bg) 100%);
+}
+.hero-stub > *:not(.hero-stub__art) { position: relative; z-index: 1; }
+.hero-stub__note {
+  max-width: 62ch; padding: var(--s-3) var(--s-4); border-radius: var(--r-card);
+  background: rgb(var(--scrim) / 0.88); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  font-size: var(--fs-xs); line-height: 1.6; color: var(--text-2);
+}
+/* знак по центру: .brand в шапке держит margin-right: auto, а авто-поле у grid-элемента
+   перебивает justify-items: center — поэтому здесь поля возвращаются симметричными. */
+.hero-stub__mark { display: inline-flex; margin-inline: auto; }
+.hero-stub__mark .brand__mark { width: 96px; height: 64px; color: var(--gold); }
+.hero-stub__hint {
+  padding: 0.35rem 0.7rem; border-radius: var(--r-chip);
+  background: rgb(var(--scrim) / 0.82);
+  font: var(--kicker-font); letter-spacing: var(--kicker-ls); text-transform: var(--kicker-transform); color: var(--text-2);
+}
+.hero-stub__edge { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--gold-line); }
+
+/* три языковые панели на первом экране: настоящие ссылки, не таб-скрипт */
+.panels { display: grid; gap: var(--gap); grid-template-columns: 1fr; margin-bottom: var(--s-10); padding: 0; list-style: none; }
+.panel {
+  display: grid; gap: 0.35rem; min-height: 3.5rem; padding: var(--s-4);
+  border: 1px solid var(--line); border-radius: var(--r-card);
+  background: var(--wash-1); color: var(--text-2);
+  transition: border-color var(--t-base) var(--ease), background-color var(--t-base) var(--ease);
+}
+.panel:hover { border-color: var(--line-strong); background: var(--wash-2); }
+.panel--active { border-color: var(--gold-line); background: var(--wash-2); color: var(--text); }
+.panel__lang { font-family: var(--font-display); font-weight: var(--fw-h); font-size: var(--fs-lg); color: var(--text-strong); }
+.panel__moment { font-size: var(--fs-sm); color: var(--text-3); }
+
+/* номер состояния — та же роль, что .trap__no и .tl__no */
+.state__no { font: var(--kicker-font); letter-spacing: var(--kicker-ls); color: var(--gold-text); font-variant-numeric: tabular-nums; }
+
+/* кикер с линейкой: у RU черту рисует кожа, здесь — общая */
+.rule-draw::before { content: ''; width: 2rem; height: 1px; background: var(--gold-line); }
+
+/* банк: главный уровень + боковой + полоса во всю ширину */
+.bank { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+.bank__level--full { grid-column: 1 / -1; }
+.diag { display: grid; gap: 0.5rem var(--s-4); grid-template-columns: auto 1fr; margin-top: var(--s-4); font-size: var(--fs-md); }
+.diag dt { font-weight: 500; color: var(--text-strong); }
+.diag dd { color: var(--text-2); }
+.reasons { display: grid; gap: 0.6rem; margin: var(--s-4) 0 0; padding-inline-start: 1.2rem; color: var(--text-2); }
+.aside-note { margin-top: var(--s-4); font-size: var(--fs-sm); color: var(--text-3); }
+.signed { margin-top: var(--s-3); font-size: var(--fs-xs); color: var(--text-3); }
+.honest { margin-top: var(--s-3); font-size: var(--fs-sm); color: var(--text-3); }
+
+/* секция «камень» — тот же приём, что section--art у RU: ступень фона */
+.section--stone { background: var(--bg-2); }
+
+/* шапка секции с разведёнными краями */
+.section__head--spread { display: grid; gap: var(--s-3); }
+
+/* форма: поля колонкой, согласие и примечание */
+.form__fields { display: grid; gap: var(--s-4); }
+.form__consent { margin-top: var(--s-2); }
+.form__note { font-size: var(--fs-xs); color: var(--text-3); }
+.contact__form { display: grid; gap: var(--s-4); }
+
+/* цифра-слот: моноширинные знаки, чтобы «{գին}» не прыгал в строке */
+.slot--num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* бургер на hy/en несёт иконки классами, а не data-ico */
+.burger .i-close { display: none; }
+.burger[aria-expanded="true"] .i-close { display: block; }
+.burger[aria-expanded="true"] .i-menu { display: none; }
+
+/* .reveal — только хук для скрипта появления; без JS содержимое видно */
+.reveal { will-change: auto; }
+
+@media (min-width: 768px) {
+  .panels { grid-template-columns: repeat(3, 1fr); }
+  .form__row--2 { display: grid; gap: var(--s-4); grid-template-columns: 1fr 1fr; }
+  .section__head--spread { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; }
+  .section__head--spread .kicker { grid-column: 1 / -1; }
+}
+@media (min-width: 1024px) {
+  .bank { grid-template-columns: 1.4fr 1fr; }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   20. ЧЕСТНАЯ ДЕГРАДАЦИЯ И ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ
+   ═════════════════════════════════════════════════════════════ */
+
+/* Ветка «без скрипта». Класс no-js стоит в разметке и снимается инлайновым
+   скриптом в <head> ДО первой отрисовки — мигания ветками нет. */
+.nojs-only { display: none; }
+.no-js .nojs-only { display: block; }
+.no-js .js-only { display: none; }
+
+/* готовый текст заявки: человек копирует его в мессенджер сам */
+.form__out {
+  width: 100%; min-height: 7.5rem; margin: var(--s-3) 0; padding: var(--s-3);
+  border: 1px solid var(--field-line); border-radius: var(--r-field);
+  background: var(--field-bg); color: var(--text);
+  font: 400 var(--fs-md)/1.55 var(--font-body); resize: vertical;
+}
+.form__nojs { margin-top: var(--s-2); }
+.form__nojs a { white-space: nowrap; }
+
+/* переключатель темы: в шапке — только там, где для него есть место,
+   на телефоне он живёт в мобильном меню (цель нажатия 44 px — см. §6). */
+.hdr .themer,
+.site-header .themer { display: none; }
+@media (min-width: 1024px) {
+  .hdr .themer,
+  .site-header .themer { display: inline-flex; }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   21. БЛОКИ ВЕТКИ · КАНОН
+   Каталог с видом в обеих темах и готовой разметкой: phase1/canon.html
+   Здесь только те роды блоков, которых в §§2–15 не было. Всё остальное
+   ветка берёт готовым: .tile .state .traps .tl .diy .calc .faq .form
+   .sign .next .chips .bento .note.
+   Правила, по которым это написано (docs/style_system.md):
+     · иерархия — размером и местом, не цветом;
+     · золото имеет ровно три работы: кромка ЕДИНСТВЕННОЙ опорной плитки,
+       номер и действие, выбранное состояние. Больше нигде;
+     · один радиус, одна толщина линии, ритм только из --s-*;
+     · другой род — другой регистр, а не другая яркость;
+     · ховер — подъём на 2 px и посветлевшая кромка, ничего больше.
+   ═════════════════════════════════════════════════════════════ */
+
+/* островок темы: тот же контракт токенов, но на контейнере, а не на <html>.
+   Селекторы дописаны к §0.2 и §0.3-бис, значения не продублированы. */
+[data-theme-scope] { background: var(--bg); color: var(--text); }
+
+/* ── 21.1 Ховер: единственный разрешённый — подъём и посветлевшая кромка ── */
+@media (hover: hover) {
+  a.tile:hover,
+  .svc:hover,
+  label.mod:not(:has(input:checked)):hover,
+  .fork__opt:hover,
+  .neigh:hover { transform: translateY(-2px); }
+  a.tile:hover,
+  .svc:hover,
+  label.mod:not(:has(input:checked)):hover,
+  .fork__opt:hover { border-color: var(--line-strong); }
+}
+
+/* ── 21.2 Полоса пути ветки ───────────────────────────────────
+   Горизонтальный близнец рейки: человек видит, в какую из шести он попал
+   и что рядом. Текущая ветка отмечена НЕ ОДНИМ ЦВЕТОМ: aria-current,
+   вес, подчёркивание. Ссылки настоящие — работает без JavaScript. */
+.pathbar { margin-top: var(--s-5); padding-top: var(--s-4); border-top: 1px solid var(--line); }
+.pathbar__list { display: flex; flex-wrap: wrap; gap: 0 var(--s-4); }
+.pathbar__i { display: inline-flex; }
+.pathbar__i > a,
+.pathbar__i > span { display: inline-flex; align-items: center; gap: 0.5em; min-height: 2.75rem; font-size: var(--fs-sm); color: var(--text-3); transition: color var(--t-base) var(--ease); }
+.pathbar__i > a:hover { color: var(--text); }
+.pathbar__n { font: 500 var(--fs-xs)/1 var(--font-mono); letter-spacing: 0.12em; }
+.pathbar__i[aria-current] > span { color: var(--text-strong); font-weight: 500; border-bottom: 1px solid var(--gold); }
+.pathbar__i[aria-current] .pathbar__n { color: var(--gold-text); }
+.pathbar__gr { display: inline-flex; align-items: center; min-height: 2.75rem; font: 500 var(--fs-xs)/1 var(--font-mono); letter-spacing: 0.12em; color: var(--text-3); }
+
+/* ── 21.3 Прямой ответ ────────────────────────────────────────
+   Абзац, который модель забирает целиком и который читается без остального.
+   Отличается размером и воздухом, а не рамкой и не подсветкой: рамка ушла
+   бы в спор с .note, а подсветка — в четвёртую работу золота. */
+.answer { display: grid; gap: var(--s-5); max-width: 68ch; }
+.answer__p { font-size: var(--fs-lg); line-height: 1.5; color: var(--text); text-wrap: pretty; }
+.answer__p b { font-weight: 500; color: var(--text-strong); }
+.answer__facts { display: grid; gap: var(--s-4); counter-reset: af; }
+.answer__facts > li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-3); font-size: var(--fs-md); color: var(--text-2); text-wrap: pretty; }
+.answer__facts > li::before { counter-increment: af; content: counter(af, decimal-leading-zero); font: 500 var(--fs-xs)/1.7 var(--font-mono); letter-spacing: 0.1em; color: var(--gold-text); }
+.answer__facts b { font-weight: 500; color: var(--text-strong); }
+.src { display: block; margin-top: 0.35em; font-size: var(--fs-sm); line-height: 1.5; color: var(--text-3); }
+.src a { color: var(--text-2); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 0.22em; }
+.src a:hover { color: var(--gold-text); text-decoration-color: currentColor; }
+
+/* ── 21.4 Крупное число с мелкой единицей ─────────────────────
+   Цена, срок, порог. Число живёт кеглем --fs-big, единица — моно-меткой:
+   разницу делает размер, а не краска. */
+.bignums { display: grid; grid-template-columns: 1fr; gap: var(--s-10); }
+.bignum { display: grid; gap: var(--s-2); align-content: start; }
+.bignum__n { font-family: var(--font-display); font-weight: var(--fw-h1); font-size: var(--fs-big); line-height: 0.92; letter-spacing: -0.035em; color: var(--text-strong); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bignums .bignum__n { font-size: var(--fs-big-2); }
+.bignum__n small { font-size: 0.34em; font-weight: var(--fw-h); letter-spacing: -0.01em; margin-left: 0.15em; color: var(--text-2); }
+.bignum__u { font: 500 var(--fs-xs)/1.4 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+.bignum__d { font-size: var(--fs-md); color: var(--text-2); max-width: 34ch; text-wrap: pretty; }
+
+/* ── 21.5 Цитата из закона ────────────────────────────────────
+   Отдельный род: не «мы считаем», а «написано так». Отсюда линейка слева,
+   номер статьи моно-цифрой и обязательная ссылка на первоисточник. */
+.lawquote { display: grid; gap: var(--s-3); padding-left: var(--s-5); border-left: 1px solid var(--line-strong); }
+.lawquote blockquote { font-size: var(--fs-lg); line-height: 1.55; color: var(--text); max-width: 58ch; text-wrap: pretty; }
+.lawquote blockquote p + p { margin-top: 0.6em; }
+.lawquote figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35em var(--s-3); font-size: var(--fs-sm); color: var(--text-3); }
+.lawquote__art { font: 500 var(--fs-xs)/1.6 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-text); }
+.lawquote figcaption a { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--text-2); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 0.22em; }
+.lawquote figcaption a:hover { color: var(--gold-text); text-decoration-color: currentColor; }
+
+/* ── 21.6 Датированная врезка «с такого-то числа иначе» ───────
+   Она про СРОК, а не про момент, поэтому регистр другой — как у .state--dated:
+   пунктир, прозрачный фон, ни тени, ни заливки. Не ярче соседей, а другая. */
+.dated-box { display: grid; gap: var(--s-5); padding: var(--s-5) var(--s-6); border: 1px dashed var(--gold-line); border-radius: var(--r-card); background: transparent; }
+.dated-box__when { display: inline-flex; align-items: center; gap: var(--s-3); font: 500 var(--fs-xs)/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-text); }
+.dated-box__when::before { content: ''; width: 1.5rem; height: 1px; background: var(--gold); }
+.dated-box__t { font-family: var(--font-display); font-weight: var(--fw-h); font-size: var(--fs-h3); line-height: 1.22; letter-spacing: -0.012em; color: var(--text-strong); text-wrap: balance; max-width: 30ch; }
+.dated-box__d { font-size: var(--fs-md); color: var(--text-2); max-width: 62ch; text-wrap: pretty; }
+.shift { display: grid; }
+.shift__row { display: grid; grid-template-columns: 1fr; gap: 0.2rem var(--s-4); padding: var(--s-3) 0; border-top: 1px solid var(--line); }
+.shift__row--head { padding-top: 0; border-top: 0; }
+.shift__row--head span { font: 500 var(--fs-xs)/1.4 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
+.shift__k { font-size: var(--fs-sm); color: var(--text-3); }
+.shift__was { font-size: var(--fs-md); color: var(--text-3); }
+.shift__now { font-size: var(--fs-md); color: var(--text-strong); font-variant-numeric: tabular-nums; }
+.shift__now b { font-weight: 500; }
+
+/* ── 21.7 Врезка отрицательного результата ────────────────────
+   «Здесь ничего не меняется, проверено по …». Тихий род: сплошная линия,
+   подложка --wash-1, ни пунктира, ни золота — она сообщает об отсутствии
+   события, и кричать ей нечем. */
+.nochange { display: grid; gap: var(--s-3); padding: var(--s-5) var(--s-6); border: 1px solid var(--line); border-radius: var(--r-card); background: var(--wash-1); }
+.nochange__tag { font: 500 var(--fs-xs)/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
+.nochange__t { font-family: var(--font-display); font-weight: var(--fw-h); font-size: var(--fs-h4); line-height: 1.35; color: var(--text-strong); text-wrap: balance; }
+.nochange ul { display: grid; gap: var(--s-2); padding-left: 1.1em; font-size: var(--fs-md); color: var(--text-2); }
+.nochange ul li::marker { color: var(--text-3); }
+.nochange ul li { text-wrap: pretty; }
+
+/* ── 21.8 Развилка на нативных radio ──────────────────────────
+   Все исходы лежат в разметке и видны по умолчанию: краулер и модель читают
+   их целиком, человек — свой. Выбор не открывает доступ, он поднимает нужный
+   исход. Ни одной строки JavaScript. Правила ниже — по порядковому номеру,
+   поэтому копируются на любую ветку без нового CSS (до четырёх вариантов). */
+.fork { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: var(--s-6); }
+.fork__q { padding: 0; font-family: var(--font-display); font-weight: var(--fw-h); font-size: var(--fs-h3); line-height: 1.22; letter-spacing: -0.012em; color: var(--text-strong); max-width: 30ch; text-wrap: balance; }
+.fork__r { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.fork__opts { display: grid; gap: var(--s-2); align-content: start; }
+.fork__opt { display: flex; align-items: flex-start; gap: var(--s-3); padding: var(--s-3) var(--s-4); min-height: 2.75rem; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--tile-bg); cursor: pointer; transition: border-color var(--t-slow) var(--ease), box-shadow var(--t-slow) var(--ease), transform var(--t-fast) var(--ease); }
+.fork__box { flex: 0 0 auto; display: grid; place-items: center; width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; border: 1px solid var(--control-line); border-radius: 50%; background: var(--field-bg); }
+.fork__box::after { content: ''; width: 0.625rem; height: 0.625rem; border-radius: 50%; background: var(--gold); transform: scale(0); transition: transform var(--t-base) var(--ease-spring); }
+.fork__t { font-size: var(--fs-md); color: var(--text-2); text-wrap: pretty; }
+.fork__t b { display: block; font-family: var(--font-display); font-weight: 600; font-size: var(--fs-h4); line-height: 1.35; color: var(--text-strong); }
+.fork__outs { display: grid; gap: var(--s-3); align-content: start; }
+.fork__out { display: grid; gap: var(--s-2); padding: var(--s-4) var(--s-5); border: 1px solid var(--line); border-radius: var(--r-card); background: var(--wash-1); transition: border-color var(--t-slow) var(--ease), background-color var(--t-slow) var(--ease), box-shadow var(--t-slow) var(--ease); }
+.fork__out__k { font: 500 var(--fs-xs)/1 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
+.fork__out__t { font-family: var(--font-display); font-weight: var(--fw-h); font-size: var(--fs-h4); line-height: 1.35; color: var(--text-strong); text-wrap: balance; }
+.fork__out p { font-size: var(--fs-md); color: var(--text-2); text-wrap: pretty; }
+/* выбранный вариант и его исход — единственное место, где золото работает
+   третью работу. Подкреплено не цветом: кольцо, поднятая поверхность, метка. */
+.fork__r:nth-of-type(1):checked ~ .fork__opts .fork__opt:nth-child(1),
+.fork__r:nth-of-type(2):checked ~ .fork__opts .fork__opt:nth-child(2),
+.fork__r:nth-of-type(3):checked ~ .fork__opts .fork__opt:nth-child(3),
+.fork__r:nth-of-type(4):checked ~ .fork__opts .fork__opt:nth-child(4) { border-color: var(--gold-line); box-shadow: 0 0 0 3px var(--ring); }
+.fork__r:nth-of-type(1):checked ~ .fork__opts .fork__opt:nth-child(1) .fork__box::after,
+.fork__r:nth-of-type(2):checked ~ .fork__opts .fork__opt:nth-child(2) .fork__box::after,
+.fork__r:nth-of-type(3):checked ~ .fork__opts .fork__opt:nth-child(3) .fork__box::after,
+.fork__r:nth-of-type(4):checked ~ .fork__opts .fork__opt:nth-child(4) .fork__box::after { transform: scale(1); }
+.fork__r:nth-of-type(1):checked ~ .fork__outs .fork__out:nth-child(1),
+.fork__r:nth-of-type(2):checked ~ .fork__outs .fork__out:nth-child(2),
+.fork__r:nth-of-type(3):checked ~ .fork__outs .fork__out:nth-child(3),
+.fork__r:nth-of-type(4):checked ~ .fork__outs .fork__out:nth-child(4) { border-color: var(--gold-line); background: var(--tile-bg); box-shadow: var(--tile-shadow); }
+.fork__r:nth-of-type(1):checked ~ .fork__outs .fork__out:nth-child(1) .fork__out__k,
+.fork__r:nth-of-type(2):checked ~ .fork__outs .fork__out:nth-child(2) .fork__out__k,
+.fork__r:nth-of-type(3):checked ~ .fork__outs .fork__out:nth-child(3) .fork__out__k,
+.fork__r:nth-of-type(4):checked ~ .fork__outs .fork__out:nth-child(4) .fork__out__k { color: var(--gold-text); }
+/* фокус виден в обеих темах: кольцо на видимой карточке, а не на скрытом input */
+.fork__r:nth-of-type(1):focus-visible ~ .fork__opts .fork__opt:nth-child(1),
+.fork__r:nth-of-type(2):focus-visible ~ .fork__opts .fork__opt:nth-child(2),
+.fork__r:nth-of-type(3):focus-visible ~ .fork__opts .fork__opt:nth-child(3),
+.fork__r:nth-of-type(4):focus-visible ~ .fork__opts .fork__opt:nth-child(4) { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* ── 21.9 Соседние ветки ──────────────────────────────────────
+   Подписаны временем — «до этого», «после этого», «параллельно», — а не
+   названием ветки: читателю нужно знать, что он там найдёт. */
+.neigh { display: grid; gap: var(--s-3); color: inherit; text-decoration: none; transition: border-color var(--t-slow) var(--ease), transform var(--t-fast) var(--ease); }
+.neigh__when { font: 500 var(--fs-xs)/1 var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
+.neigh__t { font-family: var(--font-display); font-weight: var(--fw-h); font-size: var(--fs-h4); line-height: 1.35; color: var(--text-strong); text-wrap: balance; }
+.neigh__d { font-size: var(--fs-md); color: var(--text-2); text-wrap: pretty; }
+.neigh__go { margin-top: auto; display: inline-flex; align-items: center; gap: 0.4em; font-size: var(--fs-md); color: var(--gold-text); }
+.neigh__go svg { width: 1em; height: 1em; transition: transform var(--t-fast) var(--ease); }
+@media (hover: hover) { .neigh:hover .neigh__go svg { transform: translateX(3px); } }
+
+/* ── 21.10 Брейкпоинты блоков ветки ──────────────────────────── */
+@media (min-width: 640px) {
+  .bignums { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6); }
+  .shift__row { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr); align-items: baseline; }
+}
+@media (min-width: 768px) {
+  .fork { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+  .fork__q { grid-column: 1 / -1; }
+  .dated-box { padding: var(--s-6) var(--s-8); }
+}
+@media (max-width: 47.99rem) {
+  /* единственное место, где мобильная ветка беднее десктопной: после выбора
+     показывается свой исход. Остальные возвращаются другим выбором. */
+  .fork:has(.fork__r:checked) .fork__out { display: none; }
+  .fork__r:nth-of-type(1):checked ~ .fork__outs .fork__out:nth-child(1),
+  .fork__r:nth-of-type(2):checked ~ .fork__outs .fork__out:nth-child(2),
+  .fork__r:nth-of-type(3):checked ~ .fork__outs .fork__out:nth-child(3),
+  .fork__r:nth-of-type(4):checked ~ .fork__outs .fork__out:nth-child(4) { display: grid; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fork__opt, .fork__out, .neigh, .neigh__go svg, .fork__box::after { transition-duration: 0.01ms; }
+}
+
+
+/* ── Шапка: действие не сжимается, украшение уступает ────────────────────
+   Замер 04.09.2026 на 1440×900: внутренняя ширина шапки 1280, дети просят 1140 плюс
+   зазоры — не влезает, и флекс сжимает ВСЁ подряд, включая кнопку действия: ей нужно
+   105 px, доставалось 86, текст резался прямо в шапке.
+   Самый прожорливый элемент — переключатель языков, 297 px на три полных названия.
+   По канону: действие защищено, декоративное уступает первым. */
+.hdr__cta { flex: none; white-space: nowrap; }
+.brand { flex: none; }
+
+/* до 1480 px языки показываются кодами: HY · RU · EN. Полные названия — роскошь,
+   которая стоит 150 px и вытесняет кнопку. Для чтения с экрана название остаётся. */
+@media (max-width: 1479px) {
+  .lang a .lang__name { position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+  .lang a { padding-inline: 0.45rem; gap: 0; }
+}
+@media (max-width: 1099px) {
+  .hdr__nav { display: none; }
+}

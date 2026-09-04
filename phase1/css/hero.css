@@ -1,0 +1,475 @@
+/* ============================================================
+   LTCG — hero.css · скролл-хиро, шапка первого кадра, стык с секцией
+   Подключать после site.css + site-<кожа>.css: все значения — токены кожи,
+   сырые литералы только там, где предмет один (плита, зерно, монитор OFF, золото знака).
+   Кожа может переопределить хиро-токены:
+     --hs-screen-core / --hs-screen-edge  — экран монитора просыпается в цвет кожи (navy / бумага)
+     --hs-panel-bg / --hs-panel-bg-active — панели HY | RU | EN на экране
+     --hs-brand                            — знак в углу первого кадра
+   Замки (check_css_lock.py): backdrop-filter в @supports; анимации только под no-preference;
+   ни одного runtime-фильтра (drop-shadow / blur / url(#…)) на слоях скраба;
+   мобильный @media — последний в файле; svh второй после vh; env(safe-area-inset-*) в базовых правилах.
+   ============================================================ */
+
+/* ── 0. Шапка: знак в углу на первом кадре, переключатель — после хиро ── */
+.site-head {
+  /* первый кадр — только знак в углу (утверждённая половина). Стекло и переключатель
+     приходят ПОСЛЕ ворот, классом is-past: обычный CSS-переход, ни одной записи в кадре.
+     Роль шапки внутри хиро играет .pg__head — она же и есть шапка страницы. */
+  --head-in: 0;
+  --brand-o: 1;
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 20;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: max(1.5rem, env(safe-area-inset-left)) max(1.5rem, env(safe-area-inset-right));
+  pointer-events: none;
+}
+.site-head::before {
+  content: '';
+  position: absolute; inset: 0; z-index: -1;
+  background: var(--glass-bg);
+  border-bottom: 1px solid var(--glass-line, var(--line));
+  opacity: var(--head-in);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .site-head::before { transition: opacity var(--t-slow) var(--ease); }
+}
+@supports (backdrop-filter: blur(1px)) {
+  .site-head.is-past::before {
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.35);
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.35);
+  }
+}
+/* знак: настоящий логотип компании (растр из прозрачного мастера 2048, assets/logo/).
+   Прежде здесь стояли векторные буквы L·T·C·G (#hsLogoLetters) тёплым белым с navy-кромкой
+   через paint-order. Кромка не работала: stroke-width 1.1 в юнитах viewBox 889 при высоте
+   22 px = 0.1 CSS px, и над самым светлым небом плиты A буквы давали 2.3:1.
+   НА САМОМ ЗНАКЕ НИ КРОМКИ, НИ ТЕНИ — правка владельца 04.09.2026 («тень убери, грубовато»).
+   Читаемость держит скрим сцены (.hs__stage::before ниже), то есть язык кадра, а не UI.
+   Размеры заданы в CSS с обеих сторон (width и height) — сдвига вёрстки при загрузке нет.
+   Тач-цель 44 px держит min-height, знак в ней 38 px. */
+.site-head__brand {
+  display: inline-flex; align-items: center;
+  min-height: 2.75rem;
+  color: var(--hs-brand, #FFF3D0);
+  opacity: var(--brand-o);
+  pointer-events: auto;
+  border-radius: 4px;
+}
+.site-head__brand picture { display: block; flex: none; }
+.site-head__brand .brand-logo {
+  display: block;
+  width: 57px; height: 38px;    /* локап: эмблема + буквы */
+  object-fit: contain;
+}
+.site-head.is-past { --head-in: 1; }
+/* Переключателя языков в шапке сайта НЕТ: единственный на странице живёт в .pg__head
+   (п. 5 архитектуры). Прежний блок .site-head__lang / .hl / .hl__code — пилюли с моно-кодами —
+   удалён целиком: он дублировал функцию, спорил типографикой и ловил фокус мимо видимой строки. */
+
+/* ── 0-бис. Замок ворот ────────────────────────────────────────────────
+   Хиро — ворота: на последних процентах пина документ СТОИТ и ждёт решения.
+   Замок — overflow: clip на корне: позиция сохраняется как есть, ни одного scrollTo,
+   ни возврата по scroll (прежний holdY давал дрожание и телепорт назад на 942 px).  */
+html.is-gate-locked { overflow: clip; }
+
+/* ── 1. Сцена ────────────────────────────────────────────── */
+.hs {
+  position: relative;
+  background: var(--bg);
+  color: var(--text-strong);
+  isolation: isolate;
+}
+.hs__stage {
+  --hs-scrim: 1;
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  /* LQIP 32 px: верная композиция до прихода <img>, 0.5 КБ инлайном */
+  background: var(--bg) url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAASACADASIAAhEBAxEB/8QAGgAAAgIDAAAAAAAAAAAAAAAAAAQBBgIDBf/EACQQAAEEAgAFBQAAAAAAAAAAAAEAAgMRBBIhMTJRgRMiQWFx/8QAFwEAAwEAAAAAAAAAAAAAAAAAAAIDAf/EABkRAQADAQEAAAAAAAAAAAAAAAABEkERYf/aAAwDAQACEQMRAD8A7rsmFo6gsTlw1eyqAlc3j6l/VqTkSbAbkeVKnqloWk5kdnspGXEflVZ08rDTnnjyQMp1kbmwO62o7BF3W1MPHt8oQnwmtUJLpxZJ/UxlAaONDkhCBr//2Q==") center / cover no-repeat;
+}
+/* Скрим по свету (VKV 1.2) — ЕДИНСТВЕННОЕ средство читаемости знака над плитой A.
+   Правка владельца 04.09.2026: «тень убери, грубовато» — запечённая кромка со знака снята,
+   контраст держит кадр, а не UI. Это градуированный фильтр по небу, а не плашка: восемь
+   остановок, ни одной видимой границы, хвост уходит в ноль к 62 % высоты — на горизонте
+   и на городе скрим уже не работает, тёплый час остаётся тёплым.
+   ПЛОТНОСТЬ СЧИТАНА, НЕ ПОДОБРАНА. Самый светлый пиксель кадра под знаком (1440×900,
+   плита A, коробка знака x 24..81 · y 14..58) — rgb(215,208,189), L 0.632. Медианное золото
+   знака L 0.524. Чтобы дать 4.5:1, нужно navy не меньше 0.715 по альфе; в полосе шапки
+   (0..72 px) здесь 0.80→0.74. Проверено в браузере, цифры — в отчёте.
+   Остановки под знаком — в ПИКСЕЛЯХ, а не в процентах: шапка всегда 64–72 px, и на низком
+   окне процентная сетка увела бы плотность из-под знака. Хвост — max(px, %), чтобы на
+   низком окне остановки не сходились в одну точку и не давали видимую ступень.
+   Скрим живёт только в хиро: --hs-scrim гаснет вместе с наездом и уходом знака
+   (hero-scroll.js: (1 − 0.5·dusk)·(1 − markOut)), после ворот шапка уходит в стекло. */
+.hs__stage::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 4;
+  background:
+    linear-gradient(to bottom,
+      rgba(12, 27, 58, 0.80) 0,
+      rgba(12, 27, 58, 0.74) 72px,
+      rgba(12, 27, 58, 0.56) 150px,
+      rgba(12, 27, 58, 0.34) max(250px, 26%),
+      rgba(12, 27, 58, 0.16) max(360px, 38%),
+      rgba(12, 27, 58, 0.05) max(470px, 48%),
+      rgba(12, 27, 58, 0) max(580px, 60%)),
+    linear-gradient(to top, rgba(12, 27, 58, 0.28) 0, transparent 18%);
+  opacity: var(--hs-scrim);
+  pointer-events: none;
+}
+
+/* постер: LCP-элемент в разметке; после первого кадра canvas накрывает его тем же изображением */
+.hs__poster {
+  position: absolute; inset: 0; z-index: 1;
+  transition: opacity var(--t-base) var(--ease), visibility 0s var(--t-base);
+}
+.hs__poster picture, .hs__poster img { width: 100%; height: 100%; }
+.hs__poster img { object-fit: cover; object-position: 50% 50%; }
+.hs__poster.is-hidden { opacity: 0; visibility: hidden; }
+
+.hs__canvas,
+.hs__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.hs__canvas { z-index: 0; }
+.hs__svg { z-index: 2; pointer-events: none; }
+.hs__svg--light { mix-blend-mode: screen; }
+
+/* зерно: PNG-спрайт, сдвигается движком по p — «плёнка» живёт только в движении */
+.hs__grain {
+  position: absolute; inset: -256px;
+  z-index: 3;
+  background: url("../assets/hero/lcp/grain.png") repeat 0 0 / 256px 256px;
+  mix-blend-mode: overlay;
+  opacity: 0.12;
+  pointer-events: none;
+}
+.hs.is-ready:not(.is-static) .hs__grain { will-change: transform; }
+
+/* луч по хребту — свет, не контур: тело светлого золота, ядро тёплого белого,
+   тёмная нить #593E10 только под линией (там, где снег); свечение — три штриха убывающей
+   плотности в слое screen (без фильтров), искра — радиальный спрайт + хвост по трассе */
+.hs__edge, .hs__edge-body, .hs__edge-shadow,
+.hs__glow, .hs__glow-2, .hs__glow-3, .hs__spark-tail {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+}
+.hs__edge { stroke: #FFF3D0; stroke-width: 1.1; }
+.hs__edge-body { stroke: url(#hsEdgeGrad); stroke-width: 2.8; }
+.hs__edge-shadow { stroke: #593E10; stroke-width: 1.4; transform: translate(0, 1.6px); }
+.hs__glow { stroke: #F2C249; stroke-width: 30; }
+.hs__glow-2 { stroke: #F2C249; stroke-width: 12; }
+.hs__glow-3 { stroke: #FAE0A2; stroke-width: 5; }
+.hs__spark-tail { stroke: url(#hsTailGrad); stroke-width: 7; }
+
+/* заливка эмблемы на переходе — золото рисует canvas по фактуре склонов, svg держит только
+   тонкую светлую кромку сверху (луч), без белой обводки */
+.hs__fill { fill: none; stroke: none; opacity: 0; }
+
+/* тень букв и «травление» на стекле — клоны знака со сдвигом, не фильтры */
+.hs__letters-shadow { fill: #08142C; opacity: 0; }
+.hs__etch-light { fill: #FFFCF0; opacity: 0; }
+.hs__etch-dark { fill: #281C08; opacity: 0; }
+
+/* ── 2. Хром первого кадра: без текста — знак в шапке, «Пропустить», подсказка ── */
+.hs__skip {
+  position: absolute;
+  top: calc((var(--header-h) - 2.75rem) / 2);
+  right: max(1.5rem, env(safe-area-inset-right));
+  z-index: 7;
+  display: inline-flex; align-items: center;
+  min-height: 2.75rem;
+  padding: 0 0.5rem;
+  border-radius: 4px;
+  font: 500 0.8125rem/1.2 var(--font-body);
+  letter-spacing: 0.01em;
+  color: rgba(255, 243, 208, 0.82);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 243, 208, 0.35);
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+  text-shadow: 0 1px 2px rgba(12, 27, 58, 0.55);
+  transition: color var(--t-base) var(--ease), text-decoration-color var(--t-base) var(--ease), opacity var(--t-base) var(--ease), visibility 0s var(--t-base);
+}
+.hs__skip.is-gone { opacity: 0; visibility: hidden; }
+@media (hover: hover) {
+  .hs__skip:hover { color: #FFF3D0; text-decoration-color: currentColor; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* появляется через 1.5 с — служебная ссылка не спорит со знаком на первом кадре */
+  .hs.is-ready:not(.is-static) .hs__skip { animation: hsSkipIn 0.6s var(--ease) 1.5s backwards; }
+  @keyframes hsSkipIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+}
+
+.hs__hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  font: 500 0.75rem/1 var(--font-mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 243, 208, 0.85);
+  text-shadow: 0 1px 2px rgba(12, 27, 58, 0.45);
+  transition: opacity 0.4s;
+  pointer-events: none;
+  z-index: 7;
+}
+.hs__hint::after {
+  content: '';
+  display: block;
+  width: 1px; height: 28px;
+  margin: 0.6rem auto 0;
+  background: linear-gradient(180deg, #FAE0A2, transparent);
+  transform-origin: top;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hs__hint::after { animation: hsHint 1.8s ease-in-out infinite; }
+  @keyframes hsHint { 0%, 100% { transform: scaleY(0.4); opacity: 0.4 } 50% { transform: scaleY(1); opacity: 1 } }
+}
+
+/* отладочный HUD — создаётся скриптом только при ?debug=1 */
+.hs__hud {
+  position: absolute; bottom: 0.75rem; right: 0.75rem;
+  font: 12px/1.4 var(--font-mono);
+  background: rgba(0, 0, 0, 0.55);
+  color: #FAE0A2;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 9;
+}
+
+/* ── 4. DOM-экран монитора ──────────────────────────────── */
+.hs__screen,
+.hs__screen-glow {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  transform-origin: 0 0;
+  visibility: hidden;
+  opacity: 0;
+}
+.hs__screen.is-on,
+.hs__screen-glow.is-on { visibility: visible; will-change: transform; }
+.hs.is-static .hs__screen.is-on,
+.hs.is-static .hs__screen-glow.is-on { will-change: auto; }
+
+/* свечение отдельным элементом: clip-path на экране режет тень; ::after — свет экрана на столе */
+.hs__screen-glow {
+  --wake: 0; --full: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: 6px;
+  background: var(--bg);
+  box-shadow: 0 0 0 0 rgba(242, 194, 73, 0);
+}
+.hs__screen-glow::after {
+  content: '';
+  position: absolute;
+  left: -35%; right: -35%; top: 50%; bottom: -95%;
+  background: radial-gradient(52% 52% at 50% 28%, var(--hs-desk-light, rgba(64, 110, 190, 0.85)), rgba(12, 27, 58, 0) 72%);
+  mix-blend-mode: screen;
+  opacity: calc(var(--wake) * (1 - var(--full)));
+  pointer-events: none;
+}
+
+.hs__screen {
+  z-index: 5;
+  isolation: isolate;
+  clip-path: inset(0 round 6px);
+  /* фон = фон страницы. Ни графитового «выключенного экрана», ни просыпания в синий:
+     в мониторе с самого начала лежит настоящая верхушка сайта (вердикт владельца 03.09) */
+  background: var(--bg);
+  pointer-events: none;
+  color: var(--text-strong);
+}
+.hs__screen.is-live { pointer-events: auto; cursor: default; }
+
+/* ── 4-бис. Страница внутри экрана: вход волной одной переменной ──────────
+   Движок пишет --pg-in (0→1) один раз в кадр; стаггер и кривая считаются здесь,
+   поэтому ни одного per-element стиля из JS. На .pg__h1 и её em ничего не вешаем:
+   акцент красится сплавом через background-clip (vkv_bar §1.6) — анимируется обёртка. */
+.hs__screen .pg { --pg-in: 1; --pg-choose: 0; }
+.hs__screen .pg__anim {
+  --d: 0;
+  --k: clamp(0, calc((var(--pg-in) - var(--d)) * 2), 1);
+  opacity: var(--k);
+  transform: translate3d(0, calc((1 - var(--k)) * 0.7em), 0);
+}
+/* ворота: страница стоит и ждёт решения — курсор и фокус живут только здесь.
+   Пока ждём выбор языка, обе CTA гасим и выключаем: на экране ворот единственный
+   светящийся орган управления — языковая строка (§1.1 «правило одного предмета»). */
+.hs.is-gate .hs__screen { pointer-events: auto; }
+.hs.is-gate .hs__screen .pg__cta { pointer-events: none; opacity: 0.45; }
+.hs.is-gate .hs__screen .pg__main { opacity: 0.62; }
+@media (prefers-reduced-motion: no-preference) {
+  .hs__screen .pg__cta, .hs__screen .pg__main { transition: opacity var(--t-slow) var(--ease); }
+}
+/* языковую строку ведёт скролл: собственный переход внутри хиро выключен, иначе фильтров снова два */
+.hs__screen .lang-line, .hs__screen .lang-line__item { transition: color var(--t-base) var(--ease); }
+/* посадка окончена: снимаем всё, что создаёт отдельную поверхность отрисовки —
+   иначе сплав на em заголовка ловит удвоение первой буквы (vkv_bar §1.6) */
+.hs__screen.is-flat { isolation: auto; clip-path: none; will-change: auto; }
+
+/* статичный режим (reduced motion / без GSAP) */
+.hs.is-static .hs__hint, .hs.is-static .hs__skip { display: none; }
+/* движок упал: постер остаётся, «Пропустить» ведёт в секцию — страница пригодна */
+.hs.is-failed .hs__poster { opacity: 1; visibility: hidden; visibility: visible; }
+.hs.is-failed .hs__skip { display: inline-flex; }
+
+/* БЕЗ JS И ПРИ УПАВШЕМ ДВИЖКЕ страница, в которую мы летим, обязана быть видимой и скроллиться
+   (требование 6 архитектуры). Разметка рендерится видимой; прятать её — дело движка. */
+.no-js .hs__screen,
+.hs.is-failed .hs__screen {
+  position: static;
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  clip-path: none;
+  pointer-events: auto;
+  isolation: auto;
+}
+.no-js .hs__screen .pg,
+.hs.is-failed .hs__screen .pg { position: static; inset: auto; min-height: 100svh; overflow: visible; }
+.no-js .hs__screen .pg__anim,
+.hs.is-failed .hs__screen .pg__anim { opacity: 1; transform: none; }
+.no-js .hs__stage, .hs.is-failed .hs__stage { height: auto; min-height: 100svh; }
+.no-js .site-head, .hs.is-failed .site-head { position: absolute; }
+
+/* ── 5. Стык с первой секцией: наложения нет — секция начинается за концом пина ── */
+
+/* заготовка секции «Где вы сейчас?» в срезе */
+/* Экран, а не секция. Нажал язык — открылся СЛЕДУЮЩИЙ ЭКРАН во всю высоту, а не продолжение
+   предыдущего. Дальше сайт идёт экранами: выбрал — поехал на следующий.
+   svh, а не vh: на мобильных vh считается по развёрнутому окну и экран уезжает под адресную строку.
+   Содержимое центрируется по вертикали; если карточек станет больше, чем помещается, экран
+   вырастет (min-height, не height) — обрезать содержание ради ровной высоты нельзя. */
+.after {
+  background: var(--bg); color: var(--text);
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+  /* safe center: при содержимом выше экрана обычный center срезает ВЕРХ и до него
+     невозможно доскроллить — переполнение уходит в обе стороны. safe прижимает к началу. */
+  justify-content: center;
+  justify-content: safe center;
+  padding-block: clamp(1.5rem, 4svh, 3.5rem);
+  scroll-margin-top: 0;
+}
+.after > .wrap { width: 100%; }
+.after .h1 { margin-bottom: 1rem; }
+.after .bento { margin-top: clamp(1.25rem, 4svh, 3rem); }
+.after .state { min-height: 11rem; }
+.after .state--dated { min-height: 0; }   /* полоса, а не карточка: высота по содержимому */
+.after .state__fork { margin-top: auto; }
+/* низкие и широкие окна: шапка секции ужимается, чтобы карточки остались на одном экране */
+@media (min-width: 1024px) and (max-height: 940px) {
+  .after .section__head { margin-bottom: clamp(0.75rem, 2svh, 1.5rem); }
+  .after .lead { max-width: 62ch; }
+  .after .state { min-height: 8rem; }
+  .after .bento { margin-top: clamp(1rem, 2.5svh, 1.75rem); }
+  .after .state--dated { padding: var(--s-3) var(--s-4); }
+}
+
+/* ── 6. Мобильная ветка — ПОСЛЕДНИЙ блок в файле (гейт как у VKV) ── */
+@media (max-width: 767px), ((max-height: 767px) and (pointer: coarse)) {
+  .hs__skip, .hs__canvas, .hs__svg, .hs__grain, .hs__hint, .hs__screen-glow { display: none; }
+  /* один знак на экран: в шапке — только эмблема без букв, над заголовком — ничего.
+     Условие МЕДИАЗАПРОСА ДОСЛОВНО повторено в <source media> у <picture> в разметке —
+     иначе в низком landscape с coarse-pointer шире 767 px коробка станет 63×24,
+     а картинка придёт локапом 57×38 и знак поедет. */
+  .site-head__brand .brand-logo { width: 63px; height: 24px; }
+  .hs__screen-mark { display: none; }
+  .hs__stage::before { display: none; }
+  .hs__poster, .hs__poster.is-hidden { opacity: 1; visibility: visible; overflow: hidden; }
+  .hs__poster img { object-position: 50% 30%; transform-origin: 50% 30%; }
+  .hs__poster::after {
+    /* Скрим мобильной ветки: .hs__stage::before здесь выключен, и весь свет держит этот слой.
+       Верхняя лестница — та же логика и та же плотность, что на десктопе (0.80 у кромки,
+       0.72 к низу шапки 64 px): знак остаётся чистым золотом, читаемость даёт кадр.
+       Нижняя — тёмно-янтарная, под панели; середина кадра открыта. */
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg,
+        rgba(12, 27, 58, 0.80) 0,
+        rgba(12, 27, 58, 0.72) 64px,
+        rgba(12, 27, 58, 0.50) 130px,
+        rgba(12, 27, 58, 0.26) max(210px, 24%),
+        rgba(12, 27, 58, 0.10) max(300px, 32%),
+        rgba(12, 27, 58, 0) max(390px, 40%)),
+      linear-gradient(180deg, rgba(12, 27, 58, 0) 44%, rgba(46, 30, 8, 0.55) 66%, rgba(12, 27, 58, 0.96) 100%);
+  }
+  .hs__screen {
+    visibility: visible;
+    opacity: 1;
+    top: auto; bottom: 0; height: auto;
+    transform: none; clip-path: none;
+    background: none;
+    pointer-events: auto;
+    will-change: auto;
+    isolation: auto;
+  }
+  /* та же верхушка страницы, но в потоке и снизу кадра: сначала текст и CTA, языки — последней строкой */
+  .hs__screen .pg { position: static; overflow: visible; background: none; }
+  .hs__screen .pg__main { order: 1; flex: 0 0 auto; padding: 0 max(1rem, env(safe-area-inset-left)) 1rem max(1rem, env(safe-area-inset-right)); }
+  .hs__screen .pg__head {
+    order: 2;
+    min-height: 0;
+    padding: 0.75rem max(1rem, env(safe-area-inset-left)) max(1.25rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-right));
+    border-bottom: 0;
+    border-top: 1px solid var(--line);
+    justify-content: flex-start;
+  }
+  .hs__screen .pg__brand { display: none; }   /* знак уже стоит в шапке страницы */
+  .hs__screen .pg__anim { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) and ((max-width: 767px) or ((max-height: 767px) and (pointer: coarse))) {
+  /* нить рисуется при загрузке; постер — микронаезд 1.00→1.03 за 5 с (однократно, ≤ 5 с — WCAG 2.2.2) */
+  .hs__poster img { animation: hsKen 5s var(--ease) 0.2s both; }
+  @keyframes hsKen { from { transform: scale(1); } to { transform: scale(1.03); } }
+}
+
+/* скрытый источник кадров ролика */
+.hs__video { position: absolute; left: -9999px; top: 0; width: 2px; height: 2px; opacity: 0; pointer-events: none; }
+
+
+/* ── экран внутри монитора: то же зерно и та же мягкость, что у кадра ролика,
+      иначе страница читается как наклейка. Обе величины УБЫВАЮТ по мере
+      приближения (--scr-far: 1 далеко → 0 на развороте) — на весь экран
+      страница выходит чистой, без шума и без пелены. ── */
+.hs__screen {
+  --scr-far: 1;
+  --scr-grain: 0.30;
+}
+.hs__screen::after {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  background: url("../assets/hero/lcp/grain.png") repeat 0 0 / 180px 180px;
+  mix-blend-mode: overlay;
+  opacity: calc(var(--scr-grain) * var(--scr-far));
+}
+.hs__screen .tri {
+  /* сжатие и свет кадра: экран в комнате не бывает контрастнее самой комнаты */
+  filter:
+    contrast(calc(1 - 0.09 * var(--scr-far)))
+    saturate(calc(1 - 0.07 * var(--scr-far)))
+    brightness(calc(1 - 0.06 * var(--scr-far)));
+}
+.hs__screen.is-flat::after { opacity: 0; }
+.hs__screen.is-flat .tri { filter: none; }
+.hs__screen .tri { --page-scale: 1; }

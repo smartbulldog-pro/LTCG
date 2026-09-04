@@ -1,0 +1,98 @@
+{
+ "basis": [
+  2560,
+  1440
+ ],
+ "source": "Gemini Pro (nano-banana) 03.09 01:40, office_gemini_01.jpg -> crop 2731x1536 @x0=10 -> 2560x1440; baked logo REMOVED 04.09 (clean_E.py) — sign on the glass is the vector only",
+ "order": "clockwise from top-left: TL, TR, BR, BL",
+ "screen_quad": [
+  [
+   1837,
+   746
+  ],
+  [
+   2320,
+   747
+  ],
+  [
+   2302,
+   1149
+  ],
+  [
+   1817,
+   1071
+  ]
+ ],
+ "screen_quad_note": "inner edge of the bezel (dark screen pixels), auto-detected, ±3 px; monitor yawed ~12°: right edge taller",
+ "panel_quad": [
+  [
+   770,
+   232
+  ],
+  [
+   1770,
+   222
+  ],
+  [
+   1770,
+   1440
+  ],
+  [
+   770,
+   1440
+  ]
+ ],
+ "panel_quad_note": "frosted partition inner edge, approx ±10 px; bottom occluded by chair/desk",
+ "panel_free_region": {
+  "x0": 975,
+  "y0": 455,
+  "x1": 1615,
+  "y1": 1025,
+  "note": "бокс запечённого знака по глазам (03.09 19:55); Gemini воспроизвёл знак приблизительно — вектор растворяется в мути до появления резкой плиты"
+ },
+ "baked_logo": true,
+ "light_side": "left",
+ "monitor_overlaps_panel": false,
+ "notes": "no people, no text; evening, sun from the left; the sign exists only as the SVG overlay (one source of the sign per frame)",
+ "logo_bbox": [
+  975,
+  455,
+  1615,
+  1025
+ ],
+ "walk_video": {
+  "src": "assets/hero/flow/office-walk-intra.mp4",
+  "basis": [
+   1280,
+   720
+  ],
+  "frames": 240,
+  "fps": 24,
+  "first_frame_camera": {
+   "zoom": 1.6,
+   "cx": 1228,
+   "cy": 754,
+   "corr": 0.9969,
+   "note": "замер 03.09 19:45 перебором: кадр 0 ролика против плиты E; камера плиты в момент передачи ролику"
+  },
+  "screen_quad_last": [
+   [
+    80,
+    16
+   ],
+   [
+    1199,
+    16
+   ],
+   [
+    1230,
+    691
+   ],
+   [
+    48,
+    690
+   ]
+  ],
+  "note": "последний кадр: экран ≈ 90 % ширины; DOM-экран садится на этот квад в базе 1280×720"
+ }
+}

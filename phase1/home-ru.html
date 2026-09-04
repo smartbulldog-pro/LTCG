@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="ru" data-skin="ru" data-site-root="/phase1/" data-site data-v="20260904mark" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+/* Тема и класс js — ДО первой отрисовки: иначе на светлой машине страница мигнёт тёмным,
+   а .no-js-ветки разметки успеют показаться. Единственный инлайновый скрипт на странице,
+   вся остальная логика — во внешних файлах. */
+(function(){var h=document.documentElement;h.className=h.className.replace(/\bno-js\b/,'js');
+try{var t=localStorage.getItem('ltcg-theme');if(t==='light'||t==='dark')h.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<meta name="robots" content="noindex, nofollow">
+<title>Легализация, счёт, ИП и бухгалтерия в Армении — LTCG, Ереван</title>
+<meta name="description" content="Legal and Tax Consulting Group, Ереван: ВНЖ, регистрация ИП и ООО, открытие счёта, соцкарта, юридический адрес, бухгалтерия. Вход по моменту вашей жизни, цена считается на странице, сроки известны до начала работы.">
+<meta name="theme-color" content="#0C1B3A">
+<link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+
+<link rel="canonical" href="https://ltcg.am/">
+<link rel="alternate" hreflang="ru" href="https://ltcg.am/">
+<link rel="alternate" hreflang="hy" href="https://ltcg.am/hy/">
+<link rel="alternate" hreflang="en" href="https://ltcg.am/en/">
+<link rel="alternate" hreflang="x-default" href="https://ltcg.am/">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:locale:alternate" content="hy_AM">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:site_name" content="LTCG — Legal and Tax Consulting Group">
+<meta property="og:title" content="Где вы сейчас? — LTCG, Ереван">
+<meta property="og:description" content="Сайт собран по моменту, в котором вы находитесь, а не по списку услуг. ВНЖ, счёт, ИП, адрес, бухгалтерия — с ценой на странице и сроками до начала работы.">
+<meta property="og:image" content="https://ltcg.am/assets/hero/A-dusk-1280.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="720">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- шрифты self-hosted (сабсеты latin / cyrillic / armenian, unicode-range, swap); прелоад — по языку страницы + латиница -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/onest-500-700-cyrillic.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/onest-500-700-latin.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/golos-text-400-cyrillic.woff2">
+<link rel="stylesheet" href="css/fonts.css?v=20260904mark">
+<link rel="stylesheet" href="css/site.css?v=20260904mark">
+<link rel="stylesheet" href="css/site-ru.css?v=20260904mark">
+<link rel="stylesheet" href="css/hero.css?v=20260904mark">
+<link rel="stylesheet" href="css/main-triptych.css?v=20260904mark">
+<link rel="stylesheet" href="css/home-ru.css?v=20260904fix26">
+<!-- один загрузчик: гейты reduce / мобильный / указатель → GSAP + Lenis только при движении → хиро → site.js -->
+<script defer src="js/boot.js?v=20260904mark"></script>
+<script defer src="js/home-ru.js?v=20260904fix26"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["LegalService", "ProfessionalService"],
+      "@id": "https://ltcg.am/#org",
+      "name": "Legal and Tax Consulting Group LLC",
+      "alternateName": "LTCG",
+      "url": "https://ltcg.am/",
+      "logo": { "@type": "ImageObject", "url": "https://ltcg.am/assets/icons/logo-512.png", "width": 512, "height": 512 },
+      "image": "https://ltcg.am/assets/hero/A-dusk-1280.jpg",
+      "telephone": "+374-94-184-014",
+      "sameAs": ["https://t.me/LTCG_Armenia", "https://wa.me/37494184014"],
+      "areaServed": { "@type": "Country", "name": "Armenia" },
+      "address": { "@type": "PostalAddress", "addressLocality": "Yerevan", "addressCountry": "AM" },
+      "availableLanguage": ["ru", "hy", "en"],
+      "knowsAbout": ["Вид на жительство в Армении", "Регистрация ИП в Армении", "Открытие счёта в армянском банке", "Налоговые режимы Армении", "Бухгалтерское сопровождение", "Юридический адрес"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Услуги",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Регистрация ИП" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Регистрация ООО" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Открытие счёта в банке" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Соцкарта и регистрация по адресу" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Юридический адрес и корреспонденция" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Бухгалтерия и налоговый режим" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Налоговое консультирование: резидентство, CRS" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "ВНЖ: наём, ИП, семья, корни" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Международные переводы и SWIFT: подготовка" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Справки и закрытие дел" } }
+        ]
+      }
+    },
+    {
+      "@type": ["WebPage", "FAQPage"],
+      "@id": "https://ltcg.am/#page",
+      "url": "https://ltcg.am/",
+      "name": "Где вы сейчас? — LTCG",
+      "inLanguage": "ru",
+      "isPartOf": { "@id": "https://ltcg.am/#org" },
+      "about": { "@id": "https://ltcg.am/#org" },
+      "mainEntity": [
+        { "@type": "Question", "name": "Отказали в открытии счёта — что дальше?", "acceptedAnswer": { "@type": "Answer", "text": "Сначала понять, что именно не прошло: подтверждение проживания, источник дохода, цель счёта или несовпадения между документами. Часть причин снимается до повторной подачи — другим банком, другим пакетом или другой последовательностью. Разбирается по вашим документам, не по общему совету." } },
+        { "@type": "Question", "name": "Можно ли открыть ИП, не приезжая?", "acceptedAnswer": { "@type": "Answer", "text": "Часть шагов выполняется удалённо по доверенности, но не все: банк и некоторые госорганы хотят видеть человека лично. Что именно можно сделать до приезда в вашем случае — уточняем по вашим документам и гражданству." } },
+        { "@type": "Question", "name": "Какой налоговый режим подходит под доход от зарубежных заказчиков?", "acceptedAnswer": { "@type": "Answer", "text": "Зависит от трёх вещей: кто ваши заказчики, какой годовой оборот ожидается и чем вы занимаетесь. У каждого режима есть порог и список запрещённых видов деятельности. Ошибка обнаруживается только на следующий год, поэтому режим выбирают до регистрации, а не после." } },
+        { "@type": "Question", "name": "Нужно ли уведомлять ФНС о счёте в Армении?", "acceptedAnswer": { "@type": "Answer", "text": "Обязанность зависит от вашего налогового резидентства в РФ на конец года и от того, сколько дней вы провели за границей. Это отдельный расчёт по календарю, а не общее правило — считаем по вашим датам." } },
+        { "@type": "Question", "name": "Что делать, если нет адреса для регистрации?", "acceptedAnswer": { "@type": "Answer", "text": "Адрес нужен раньше, чем кажется: для регистрации ИП, соцкарты и ряда банковских анкет. Если аренда без договора или собственник против, используется юридический адрес с обслуживанием корреспонденции — это одна из наших услуг." } },
+        { "@type": "Question", "name": "Можно ли сделать всё самому?", "acceptedAnswer": { "@type": "Answer", "text": "Да. Ломается обычно не на форме, а на порядке шагов, на неподтверждаемом адресе, на выборе режима и на пакете для банка. Мы берём на себя именно эти места — а не «всё», и в таблице на странице честно написано, что именно." } },
+        { "@type": "Question", "name": "Берёте ли ВНЖ отдельно?", "acceptedAnswer": { "@type": "Answer", "text": "ВНЖ — это всегда основание: наём, ИП, семья или корни. Отдельно от основания его не бывает, поэтому сначала разбираем, какое основание у вас есть и какое выгоднее, и только потом собираем пакет." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">К содержанию</a>
+
+<!-- иконки: SVG-спрайт, currentColor -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="206.69" y1="971.49" x2="903.97" y2="274.21">
+      <stop offset="0.32" stop-color="#C4922B"/><stop offset="0.55" stop-color="#F2C249"/><stop offset="0.79" stop-color="#FAE0A2"/><stop offset="1.0" stop-color="#C4922B"/>
+    </linearGradient>
+    <symbol id="emblem" viewBox="70 160 875 330">
+      <g fill="url(#gold)">
+        <path d="M395.61 375.61C364.78 346.18 333.98 316.74 303.18 287.31C228.45 351.94 153.72 416.54 78.99 481.16C133.82 479.61 188.66 478.06 243.5 476.5C326.05 475.33 473.76 460.55 618.97 367.65C663.92 338.9 700.76 307.69 730.52 278.1C702.35 250.58 674.18 223.07 646 195.56C635.87 195.35 625.77 195.1 615.66 194.89C605.77 186.38 595.89 177.87 586 169.36C522.53 238.12 459.07 306.85 395.61 375.61Z"/>
+        <path d="M783.7 329.49C771.99 342.4 757.81 356.67 740.94 371.25L632.04 477.59L935.37 477.59Z"/>
+        <path d="M761.04 267.86C624.46 457.56 349.91 477.56 349.91 477.56C647.91 480.32 794.84 296.14 794.84 296.14L780.63 279.04Z"/>
+        <path d="M740.94 371.25C725.94 384.21 708.81 397.41 689.4 410.12C628.82 449.8 570.97 468.36 531.15 477.59L636.33 477.59L743.03 373.39Z"/>
+        <path d="M735.52 244.41L761.04 267.86L794.84 296.14L822.43 318.9L841.75 211.98Z"/>
+      </g>
+      <g fill="#FFFFFF">
+        <path d="M305.18 311.52C323.8 329.22 342.43 346.93 361.05 364.63C347.49 358.88 333.92 353.13 320.35 347.38C321.96 352.9 323.57 358.42 325.18 363.94C318.97 358.65 312.76 353.36 306.56 348.08C298.51 360.26 290.46 372.45 282.41 384.63L282.41 348.08C265.63 356.12 248.84 364.17 232.06 372.22C256.43 351.98 280.81 331.75 305.18 311.52Z"/>
+        <path d="M588.69 190.11C596.51 197.24 604.33 204.37 612.14 211.49C621.57 211.72 631 211.95 640.43 212.18C656.75 229.2 673.08 246.21 689.4 263.23C676.3 257.94 663.19 252.65 650.08 247.36L655.6 270.82C643.41 261.62 631.23 252.42 619.04 243.22C605.25 257.94 591.45 272.66 577.65 287.37C576.73 272.43 575.81 257.48 574.89 242.53C554.89 251.96 534.88 261.39 514.88 270.82C539.48 243.91 564.09 217.01 588.69 190.11Z"/>
+      </g>
+    </symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pending" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3.2 3.2"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.6 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.6 3.6a1 1 0 0 1-.25 1z" fill="currentColor"/></symbol>
+    <symbol id="i-tg" viewBox="0 0 24 24"><path d="M21.6 3.3 2.9 10.5c-1.1.4-1.1 1.1-.1 1.4l4.7 1.5 1.8 5.6c.2.6.4.8.9.8.4 0 .6-.2.9-.5l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.3-1.8zM8.3 13.4l8.6-5.4c.4-.3.8-.1.5.2l-7.1 6.4-.3 3.1-1.7-4.3z" fill="currentColor"/></symbol>
+    <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 2.2a9.8 9.8 0 0 0-8.4 14.8L2.3 21.8l4.9-1.3A9.8 9.8 0 1 0 12 2.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.7 7.6c.2-.4.5-.4.8-.4h.6c.2 0 .4.1.5.4l.8 1.9c.1.2 0 .4-.1.6l-.5.6c-.1.2-.1.3 0 .5.6 1 1.5 1.9 2.6 2.5.2.1.3.1.5 0l.6-.6c.2-.2.4-.2.6-.1l1.8.8c.3.1.4.3.4.5v.7c0 .3-.1.6-.4.8-.6.5-1.4.8-2.2.6-2.6-.6-4.7-2.7-5.7-5.1-.3-.8-.1-1.6.4-2.2z" fill="currentColor"/></symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 7.5h7M8.5 12h2M13.5 12h2M8.5 16h2M13.5 16h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 3.6a8.4 8.4 0 0 1 0 16.8z" fill="currentColor"/></symbol>
+    <!-- знак хиро: заполняется из assets/hero/logo.svg скриптом -->
+    <symbol id="hsLogoLetters" viewBox="67 524 889 236"></symbol>
+    <symbol id="hsLogoMark" viewBox="67 169 889 590"></symbol>
+  </defs>
+</svg>
+
+<!-- ═══ Шапка: стекло, появляется после хиро ═══════════════════ -->
+<header class="hdr glass" id="hdr">
+  <div class="wrap hdr__in">
+    <a class="brand" href="./home-ru.html" data-path="" aria-label="LTCG — на главную">
+      <picture>
+        <source type="image/avif" srcset="assets/logo/ltcg-lockup@2x.avif 2x, assets/logo/ltcg-lockup@3x.avif 3x">
+        <source type="image/webp" srcset="assets/logo/ltcg-lockup@2x.webp 2x, assets/logo/ltcg-lockup@3x.webp 3x">
+        <img class="brand-logo" src="assets/logo/ltcg-lockup@2x.png" width="57" height="38" alt="" decoding="async">
+      </picture>
+    </a>
+    <div class="hdr__mid">
+      <span class="hdr__chosen" data-chosen hidden>Вы выбрали: <b data-chosen-name></b> <a href="./home-ru.html#contact" data-cta>Обсудить</a></span>
+      <a class="btn btn--primary btn--sm hdr__cta" href="./home-ru.html#calc">Рассчитать стоимость <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
+    </div>
+    <div class="themer" role="group" aria-label="Тема оформления" data-themer>
+      <button class="themer__btn" type="button" data-theme-set="auto" aria-pressed="true" title="Как в системе"><svg aria-hidden="true"><use href="#i-auto"/></svg><span class="sr-only">Как в системе</span></button>
+      <button class="themer__btn" type="button" data-theme-set="light" aria-pressed="false" title="Светлая тема"><svg aria-hidden="true"><use href="#i-sun"/></svg><span class="sr-only">Светлая тема</span></button>
+      <button class="themer__btn" type="button" data-theme-set="dark" aria-pressed="false" title="Тёмная тема"><svg aria-hidden="true"><use href="#i-moon"/></svg><span class="sr-only">Тёмная тема</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="menu glass" id="menu" hidden>
+  <nav class="menu__list" aria-label="Разделы">
+    <a href="#where">Где вы сейчас?</a>
+    <a href="#calc" hidden data-parked>Цены</a>
+    <a href="#bank" hidden data-parked>Счёт в банке</a>
+    <a href="#services" hidden data-parked>Услуги</a>
+    <a href="#faq" hidden data-parked>Вопросы</a>
+    <a href="#contact" hidden data-parked>Контакты</a>
+  </nav>
+  <div class="menu__row">
+    <a class="btn btn--primary" href="#calc">Рассчитать стоимость <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
+    <a class="btn btn--outline" href="tel:+37494184014"><svg aria-hidden="true"><use href="#i-phone"/></svg> +374 94 184 014</a>
+  </div>
+  <div class="themer" role="group" aria-label="Тема оформления" data-themer>
+      <button class="themer__btn" type="button" data-theme-set="auto" aria-pressed="true" title="Как в системе"><svg aria-hidden="true"><use href="#i-auto"/></svg><span class="sr-only">Как в системе</span></button>
+      <button class="themer__btn" type="button" data-theme-set="light" aria-pressed="false" title="Светлая тема"><svg aria-hidden="true"><use href="#i-sun"/></svg><span class="sr-only">Светлая тема</span></button>
+      <button class="themer__btn" type="button" data-theme-set="dark" aria-pressed="false" title="Тёмная тема"><svg aria-hidden="true"><use href="#i-moon"/></svg><span class="sr-only">Тёмная тема</span></button>
+    </div>
+  <nav class="menu__langs" aria-label="Язык сайта">
+    <a href="hy/" data-path="hy/" lang="hy" hreflang="hy">Հայերեն</a>
+    <a href="./" data-path="" lang="ru" aria-current="page">Русский</a>
+    <a href="en/" data-path="en/" lang="en" hreflang="en">English</a>
+  </nav>
+</div>
+
+<!-- ═══ Хиро: шапка-знак и секция .hs — из hero-slice.html как есть (js/hero-scroll.js + css/hero.css) ═══ -->
+<header class="site-head" id="siteHead" inert>
+  <a class="site-head__brand" href="./" data-path="" aria-label="LTCG — на главную">
+    <!-- Настоящий знак компании. media у первых трёх <source> ДОСЛОВНО повторяет мобильную
+         ветку hero.css: на узком — только эмблема, на широком — эмблема с буквами. -->
+    <picture>
+      <source type="image/avif" media="(max-width: 767px), (max-height: 767px) and (pointer: coarse)" srcset="assets/logo/ltcg-mark@2x.avif 2x, assets/logo/ltcg-mark@3x.avif 3x">
+      <source type="image/webp" media="(max-width: 767px), (max-height: 767px) and (pointer: coarse)" srcset="assets/logo/ltcg-mark@2x.webp 2x, assets/logo/ltcg-mark@3x.webp 3x">
+      <source media="(max-width: 767px), (max-height: 767px) and (pointer: coarse)" srcset="assets/logo/ltcg-mark@2x.png 2x">
+      <source type="image/avif" srcset="assets/logo/ltcg-lockup@2x.avif 2x, assets/logo/ltcg-lockup@3x.avif 3x">
+      <source type="image/webp" srcset="assets/logo/ltcg-lockup@2x.webp 2x, assets/logo/ltcg-lockup@3x.webp 3x">
+      <img class="brand-logo" src="assets/logo/ltcg-lockup@2x.png" width="57" height="38" alt="" decoding="async">
+    </picture>
+  </a>
+</header>
+
+<section class="hs" id="hero" data-hero-scroll aria-label="Главный экран" data-rail-label="Начало">
+    <div class="hs__stage">
+      <!-- первая в табе: выход из анимации доступен с клавиатуры до любого другого элемента -->
+      <a class="hs__skip" href="#triGate">Пропустить анимацию</a>
+
+      <!-- слой 0: постер — LCP-элемент. Движок берёт из него первый битмап и накрывает canvas тем же кадром -->
+      <div class="hs__poster" aria-hidden="true">
+        <picture>
+          <source type="image/avif" media="(max-width: 767px)" sizes="100vw"
+                  srcset="assets/hero/lcp/A-m-540.avif 540w, assets/hero/lcp/A-m-864.avif 864w">
+          <source type="image/webp" media="(max-width: 767px)" sizes="100vw"
+                  srcset="assets/hero/lcp/A-m-540.webp 540w, assets/hero/lcp/A-m-864.webp 864w">
+          <source type="image/avif" sizes="100vw"
+                  srcset="assets/hero/lcp/A-1280.avif 1280w, assets/hero/lcp/A-1920.avif 1920w, assets/hero/lcp/A-2560.avif 2560w">
+          <source type="image/webp" sizes="100vw"
+                  srcset="assets/hero/lcp/A-1280.webp 1280w, assets/hero/lcp/A-1920.webp 1920w, assets/hero/lcp/A-2560.webp 2560w">
+          <img src="assets/hero/lcp/A-1280.jpg" width="2560" height="1440" alt="" fetchpriority="high" decoding="async" loading="eager">
+        </picture>
+      </div>
+
+      <!-- слой 1: фотоплиты + грейд -->
+      <canvas class="hs__canvas" aria-hidden="true"></canvas>
+
+      <!-- слой 2: свет (screen) — без фильтров: свечение тремя штрихами, искра спрайтом -->
+      <svg class="hs__svg hs__svg--light" aria-hidden="true">
+        <defs>
+          <radialGradient id="hsSparkGrad">
+            <stop offset="0" stop-color="#FFFFFF"/>
+            <stop offset="0.25" stop-color="#FAE0A2"/>
+            <stop offset="1" stop-color="#F2C249" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="hsTailGrad" gradientUnits="userSpaceOnUse" x1="136" y1="0" x2="2491" y2="0">
+            <stop offset="0" stop-color="#FAE0A2"/>
+            <stop offset="1" stop-color="#FFF3D0"/>
+          </linearGradient>
+          <mask id="hsSwooshMaskL" maskUnits="userSpaceOnUse" x="-1000" y="-1000" width="4560" height="3440">
+            <path class="hs__swoosh-mask-path" fill="none" stroke="#fff" stroke-width="260" stroke-linecap="round" d="M0 0"/>
+          </mask>
+        </defs>
+        <g class="hs__world">
+          <path id="hsGlow" class="hs__glow" d=""/>
+          <circle id="hsSpark" r="120" fill="url(#hsSparkGrad)" opacity="0"/>
+          <!-- свош как свет: те же формы логотипа, светлое золото, под маской прорисовки -->
+          <g mask="url(#hsSwooshMaskL)"><g id="hsSwooshLight" opacity="0"></g></g>
+        </g>
+      </svg>
+
+      <!-- слой 3: золото -->
+      <svg class="hs__svg hs__svg--solid" aria-hidden="true">
+        <defs>
+          <linearGradient id="hsGold" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#C4922B"/>
+            <stop offset="0.55" stop-color="#F2C249"/>
+            <stop offset="1" stop-color="#FAE0A2"/>
+          </linearGradient>
+          <linearGradient id="hsEdgeGrad" gradientUnits="userSpaceOnUse" x1="136" y1="0" x2="2491" y2="0">
+            <stop offset="0" stop-color="#F2C249"/>
+            <stop offset="0.55" stop-color="#FAE0A2"/>
+            <stop offset="1" stop-color="#FFF3D0"/>
+          </linearGradient>
+          <mask id="hsSwooshMaskS" maskUnits="userSpaceOnUse" x="-1000" y="-1000" width="4560" height="3440">
+            <path class="hs__swoosh-mask-path" fill="none" stroke="#fff" stroke-width="260" stroke-linecap="round" d="M0 0"/>
+          </mask>
+        </defs>
+        <g class="hs__world">
+          <path id="hsFill" class="hs__fill" d=""/>
+          <g id="hsShapes" opacity="0"></g>
+          <g id="hsSnow" opacity="0"></g>
+          <path id="hsEdgeShadow" class="hs__edge-shadow" d=""/>
+          <path id="hsEdgeBody" class="hs__edge-body" d=""/>
+          <path id="hsEdge" class="hs__edge" d=""/>
+          <g mask="url(#hsSwooshMaskS)"><g id="hsSwoosh" opacity="0"></g></g>
+          <g id="hsHead" opacity="0"></g>
+          <g id="hsLetters" class="hs__letters" opacity="0"></g>
+          <g id="hsTagline" class="hs__letters" opacity="0"></g>
+        </g>
+      </svg>
+
+      <!-- слой 4: зерно — PNG-спрайт, не фильтр -->
+      <div class="hs__grain" aria-hidden="true"></div>
+
+      <!-- ролик «стекло → офис → монитор»: скрытый источник кадров для canvas, all-intra, без звука -->
+      <video class="hs__video" muted playsinline preload="none" aria-hidden="true" tabindex="-1" data-src="assets/hero/flow/office-walk-intra.mp4"></video>
+
+      <!-- слой 5: живой DOM — экран монитора. Свечение отдельным элементом: clip-path на экране режет тень -->
+      <div class="hs__screen-glow" aria-hidden="true"></div>
+      <div class="hs__screen" id="hsScreen">
+        <!-- ВНУТРИ МОНИТОРА — ГЛАВНЫЙ ЭКРАН: ворота выбора языка (partials/main-triptych.html).
+             Тот же DOM, что развернётся на весь вьюпорт: тема и вёрстка совпадают, перехода нет. -->
+        <section class="tri tri--screen pg" id="triGate" data-tri aria-labelledby="triTitle">
+
+
+  <!-- подсказка стоит НАД панелями: это заголовок выбора, а не сноска -->
+  <p class="lang-hint" id="triHint" hidden><span class="lang-hint__line"><span class="lang-hint__col" lang="hy" data-draft="native-review-pending"><span class="lang-hint__pick">Ընտրեք ձեր լեզուն</span><span class="lang-hint__back">Վերև — վերադառնալ սկզբին</span></span><span class="lang-hint__col" lang="ru"><span class="lang-hint__pick">Выберите язык</span><span class="lang-hint__back">Вверх — вернуться к началу</span></span><span class="lang-hint__col" lang="en"><span class="lang-hint__pick">Choose your language</span><span class="lang-hint__back">Up — back to the start</span></span></span></p>
+          <!-- единственный h1 экрана. Стоит первым в DOM — читалка встречает
+               заголовок раньше ссылок; визуально его роль играет знак ниже. -->
+          <h1 class="tri__title sr-only" id="triTitle">LTCG — Legal and Tax Consulting Group. Выберите язык · Choose your language</h1>
+
+          <!-- ── три части. Порядок утверждён клиентом 31.08: HY · RU · EN ────────
+               Вся треть — одна ссылка: тач-цель заведомо больше 44 px.
+               Языки идут первыми в табе; переключатель темы — после них.        -->
+
+          <!-- I · КЛАССИКА — неоклассика, гравюра по туфу -->
+          <a class="tri__part tri__part--hy is-soon" data-lang="hy" aria-disabled="true" tabindex="-1"
+             lang="hy" hreflang="hy" style="--p:0">
+            <span class="tri__art" aria-hidden="true"></span>
+            <span class="tri__scrim" aria-hidden="true"></span>
+
+            <span class="tri__idx" style="--i:0">
+              <i class="tri__tick" aria-hidden="true"></i><span class="tri__ord">I</span>
+            </span>
+            <span class="tri__name" style="--i:1">Հայերեն</span>
+            <!-- ЧЕРНОВИК. CLAUDE.md запрещает выдавать сгенерированный армянский за
+                 готовый: строка и слово действия помечены слотом (золотая подложка)
+                 и data-draft. До вычитки носителем на прод не идут.
+                 Гарантирован только автоним «Հայերեն». -->
+            <span class="tri__aud" style="--i:2"><span data-draft="native-review-pending">Հաշվապահություն և հարկեր</span></span>
+            <span class="tri__act" style="--i:3">
+              <span class="tri__word" data-draft="native-review-pending">Շարունակել</span>
+              <svg class="tri__arw" viewBox="0 0 24 12" aria-hidden="true" focusable="false"><path d="M0 6h20.4M15.6 1.2 20.4 6l-4.8 4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </a>
+
+          <!-- II · СОВРЕМЕННОСТЬ — тёмный прибор со стеклом. Язык по умолчанию:
+               помечен золотым квадратом 6 px, золотым швом и aria-current — без
+               карточки, без рамки, без увеличенного кегля. -->
+          <a class="tri__part tri__part--ru is-active" href="#where" data-lang="ru"
+             lang="ru" hreflang="ru" aria-current="true" data-default="true" style="--p:1">
+            <span class="tri__art" aria-hidden="true"></span>
+            <span class="tri__scrim" aria-hidden="true"></span>
+            <span class="tri__glass" aria-hidden="true"></span>
+
+            <span class="tri__idx" style="--i:0">
+              <i class="tri__tick" aria-hidden="true"></i><span class="tri__ord">02</span>
+            </span>
+            <span class="tri__name" style="--i:1">Русский<span class="sr-only"> — выбран по умолчанию · selected by default · ընտրված է լռելյայն</span></span>
+            <span class="tri__aud" style="--i:2">Релокация, ВНЖ и налоги</span>
+            <span class="tri__act" style="--i:3">
+              <span class="tri__word">Продолжить</span>
+              <svg class="tri__arw" viewBox="0 0 24 12" aria-hidden="true" focusable="false"><path d="M0 6h20.4M15.6 1.2 20.4 6l-4.8 4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </a>
+
+          <!-- III · БУДУЩЕЕ — редакционная бумага, воздух -->
+          <a class="tri__part tri__part--en is-soon" data-lang="en" aria-disabled="true" tabindex="-1"
+             lang="en" hreflang="en" style="--p:2">
+            <span class="tri__art" aria-hidden="true"></span>
+            <span class="tri__scrim" aria-hidden="true"></span>
+
+            <span class="tri__idx" style="--i:0">
+              <i class="tri__tick" aria-hidden="true"></i><span class="tri__ord">№&nbsp;03</span>
+            </span>
+            <span class="tri__name" style="--i:1">English</span>
+            <span class="tri__aud" style="--i:2">Low taxes, a company, accounting</span>
+            <span class="tri__act" style="--i:3">
+              <span class="tri__word">Continue</span>
+              <svg class="tri__arw" viewBox="0 0 24 12" aria-hidden="true" focusable="false"><path d="M0 6h20.4M15.6 1.2 20.4 6l-4.8 4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </a>
+
+          <!-- ── полоса хрома: знак один раз на весь экран + переключатель темы.
+               Переключатель стоит рядом со знаком, а не в углу английской колонки:
+               у него нет владельца-колонки и он ни с чем не сталкивается.
+               Без JS он остаётся hidden — мёртвых кнопок на экране нет.        -->
+          <div class="tri__crest">
+            <picture class="tri__mark"><source type="image/avif" srcset="assets/logo/ltcg-lockup@2x.avif 2x, assets/logo/ltcg-lockup@3x.avif 3x"><source type="image/webp" srcset="assets/logo/ltcg-lockup@2x.webp 2x, assets/logo/ltcg-lockup@3x.webp 3x"><img src="assets/logo/ltcg-lockup@2x.png" width="57" height="38" alt="" aria-hidden="true" decoding="async"></picture>
+
+            <span class="tri__theme" role="group" aria-label="Тема оформления · Colour theme · Գունային թեմա" data-theme-toggle hidden>
+              <button class="tri__theme-btn" type="button" data-set="auto" aria-pressed="true">
+                <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                  <circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                  <path d="M10 3a7 7 0 0 0 0 14Z" fill="currentColor"/>
+                </svg>
+                <span class="sr-only">Как в системе · System · Համակարգային</span>
+              </button>
+              <button class="tri__theme-btn" type="button" data-set="light" aria-pressed="false">
+                <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                  <circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                  <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                    <path d="M10 1.7v2.1M10 16.2v2.1M1.7 10h2.1M16.2 10h2.1M4.2 4.2l1.5 1.5M14.3 14.3l1.5 1.5M15.8 4.2l-1.5 1.5M5.7 14.3l-1.5 1.5"/>
+                  </g>
+                </svg>
+                <span class="sr-only">Светлая · Light · Լուսավոր</span>
+              </button>
+              <button class="tri__theme-btn" type="button" data-set="dark" aria-pressed="false">
+                <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                  <path d="M15.6 12.4A6.6 6.6 0 0 1 7.6 4.4a6.6 6.6 0 1 0 8 8Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+                </svg>
+                <span class="sr-only">Тёмная · Dark · Մութ</span>
+              </button>
+            </span>
+          </div>
+
+          <!-- показывает движок: hidden снимается, затем добавляется .is-in -->
+          
+
+        </section>
+
+      </div>
+
+      <div class="hs__hint" aria-hidden="true"><span class="hs__hint-pill"><span lang="hy">Թերթեք ներքև</span><span lang="ru">Листайте</span><span lang="en">Scroll</span></span></div>
+    </div>
+  </section>
+
+<main id="main">
+
+<!-- ═══ 01 · Где вы сейчас? ══════════════════════════════════════ -->
+<section class="section section--grid" id="where" aria-labelledby="where-title" data-rail-label="Где вы сейчас">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <p class="kicker"><span class="kicker__no">01</span> Вход по моменту</p>
+      <h1 class="h1" id="where-title">Где вы <em>сейчас</em>?</h1>
+      <p class="lead">Сайт собран по моменту, в котором вы находитесь, а не по списку наших услуг. Выберите свой — покажем, что на этом шаге обычно ломается и что из этого берём на себя.</p>
+    </div>
+
+    <div class="bento" data-stagger>
+
+      <article class="tile tile--hero state" id="arrived" data-span="6" data-state="arrived" data-name="Только приехал" data-preset="account,social,address" aria-labelledby="arrived-h">
+        <span class="state__tab" aria-hidden="true">Выбрано</span>
+        <p class="tile__meta"><b>01</b> До переезда и первые дни</p>
+        <h2 class="state__name" id="arrived-h"><a class="state__link" href="./schet-v-banke.html">Только приехал</a></h2>
+        <p class="state__recog">Вы уже здесь. Нужны счёт, соцкарта и адрес — и непонятно, в каком порядке и с чего начать, чтобы не ходить по кругу.</p>
+        <p class="state__fork"><b>Развилка</b><span>Порядок имеет значение: одни документы нужны для других, и неверная очерёдность стоит недель. Банк при этом смотрит не на форму, а на то, сходится ли ваша история.</span></p>
+        <ul class="chips" role="list" aria-label="Темы">
+          <li class="chip">счёт в банке</li><li class="chip">соцкарта</li><li class="chip">регистрация по адресу</li>
+        </ul>
+        <div class="tile__foot">
+          <a class="tile__read" href="./schet-v-banke.html">Счёт, адрес и соцкарта <span aria-hidden="true">→</span></a>
+          <a class="btn btn--primary" href="#contact" data-cta data-state-link="arrived">Проверить мой пакет до подачи <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
+          <a class="btn btn--link" href="#calc" data-preset-link="arrived">Рассчитать</a>
+        </div>
+      </article>
+
+      <article class="tile state" id="pre-move" data-span="3" data-state="pre-move" data-name="Ещё не переехал" data-preset="" aria-labelledby="pre-move-h">
+        <span class="state__tab" aria-hidden="true">Выбрано</span>
+        <p class="tile__meta"><b>02</b> До переезда</p>
+        <h2 class="state__name" id="pre-move-h"><a class="state__link" href="./pered-pereezdom.html">Ещё не переехал</a></h2>
+        <p class="state__recog">Билет ещё не куплен, но список дел уже длиннее, чем хотелось бы: что закрыть дома, что можно начать отсюда.</p>
+        <p class="state__fork"><b>Развилка</b><span>Часть бумаг проще оформить до отъезда — потом за ними придётся ехать обратно или искать, кому доверить.</span></p>
+        <ul class="chips" role="list" aria-label="Темы">
+          <li class="chip">доверенности для РФ</li><li class="chip">консульские действия</li><li class="chip">уведомление ФНС</li>
+        </ul>
+        <div class="tile__foot">
+          <a class="tile__read" href="./pered-pereezdom.html">Что сделать до переезда <span aria-hidden="true">→</span></a>
+          <a class="btn btn--outline btn--sm" href="#contact" data-cta data-state-link="pre-move">Составить план до отъезда</a>
+        </div>
+      </article>
+
+      <article class="tile state" id="legalizing" data-span="3" data-state="legalizing" data-name="Легализуюсь" data-preset="ip,address" aria-labelledby="legalizing-h">
+        <span class="state__tab" aria-hidden="true">Выбрано</span>
+        <p class="tile__meta"><b>03</b> Статус и работа</p>
+        <h2 class="state__name" id="legalizing-h"><a class="state__link" href="./vnzh.html">Легализуюсь</a></h2>
+        <p class="state__recog">Пора решать со статусом: ВНЖ по найму, через ИП, по семье или по корням — и от основания зависит весь пакет.</p>
+        <p class="state__fork"><b>Развилка</b><span>Основание выбирают один раз; сменить его посреди процесса — значит собирать документы заново.</span></p>
+        <ul class="chips" role="list" aria-label="Темы">
+          <li class="chip">наём</li><li class="chip">ИП</li><li class="chip">семья</li><li class="chip">корни</li><li class="chip">красные флаги в анкете</li>
+        </ul>
+        <div class="tile__foot">
+          <a class="tile__read" href="./vnzh.html">Как получают ВНЖ <span aria-hidden="true">→</span></a>
+          <a class="btn btn--outline btn--sm" href="#contact" data-cta data-state-link="legalizing">Обсудить основание для ВНЖ</a>
+        </div>
+      </article>
+
+      <article class="tile state" id="working" data-span="4" data-state="working" data-name="Работаю" data-preset="ip,accounting" aria-labelledby="working-h">
+        <span class="state__tab" aria-hidden="true">Выбрано</span>
+        <p class="tile__meta"><b>04</b> Статус и работа</p>
+        <h2 class="state__name" id="working-h"><a class="state__link" href="./ip-i-nalogi.html">Работаю</a></h2>
+        <p class="state__recog">Заказчики есть, деньги идут из-за рубежа, и нужно, чтобы это было легально, удобно и без переплаты.</p>
+        <p class="state__fork"><b>Развилка</b><span>Налоговый режим выбирают по составу заказчиков и обороту, а не по совету из чата — ошибка обнаруживается только через год.</span></p>
+        <ul class="chips" role="list" aria-label="Темы">
+          <li class="chip">ИП</li><li class="chip">налоговый режим</li><li class="chip">бухгалтерия</li><li class="chip">платежи из-за рубежа</li><li class="chip">SWIFT</li>
+        </ul>
+        <div class="tile__foot">
+          <a class="tile__read" href="./ip-i-nalogi.html">ИП и налоги <span aria-hidden="true">→</span></a>
+          <a class="btn btn--outline btn--sm" href="#calc" data-preset-link="working" data-cta data-state-link="working">Подобрать режим и посчитать</a>
+        </div>
+      </article>
+
+      <article class="tile state" id="settled" data-span="4" data-state="settled" data-name="Живу и планирую" data-preset="accounting" aria-labelledby="settled-h">
+        <span class="state__tab" aria-hidden="true">Выбрано</span>
+        <p class="tile__meta"><b>05</b> Жизнь здесь — и дальше</p>
+        <h2 class="state__name" id="settled-h"><a class="state__link" href="./rezidentstvo-i-crs.html">Живу и планирую</a></h2>
+        <p class="state__recog">Быт наладился. Теперь важно, чтобы годовая картина сходилась: налоги здесь, обязанности там, обмен данными между странами.</p>
+        <p class="state__fork"><b>Развилка</b><span>Резидентство считают по дням и обстоятельствам — и две страны могут посчитать по-разному.</span></p>
+        <ul class="chips" role="list" aria-label="Темы">
+          <li class="chip">налоги за год</li><li class="chip">декларация ФЛ</li><li class="chip">CRS и двойное налогообложение</li>
+        </ul>
+        <div class="tile__foot">
+          <a class="tile__read" href="./rezidentstvo-i-crs.html">Резидентство и обмен данными <span aria-hidden="true">→</span></a>
+          <a class="btn btn--outline btn--sm" href="#contact" data-cta data-state-link="settled">Разобрать мою налоговую картину</a>
+        </div>
+      </article>
+
+      <article class="tile state" id="moving-on" data-span="4" data-state="moving-on" data-name="Двигаюсь дальше" data-preset="" aria-labelledby="moving-on-h">
+        <span class="state__tab" aria-hidden="true">Выбрано</span>
+        <p class="tile__meta"><b>06</b> Жизнь здесь — и дальше</p>
+        <h2 class="state__name" id="moving-on-h"><a class="state__link" href="./spravki-i-zakrytie.html">Двигаюсь дальше</a></h2>
+        <p class="state__recog">Армения была ступенью. Следующая страна попросит бумаги отсюда — и их лучше собрать, пока вы ещё здесь.</p>
+        <p class="state__fork"><b>Развилка</b><span>Закрыть ИП и получить справки после отъезда можно, но дольше и дороже, чем до.</span></p>
+        <ul class="chips" role="list" aria-label="Темы">
+          <li class="chip">справка о несудимости</li><li class="chip">налоговое резидентство</li><li class="chip">закрытие ИП</li><li class="chip">апостиль и переводы</li>
+        </ul>
+        <div class="tile__foot">
+          <a class="tile__read" href="./spravki-i-zakrytie.html">Справки, апостиль и закрытие <span aria-hidden="true">→</span></a>
+          <a class="btn btn--outline btn--sm" href="#contact" data-cta data-state-link="moving-on">Собрать пакет для следующей страны</a>
+        </div>
+      </article>
+
+      <!-- 07 · датированный вход ПОЛОСОЙ, а не картой: другой род (срок, а не момент),
+           и семь полноценных карточек в один экран не помещаются. Разбор живёт на своём экране. -->
+      <a class="tile state state--dated" id="new-rules" href="./noyabr.html" data-span="12" data-state="new-rules" data-name="Подаю после 1 ноября" aria-labelledby="new-rules-h">
+        <span class="dated__no">07</span>
+        <span class="dated__when">с <span class="slot" data-slot="rules-date">1 ноября 2026</span></span>
+        <span class="state__name dated__name" id="new-rules-h">Подаю по новым правилам</span>
+        <span class="dated__note">Реформа переписала пятнадцать статей: подача уходит на единую платформу, появляется квота, круг родственников сужается. Разобрали по статьям закона.</span>
+        <span class="dated__go">Что меняется с 1 ноября <svg aria-hidden="true"><use href="#i-chevron"/></svg></span>
+      </a>
+
+    </div>
+    <p class="small" style="margin-top: var(--s-5); max-width: 70ch;">Фразы узнавания и развилки будут заменены формулировками из историй практики LTCG после получения материала от клиента. Цифр на этой странице нет намеренно: каждая появится с датой и источником.</p>
+  </div>
+</section>
+
+<!-- ═══ 02 · Сколько это стоит ═══════════════════════════════════ -->
+<section class="section section--deep section--thread section--light" id="calc" hidden data-parked data-rail-skip aria-labelledby="calc-title" data-rail-label="Стоимость">
+  <div class="wrap">
+    <div class="section__head section__head--split" data-reveal>
+      <div>
+        <p class="kicker"><span class="kicker__no">02</span> Цена</p>
+        <h2 class="h2" id="calc-title">Сколько это стоит — считается здесь, <em>без звонка</em></h2>
+      </div>
+      <p class="lead">Отметьте, что нужно. Сумма меняется сразу. Контакт — только если хотите получить расчёт и план по шагам.</p>
+    </div>
+
+    <!-- единый источник цен: отсюда читают калькулятор и карточки услуг.
+         publish:false — на странице «уточняем» до подтверждения валюты и состава (sozvon §8-бис).
+         ?prices=preview показывает предварительные значения с пометкой — только для внутреннего показа. -->
+    <script type="application/json" id="prices">
+    {
+      "publish": false,
+      "currency": "AMD",
+      "currencyConfirmed": false,
+      "asOf": null,
+      "modules": {
+        "ip":         { "name": "Регистрация ИП",                       "per": "once",  "amount": 45000  },
+        "account":    { "name": "Открытие счёта",                       "per": "once",  "amount": 110000 },
+        "social":     { "name": "Соцкарта",                             "per": "once",  "amount": 35000  },
+        "address":    { "name": "Юридический адрес и корреспонденция",  "per": "year",  "amount": 430000 },
+        "accounting": { "name": "Бухгалтерия",                          "per": "month", "amount": 36000  }
+      }
+    }
+    </script>
+
+    <div class="calc" id="calc-form" role="group" aria-labelledby="calc-title" data-calc>
+      <div class="calc__mods" data-stagger>
+
+        <label class="tile mod" for="m-ip">
+          <input type="checkbox" id="m-ip" name="mod" value="ip">
+          <div class="mod__top">
+            <span class="mod__box" aria-hidden="true"><svg><use href="#i-check"/></svg></span>
+            <div>
+              <div class="mod__name">Регистрация ИП</div>
+              <div class="mod__unit">единовременно</div>
+            </div>
+            <div class="mod__price" data-price="ip" hidden></div>
+          </div>
+          <details class="mod__more">
+            <summary><svg aria-hidden="true"><use href="#i-chevron"/></svg> Что входит</summary>
+            <ul>
+              <li>Подбор налогового режима под ваш профиль дохода</li>
+              <li>Подготовка и подача документов, получение регистрации</li>
+              <li>Не входит: госпошлины и комиссии — отдельной строкой</li>
+            </ul>
+          </details>
+        </label>
+
+        <label class="tile mod" for="m-account">
+          <input type="checkbox" id="m-account" name="mod" value="account">
+          <div class="mod__top">
+            <span class="mod__box" aria-hidden="true"><svg><use href="#i-check"/></svg></span>
+            <div>
+              <div class="mod__name">Открытие счёта</div>
+              <div class="mod__unit">единовременно</div>
+            </div>
+            <div class="mod__price" data-price="account" hidden></div>
+          </div>
+          <details class="mod__more">
+            <summary><svg aria-hidden="true"><use href="#i-chevron"/></svg> Что входит</summary>
+            <ul>
+              <li>Проверка пакета до подачи по списку причин отказа</li>
+              <li>Подбор банка под цель счёта, сопровождение подачи</li>
+              <li>Не входит: комиссии банка; решение принимает банк</li>
+            </ul>
+          </details>
+        </label>
+
+        <label class="tile mod" for="m-social">
+          <input type="checkbox" id="m-social" name="mod" value="social">
+          <div class="mod__top">
+            <span class="mod__box" aria-hidden="true"><svg><use href="#i-check"/></svg></span>
+            <div>
+              <div class="mod__name">Соцкарта</div>
+              <div class="mod__unit">единовременно</div>
+            </div>
+            <div class="mod__price" data-price="social" hidden></div>
+          </div>
+          <details class="mod__more">
+            <summary><svg aria-hidden="true"><use href="#i-chevron"/></svg> Что входит</summary>
+            <ul>
+              <li>Порядок шагов относительно адреса и статуса</li>
+              <li>Подготовка и сопровождение получения</li>
+              <li>Не входит: госпошлины</li>
+            </ul>
+          </details>
+        </label>
+
+        <label class="tile mod" for="m-address">
+          <input type="checkbox" id="m-address" name="mod" value="address">
+          <div class="mod__top">
+            <span class="mod__box" aria-hidden="true"><svg><use href="#i-check"/></svg></span>
+            <div>
+              <div class="mod__name">Юридический адрес и корреспонденция</div>
+              <div class="mod__unit">в год</div>
+            </div>
+            <div class="mod__price" data-price="address" hidden></div>
+          </div>
+          <details class="mod__more">
+            <summary><svg aria-hidden="true"><use href="#i-chevron"/></svg> Что входит</summary>
+            <ul>
+              <li>Адрес для регистрации ИП или ООО, подтверждаемый документом</li>
+              <li>Приём писем и уведомлений, пересылка вам</li>
+            </ul>
+          </details>
+        </label>
+
+        <label class="tile mod" for="m-accounting">
+          <input type="checkbox" id="m-accounting" name="mod" value="accounting">
+          <div class="mod__top">
+            <span class="mod__box" aria-hidden="true"><svg><use href="#i-check"/></svg></span>
+            <div>
+              <div class="mod__name">Бухгалтерия</div>
+              <div class="mod__unit">в месяц</div>
+            </div>
+            <div class="mod__price" data-price="accounting" hidden></div>
+          </div>
+          <details class="mod__more">
+            <summary><svg aria-hidden="true"><use href="#i-chevron"/></svg> Что входит</summary>
+            <ul>
+              <li>Учёт, отчётность в срок, контроль порога режима</li>
+              <li>Юрист и бухгалтер в одной компании — вопросы не уходят «к другому подрядчику»</li>
+              <li>Отдельный тариф для простых ИП — вопрос открыт, ответ появится здесь</li>
+            </ul>
+          </details>
+        </label>
+
+        <div class="tile tile--quiet mod-note">
+          <p class="small">Суммы появятся на странице после подтверждения валюты и состава модулей — с датой актуальности. Механика уже работает: отметьте модули, итог соберёт состав и подготовит текст для WhatsApp.</p>
+        </div>
+      </div>
+
+      <aside class="tile tile--hero total" aria-live="polite" data-total>
+        <p class="tile__meta"><b>02</b> Итог</p>
+        <p class="total__title">Состав расчёта</p>
+        <p class="total__asof" data-total-count>0<small>модулей выбрано</small></p>
+        <dl class="total__rows" data-total-rows hidden>
+          <div class="total__row"><dt>Единовременно</dt><dd data-sum="once">—</dd></div>
+          <div class="total__row"><dt>В год</dt><dd data-sum="year">—</dd></div>
+          <div class="total__row"><dt>В месяц</dt><dd data-sum="month">—</dd></div>
+        </dl>
+        <div class="total__list" data-total-list><span class="total__empty">Пока ничего не выбрано — отметьте модули слева.</span></div>
+        <div class="total__meta">
+          <span data-total-note>Суммы появятся после подтверждения состава и валюты — с датой актуальности.</span>
+          <span><b>Это та же сумма, что будет в договоре</b> — формулировку подтверждает клиент.</span>
+          <span>Итог — стоимость наших услуг. Решения по счёту и статусу принимают банк и госорганы.</span>
+        </div>
+        <div class="total__cta">
+          <a class="btn btn--primary" href="#contact" data-cta data-calc-cta>Получить расчёт и план по шагам <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
+          <a class="btn btn--outline" href="https://t.me/LTCG_Armenia" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-tg"/></svg> Спросить в Telegram</a>
+          <!-- WhatsApp не подтверждён — см. комментарий у формы -->
+          <a class="btn btn--outline" href="https://wa.me/37494184014" target="_blank" rel="noopener noreferrer" data-wa data-wa-calc><svg aria-hidden="true"><use href="#i-wa"/></svg> Открыть в WhatsApp</a>
+          <a class="btn btn--link" href="#contact">Сначала обсудить</a>
+        </div>
+        <p class="small">Сами: госпошлина и ваше время. С нами — вот <a class="lnk" href="#diy">что именно берём на себя</a>.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 03 · Что будет после того, как вы написали ═══════════════ -->
+<section class="section section--thread" id="roadmap" hidden data-parked data-rail-skip aria-labelledby="roadmap-title" data-rail-label="Как проходит">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <p class="kicker"><span class="kicker__no">03</span> Что дальше</p>
+      <h2 class="h2" id="roadmap-title">Что будет после того, как вы <em>написали</em></h2>
+      <p class="lead">Сроки и цена известны до начала работы. Что решают банки и госорганы — говорим заранее, а не после подачи.</p>
+    </div>
+
+    <ol class="tl" role="list" data-stagger>
+      <li class="tl__step">
+        <span class="tl__dot" aria-hidden="true"></span>
+        <span class="tl__no">Шаг 01</span>
+        <span class="tl__title">Ответ</span>
+        <span class="tl__who"><span><b>От вас:</b> где вы сейчас, одной фразой</span><span><b>От нас:</b> ответ живого человека, не бота</span></span>
+      </li>
+      <li class="tl__step">
+        <span class="tl__dot" aria-hidden="true"></span>
+        <span class="tl__no">Шаг 02</span>
+        <span class="tl__title">Разбор ситуации</span>
+        <span class="tl__who"><span><b>От вас:</b> документы, которые уже есть</span><span><b>От нас:</b> что нужно, что нет, где риск</span></span>
+      </li>
+      <li class="tl__step">
+        <span class="tl__dot" aria-hidden="true"></span>
+        <span class="tl__no">Шаг 03</span>
+        <span class="tl__title">План с датами — до оплаты</span>
+        <span class="tl__who"><span><b>От вас:</b> решение</span><span><b>От нас:</b> список документов и даты по шагам</span></span>
+        <span class="tl__days">До оплаты — всегда</span>
+      </li>
+      <li class="tl__step">
+        <span class="tl__dot" aria-hidden="true"></span>
+        <span class="tl__no">Шаг 04</span>
+        <span class="tl__title">Исполнение по модулям</span>
+        <span class="tl__who"><span><b>От вас:</b> подписи и личные визиты там, где без вас нельзя</span><span><b>От нас:</b> подготовка, подача, сопровождение</span></span>
+      </li>
+      <li class="tl__step">
+        <span class="tl__dot" aria-hidden="true"></span>
+        <span class="tl__no">Шаг 05</span>
+        <span class="tl__title">Если что-то пошло не так</span>
+        <span class="tl__who"><span><b>От вас:</b> ничего — мы уже в курсе</span><span><b>От нас:</b> разбор отказа или запроса, следующий шаг</span></span>
+      </li>
+    </ol>
+
+    <div class="oath" data-stagger>
+      <div class="tile"><span class="oath__no">Обязательство 1</span><span class="oath__t">Цена из калькулятора — цена в договоре</span><span class="oath__d">Без «уточним при встрече». Формулировку подтверждает клиент.</span></div>
+      <div class="tile"><span class="oath__no">Обязательство 2</span><span class="oath__t">План с датами — до оплаты</span><span class="oath__d">Вы видите шаги и сроки раньше, чем платите.</span></div>
+      <div class="tile"><span class="oath__no">Обязательство 3</span><span class="oath__t">Проверка пакета до подачи</span><span class="oath__d">По списку причин, по которым банки чаще всего отказывают.</span></div>
+      <div class="tile"><span class="oath__no">Обязательство 4</span><span class="oath__t">Дата актуальности на каждой цене</span><span class="oath__d">Если что-то изменится — сначала изменится здесь.</span></div>
+    </div>
+
+    <div class="section__foot" data-reveal>
+      <p class="note measure">Решения о выдаче ВНЖ и открытии счёта принимают государственные органы и банки. Мы отвечаем за подготовку, сроки и за то, что о рисках вы узнаёте <b>до подачи, а не после</b>. Сроки по шагам появятся здесь с датой и источником — <span class="tbc tbc--quiet"><svg aria-hidden="true"><use href="#i-pending"/></svg>после подтверждения</span>.</p>
+      <a class="btn btn--primary" href="#contact" data-cta>Обсудить мою ситуацию <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
+      <a class="btn btn--link" href="#calc">Рассчитать</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 04 · Одинаковые документы — разный результат ═════════════ -->
+<section class="section section--deep section--thread section--light" id="bank" hidden data-parked data-rail-skip aria-labelledby="bank-title" data-rail-label="Банк">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <p class="kicker"><span class="kicker__no">04</span> Счёт в банке</p>
+      <h2 class="h2" id="bank-title">Одинаковые документы — <em>разный результат</em></h2>
+      <p class="lead">Счёт можно открыть и самому. Мы про то, где это ломается. Решение принимает банк, и мы не обещаем исход — мы делаем так, чтобы к решению вы подошли с пакетом, к которому нет вопросов.</p>
+    </div>
+
+    <dl class="traps" data-stagger>
+      <div class="tile trap">
+        <dt><span class="trap__head"><span class="trap__no">Ловушка 01</span><span class="trap__tag trap__tag--fix">снимается до подачи</span></span><span class="trap__title">Адрес, который нельзя подтвердить</span></dt>
+        <dd>Живёте по адресу, но договора нет или собственник против. Для банка это не «проживание», а слово.</dd>
+        <dd><b>Что делаем</b>Подтверждаемый адрес до подачи: договор, регистрация или юридический адрес с корреспонденцией.</dd>
+      </div>
+      <div class="tile trap">
+        <dt><span class="trap__head"><span class="trap__no">Ловушка 02</span><span class="trap__tag trap__tag--fix">снимается до подачи</span></span><span class="trap__title">Доход есть, а показать нечем</span></dt>
+        <dd>Заказчик за рубежом, оплата на карту, договор в переписке. Легальный доход существует — подтверждение нет.</dd>
+        <dd><b>Что делаем</b>Собираем цепочку: договор, акты, выписки — так, чтобы каждая строка объяснялась предыдущей.</dd>
+      </div>
+      <div class="tile trap">
+        <dt><span class="trap__head"><span class="trap__no">Ловушка 03</span><span class="trap__tag trap__tag--fix">снимается до подачи</span></span><span class="trap__title">Цель счёта не совпадает с профилем</span></dt>
+        <dd>Личный счёт «для себя», на который потом приходят оплаты от клиентов. Комплаенс видит несоответствие раньше, чем вы.</dd>
+        <dd><b>Что делаем</b>Называем цель честно и подбираем тип счёта под неё: личный, ИП, приём из-за рубежа.</dd>
+      </div>
+    </dl>
+    <details class="traps-more" data-reveal>
+      <summary class="btn btn--outline btn--sm">Ещё три ловушки <svg aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+    <dl class="traps">
+      <div class="tile trap">
+        <dt><span class="trap__head"><span class="trap__no">Ловушка 04</span><span class="trap__tag trap__tag--fix">снимается до подачи</span></span><span class="trap__title">Документы спорят друг с другом</span></dt>
+        <dd>В анкете один адрес, в справке другой; в договоре одно имя, в паспорте транслитерация иная. Каждое расхождение — вопрос.</dd>
+        <dd><b>Что делаем</b>Сверяем пакет строка к строке до того, как его увидит банк.</dd>
+      </div>
+      <div class="tile trap">
+        <dt><span class="trap__head"><span class="trap__no">Ловушка 05</span><span class="trap__tag">зависит от банка</span></span><span class="trap__title">Происхождение крупной суммы</span></dt>
+        <dd>Продали квартиру, накопили, получили наследство — для вас очевидно, для банка это история, которую надо рассказать документами.</dd>
+        <dd><b>Что делаем</b>Готовим объяснение происхождения средств заранее; если банк не примет — знаем, к какому идти следующим.</dd>
+      </div>
+      <div class="tile trap">
+        <dt><span class="trap__head"><span class="trap__no">Ловушка 06</span><span class="trap__tag">зависит от банка</span></span><span class="trap__title">Гражданство и история заявителя</span></dt>
+        <dd>Паспорт, прежние отказы, санкционные фильтры — то, что вы не можете изменить, но можете правильно подать.</dd>
+        <dd><b>Что делаем</b>Говорим заранее, где шансы ниже, и не ведём подавать туда, где отказ предсказуем.</dd>
+      </div>
+    </dl>
+    </details>
+
+    <div class="bank__aside" data-stagger>
+      <div class="tile tile--quiet">
+        <p class="tile__meta"><b>Граница</b></p>
+        <p class="measure">Дальше — ваш паспорт, ваша история и конкретный банк. Это разбирается по документам, не по странице. Перечень выше — то, что мы видели; список причин из практики LTCG и чек-лист «что делаем до подачи» дополняет юрист компании.</p>
+      </div>
+      <div class="tile">
+        <p class="tile__meta"><b>Боль номер два</b></p>
+        <p class="h4">Переводы и SWIFT</p>
+        <p class="measure small">Счёт открыт, а деньги не доходят: банк-корреспондент, назначение платежа, лимиты. Подготовка перевода — отдельная тема и отдельная страница.</p>
+        <p><a class="btn btn--link" href="#services">К услугам <svg aria-hidden="true"><use href="#i-chevron"/></svg></a></p>
+      </div>
+    </div>
+
+    <div class="section__foot" data-reveal>
+      <p class="sign"><span>Проверил: <span class="tbc tbc--quiet"><svg aria-hidden="true"><use href="#i-pending"/></svg>юрист LTCG</span></span><span>Обновлено: <span class="tbc tbc--quiet"><svg aria-hidden="true"><use href="#i-pending"/></svg>дата</span></span></p>
+      <a class="btn btn--primary" href="#contact" data-cta data-state-link="arrived">Проверить мой пакет до подачи <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
+      <a class="btn btn--link" href="#calc" data-preset-link="arrived">Рассчитать</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 05 · Многое можно сделать самому ═════════════════════════ -->
+<section class="section section--thread" id="diy" hidden data-parked data-rail-skip aria-labelledby="diy-title" data-rail-label="Сделать самому">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <p class="kicker"><span class="kicker__no">05</span> Своими руками</p>
+      <h2 class="h2" id="diy-title">Многое можно сделать самому. Вот что именно, и где обычно <em>ломается</em></h2>
+      <p class="lead">Мы не говорим «это сложно». Мы показываем, какой шаг вы закроете сами за вечер, а какой стоит недель, если свернуть не туда.</p>
+    </div>
+
+    <div class="diy-wrap" data-reveal>
+      <table class="diy">
+        <caption>Шесть шагов: можно ли самому, где ломается, что берём на себя. Оценку «да / частично» подтверждает юрист LTCG.</caption>
+        <colgroup><col class="c-step"><col class="c-diy"><col class="c-break"><col class="c-us"></colgroup>
+        <thead><tr><th scope="col">Шаг</th><th scope="col">Самому</th><th scope="col">Где ломается</th><th scope="col">Что берём на себя</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">ИП</th><td data-l="Самому"><span class="yes">да</span></td><td data-l="Где ломается">Режим и коды деятельности выбраны «как у всех», а не под ваш доход; переиграть можно только со следующего года.</td><td data-l="Что берём на себя" class="us">Режим под профиль дохода, регистрация, первая отчётность.</td></tr>
+          <tr><th scope="row">Счёт</th><td data-l="Самому"><span class="yes">да</span></td><td data-l="Где ломается">Пакет без подтверждения проживания и дохода; цель счёта не совпадает с тем, как он потом используется.</td><td data-l="Что берём на себя" class="us">Проверка пакета до подачи, выбор банка под цель, сопровождение.</td></tr>
+          <tr><th scope="row">Соцкарта</th><td data-l="Самому"><span class="yes">да</span></td><td data-l="Где ломается">Очерёдность: пришли за картой раньше, чем есть то, к чему её привязать.</td><td data-l="Что берём на себя" class="us">Порядок шагов и подача.</td></tr>
+          <tr><th scope="row">Адрес и корреспонденция</th><td data-l="Самому"><span class="part">частично</span></td><td data-l="Где ломается">Адрес есть, документа на него нет; письма от госорганов приходят туда, где вы уже не живёте.</td><td data-l="Что берём на себя" class="us">Юридический адрес с подтверждением, приём и пересылка писем.</td></tr>
+          <tr><th scope="row">ВНЖ</th><td data-l="Самому"><span class="part">частично</span></td><td data-l="Где ломается">Основание выбрано наспех; расхождения в анкете, которые читаются как красный флаг.</td><td data-l="Что берём на себя" class="us">Выбор основания, пакет, сопровождение до решения.</td></tr>
+          <tr><th scope="row">Бухгалтерия и режим</th><td data-l="Самому"><span class="part">частично</span></td><td data-l="Где ломается">Пропущенный срок отчётности; порог режима перейдён незаметно — и налог считается уже иначе.</td><td data-l="Что берём на себя" class="us">Учёт, отчётность в срок, контроль порога, смена режима вовремя.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section__foot" data-reveal>
+      <p class="small">Строка «цена ошибки» (сколько стоит неверный режим за год) появится только из подтверждённого кейса — до тех пор её нет.</p>
+      <a class="btn btn--primary" href="#calc" data-preset-link="working">Рассчитать, что берём на себя <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
+      <a class="btn btn--link" href="#contact" data-cta data-state-link="working">Обсудить мой случай</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 06 · Если вы уже знаете, что вам нужно ═══════════════════ -->
+<section class="section section--deep section--grid section--thread section--light" id="services" hidden data-parked data-rail-skip aria-labelledby="services-title" data-rail-label="Услуги">
+  <div class="wrap">
+    <div class="section__head section__head--split" data-reveal>
+      <div>
+        <p class="kicker"><span class="kicker__no">06</span> Услуги</p>
+        <h2 class="h2" id="services-title">Если вы уже знаете, что вам <em>нужно</em></h2>
+      </div>
+      <p class="lead">Регистрация бизнеса, бухгалтерия и налоги, открытие счёта, миграционные вопросы — только это, и в этом мы разбираемся глубоко.</p>
+    </div>
+
+    <div class="bento" data-stagger>
+      <article class="tile svc" data-span="4"><p class="tile__meta"><b>06</b> 01</p><h3 class="svc__name">Регистрация ИП</h3><p class="svc__for">Для тех, кто работает на себя и принимает оплату из-за рубежа.</p><p class="svc__price" data-price="ip" hidden></p><ul class="chips" role="list"><li class="chip">Работаю</li><li class="chip">Легализуюсь</li></ul><div class="tile__foot"><a class="btn btn--link" href="#calc" data-preset-link="working">Рассчитать</a></div></article>
+      <article class="tile svc" data-span="4"><p class="tile__meta"><b>06</b> 02</p><h3 class="svc__name">Регистрация ООО</h3><p class="svc__for">Когда нужна компания: партнёры, сотрудники, контракты от юрлица.</p><ul class="chips" role="list"><li class="chip">Работаю</li></ul><div class="tile__foot"><a class="btn btn--link" href="#contact" data-cta>Обсудить</a></div></article>
+      <article class="tile svc tile--hero" data-span="4"><p class="tile__meta"><b>06</b> 03</p><h3 class="svc__name">Открытие счёта</h3><p class="svc__for">Личный, для ИП или для приёма оплат — с проверкой пакета до подачи.</p><p class="svc__price" data-price="account" hidden></p><ul class="chips" role="list"><li class="chip">Только приехал</li><li class="chip">Работаю</li></ul><div class="tile__foot"><a class="btn btn--link" href="#bank">Где ломается</a><a class="btn btn--link" href="#calc" data-preset-link="arrived">Рассчитать</a></div></article>
+      <article class="tile svc" data-span="4"><p class="tile__meta"><b>06</b> 04</p><h3 class="svc__name">Соцкарта и регистрация по адресу</h3><p class="svc__for">Первые дни: в правильном порядке, без второго захода.</p><p class="svc__price" data-price="social" hidden></p><ul class="chips" role="list"><li class="chip">Только приехал</li></ul><div class="tile__foot"><a class="btn btn--link" href="#calc" data-preset-link="arrived">Рассчитать</a></div></article>
+      <article class="tile svc" data-span="4"><p class="tile__meta"><b>06</b> 05</p><h3 class="svc__name">Юридический адрес и корреспонденция</h3><p class="svc__for">Адрес, подтверждаемый документом, и письма, которые не теряются.</p><p class="svc__price" data-price="address" hidden></p><ul class="chips" role="list"><li class="chip">Только приехал</li><li class="chip">Легализуюсь</li></ul><div class="tile__foot"><a class="btn btn--link" href="#calc" data-preset-link="legalizing">Рассчитать</a></div></article>
+      <article class="tile svc" data-span="4"><p class="tile__meta"><b>06</b> 06</p><h3 class="svc__name">Бухгалтерия и налоговый режим</h3><p class="svc__for">Учёт, отчётность в срок и контроль порога — юрист и бухгалтер в одной компании.</p><p class="svc__price" data-price="accounting" hidden></p><ul class="chips" role="list"><li class="chip">Работаю</li><li class="chip">Живу и планирую</li></ul><div class="tile__foot"><a class="btn btn--link" href="#calc" data-preset-link="settled">Рассчитать</a></div></article>
+      <article class="tile svc" data-span="4"><p class="tile__meta"><b>06</b> 07</p><h3 class="svc__name">Налоговое консультирование: резидентство, CRS</h3><p class="svc__for">Годовая картина по двум странам: где вы резидент и что из этого следует.</p><ul class="chips" role="list"><li class="chip">Живу и планирую</li></ul><div class="tile__foot"><a class="btn btn--link" href="#contact" data-cta data-state-link="settled">Обсудить</a></div></article>
+      <article class="tile svc" data-span="4"><p class="tile__meta"><b>06</b> 08</p><h3 class="svc__name">ВНЖ: наём, ИП, семья, корни</h3><p class="svc__for">Основание выбирается один раз — помогаем выбрать то, которое пройдёт.</p><ul class="chips" role="list"><li class="chip">Легализуюсь</li></ul><div class="tile__foot"><a class="btn btn--link" href="#contact" data-cta data-state-link="legalizing">Обсудить основание</a></div></article>
+      <article class="tile svc" data-span="4"><p class="tile__meta"><b>06</b> 09</p><h3 class="svc__name">Справки и закрытие дел</h3><p class="svc__for">Несудимость, налоговое резидентство, закрытие ИП, апостиль и переводы — пока вы ещё здесь.</p><ul class="chips" role="list"><li class="chip">Двигаюсь дальше</li></ul><div class="tile__foot"><a class="btn btn--link" href="#contact" data-cta data-state-link="moving-on">Обсудить</a></div></article>
+      <aside class="tile tile--quiet svc-more" data-span="12" aria-label="Не нашли услугу">
+        <p><b>Не нашли?</b> Переводы и SWIFT, доверенности и дела в РФ, апостиль — напишите, где вы сейчас: скажем, что нужно, а что нет.</p>
+        <div class="btn-row">
+          <a class="btn btn--outline btn--sm" href="https://t.me/LTCG_Armenia" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-tg"/></svg> Telegram</a>
+          <!-- WhatsApp не подтверждён — см. комментарий у формы -->
+          <a class="btn btn--outline btn--sm" href="https://wa.me/37494184014" target="_blank" rel="noopener noreferrer" data-wa><svg aria-hidden="true"><use href="#i-wa"/></svg> WhatsApp</a>
+        </div>
+      </aside>
+    </div>
+
+    <p class="path" data-reveal>
+      <span>Зарегистрировали</span><svg aria-hidden="true"><use href="#i-arrow"/></svg>
+      <span>открыли счёт</span><svg aria-hidden="true"><use href="#i-arrow"/></svg>
+      <span>ведём учёт</span><svg aria-hidden="true"><use href="#i-arrow"/></svg>
+      <span>сопровождаем статус</span>
+      <span class="small">Один непрерывный путь внутри одной компании — без «а это к другому подрядчику».</span>
+    </p>
+
+    <div class="tile tile--quiet notdo" data-reveal>
+      <p class="tile__meta"><b>Чего не делаем</b></p>
+      <ul role="list"><li>подбор жилья</li><li>школы и сады</li><li>билеты</li><li>визы в третьи страны</li></ul>
+      <p class="small">Кто принимает решения: банк, миграционная служба, налоговая. Формулировку списка подтверждает клиент.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 07 · Вопросы, с которыми приходят ═══════════════════════ -->
+<section class="section section--thread" id="faq" hidden data-parked data-rail-skip aria-labelledby="faq-title" data-rail-label="Вопросы">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <p class="kicker"><span class="kicker__no">07</span> Вопросы</p>
+      <h2 class="h2" id="faq-title">Вопросы, с которыми <em>приходят</em></h2>
+      <p class="lead">Короткие ответы с честным «можно самому». Каждый ответ проверяет юрист LTCG; дата проверки будет стоять у каждого.</p>
+    </div>
+
+    <div class="faq" data-faq data-reveal>
+      <details>
+        <summary>Отказали в открытии счёта — что дальше?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <div class="faq__a"><p>Сначала понять, что именно не прошло: подтверждение проживания, источник дохода, цель счёта или несовпадения между документами. Часть причин снимается до повторной подачи — другим банком, другим пакетом или другой последовательностью. Разбирается по вашим документам, не по общему совету.</p><p class="small"><a class="lnk" href="#bank">Названные ловушки</a><a class="lnk" href="#arrived">Только приехал</a></p></div>
+      </details>
+      <details>
+        <summary>Можно ли открыть ИП, не приезжая?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <div class="faq__a"><p>Часть шагов выполняется удалённо по доверенности, но не все: банк и некоторые госорганы хотят видеть человека лично. Что именно можно сделать до приезда в вашем случае — уточняем по вашим документам и гражданству.</p><p class="small"><a class="lnk" href="#pre-move">Ещё не переехал</a></p></div>
+      </details>
+      <details>
+        <summary>Какой налоговый режим подходит под доход от зарубежных заказчиков?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <div class="faq__a"><p>Зависит от трёх вещей: кто ваши заказчики, какой годовой оборот ожидается и чем вы занимаетесь. У каждого режима есть порог и список запрещённых видов деятельности. Ошибка обнаруживается только на следующий год, поэтому режим выбирают до регистрации, а не после.</p><p class="small"><a class="lnk" href="#working">Работаю</a><a class="lnk" href="#diy">Где ломается</a></p></div>
+      </details>
+      <details>
+        <summary>Нужно ли уведомлять ФНС о счёте в Армении?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <div class="faq__a"><p>Обязанность зависит от вашего налогового резидентства в РФ на конец года и от того, сколько дней вы провели за границей. Это отдельный расчёт по календарю, а не общее правило — считаем по вашим датам.</p><p class="small"><a class="lnk" href="#settled">Живу и планирую</a></p></div>
+      </details>
+      <details>
+        <summary>Что делать, если нет адреса для регистрации?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <div class="faq__a"><p>Адрес нужен раньше, чем кажется: для регистрации ИП, соцкарты и ряда банковских анкет. Если аренда без договора или собственник против, используется юридический адрес с обслуживанием корреспонденции — это одна из наших услуг.</p><p class="small"><a class="lnk" href="#services">Юридический адрес</a></p></div>
+      </details>
+      <details>
+        <summary>Можно ли сделать всё самому?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <div class="faq__a"><p>Да. Ломается обычно не на форме, а на порядке шагов, на неподтверждаемом адресе, на выборе режима и на пакете для банка. Мы берём на себя именно эти места — а не «всё», и в таблице на странице честно написано, что именно.</p><p class="small"><a class="lnk" href="#diy">Таблица «где ломается»</a></p></div>
+      </details>
+      <details>
+        <summary>Берёте ли ВНЖ отдельно?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <div class="faq__a"><p>ВНЖ — это всегда основание: наём, ИП, семья или корни. Отдельно от основания его не бывает, поэтому сначала разбираем, какое основание у вас есть и какое выгоднее, и только потом собираем пакет.</p><p class="small"><a class="lnk" href="#legalizing">Легализуюсь</a></p></div>
+      </details>
+    </div>
+
+    <div class="section__foot" data-reveal>
+      <a class="btn btn--outline" href="#contact" data-cta>Не нашли свой вопрос — напишите, где вы сейчас <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 08 · Контакт ═════════════════════════════════════════════ -->
+<section class="section section--art section--contact" id="contact" hidden data-parked data-rail-skip aria-labelledby="contact-title" data-rail-label="Контакты">
+  <div class="art art--center" aria-hidden="true">
+    <picture>
+      <source type="image/webp" srcset="assets/bg/bg-soft-bokeh.webp">
+      <img src="assets/bg/bg-soft-bokeh-1280.jpg" srcset="assets/bg/bg-soft-bokeh-1280.jpg 1280w, assets/bg/bg-soft-bokeh.jpg 2496w" sizes="100vw" alt="" width="2496" height="1664" loading="lazy" decoding="async">
+    </picture>
+  </div>
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <p class="kicker"><span class="kicker__no">08</span> Контакт</p>
+      <h2 class="h2" id="contact-title">Напишите, где вы <em>сейчас</em></h2>
+      <p class="lead">Скажем, что нужно, а что нет. Один номер, три способа — напишите, ответим быстро; часы работы и срок ответа появятся здесь после подтверждения.</p>
+    </div>
+
+    <div class="contact">
+      <div class="tile" data-reveal>
+        <div class="ways">
+          <a class="way" href="https://t.me/LTCG_Armenia" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-tg"/></svg>Telegram<small>@LTCG_Armenia</small></a>
+          <!-- WhatsApp у компании НЕ ПОДТВЕРЖДЁН: номер тот же, но наличие WhatsApp на нём никто не проверял.
+               Если не подтвердится — снять эту ссылку и все остальные с data-wa на странице. -->
+          <a class="way" href="https://wa.me/37494184014" target="_blank" rel="noopener noreferrer" data-wa><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp<small>+374 94 184 014</small></a>
+          <a class="way" href="tel:+37494184014"><svg aria-hidden="true"><use href="#i-phone"/></svg>Позвонить<small>+374 94 184 014</small></a>
+        </div>
+        <hr class="rule">
+        <!-- method="dialog" вне <dialog> — это НЕ отправка: браузер прерывает submit.
+             Так без JavaScript нажатие Enter в поле не бросает POST в никуда (бэкенда нет,
+             GitHub Pages ответит 405) и, главное, не уносит имя и контакт в строку адреса.
+             С JavaScript отправку перехватывает js/site.js и собирает сообщение. -->
+        <form class="form" id="lead" method="dialog" data-lead novalidate>
+          <div class="form__row">
+            <div class="field">
+              <label class="field__label" for="f-name">Как к вам обращаться</label>
+              <input class="field__input" id="f-name" name="name" type="text" autocomplete="name" required placeholder="Имя">
+            </div>
+            <div class="field">
+              <label class="field__label" for="f-contact">Телефон или Telegram</label>
+              <input class="field__input" id="f-contact" name="contact" type="text" autocomplete="tel" inputmode="text" required placeholder="+7… или @ник">
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-state">Где вы сейчас?</label>
+            <select id="f-state" name="state" required>
+              <option value="">Выберите момент</option>
+              <option value="pre-move">Ещё не переехал</option>
+              <option value="arrived">Только приехал</option>
+              <option value="legalizing">Легализуюсь</option>
+              <option value="working">Работаю</option>
+              <option value="settled">Живу и планирую</option>
+              <option value="moving-on">Двигаюсь дальше</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-msg">Сообщение <small>— необязательно</small></label>
+            <textarea id="f-msg" name="message" placeholder="Одной фразой: что уже сделали, что не получилось"></textarea>
+          </div>
+          <div class="field">
+            <label class="field__label" for="f-src">Как вы о нас узнали? <small>— необязательно</small></label>
+            <input class="field__input" id="f-src" name="source" type="text" placeholder="Рекомендация, поиск, Telegram…">
+          </div>
+          <!-- honeypot: отсекает только заполненное поле; отсечки по времени нет намеренно -->
+          <div class="hp" aria-hidden="true"><label>Не заполняйте это поле <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <input type="hidden" name="modules" data-f-modules value="">
+          <input type="hidden" name="page" value="home-ru">
+          <label class="check"><input type="checkbox" name="consent" required><span class="check__box" aria-hidden="true"><svg><use href="#i-check"/></svg></span><span>Согласен на обработку персональных данных — <span class="tbc tbc--quiet"><svg aria-hidden="true"><use href="#i-pending"/></svg>текст согласия от клиента</span></span></label>
+          <div class="form__foot">
+            <!-- Бэкенда у сайта нет и не будет: статические страницы на GitHub Pages.
+                 Кнопка собирает текст заявки и открывает мессенджер компании. Без JavaScript
+                 она скрыта, а человек видит прямые ссылки ниже — без подстановки, но рабочие. -->
+            <button class="btn btn--primary js-only" type="submit">Собрать заявку <svg aria-hidden="true"><use href="#i-chevron"/></svg></button>
+            <span class="small js-only">или сразу <a class="lnk" href="https://t.me/LTCG_Armenia" target="_blank" rel="noopener noreferrer">напишите в Telegram</a></span>
+            <p class="form__nojs nojs-only small">Форма собирает сообщение скриптом. Скрипт выключен — напишите напрямую:
+              <a class="lnk" href="https://t.me/LTCG_Armenia" target="_blank" rel="noopener noreferrer">Telegram @LTCG_Armenia</a> ·
+              <a class="lnk" href="https://wa.me/37494184014" target="_blank" rel="noopener noreferrer" data-wa>WhatsApp</a> ·
+              <a class="lnk" href="tel:+37494184014">+374 94 184 014</a></p>
+            <p class="form__msg" role="status" aria-live="polite" data-form-msg></p>
+          </div>
+        </form>
+        <!-- Приёмник заявки. Telegram НЕ умеет подставлять текст в чат обычного аккаунта
+             (?text= работает только у ботов и у WhatsApp), поэтому текст показан здесь целиком,
+             с кнопкой «скопировать»: человек открывает Telegram и вставляет. У WhatsApp текст
+             подставляется ссылкой. Никакие данные никуда не уходят до нажатия человеком. -->
+        <div class="form__done" data-form-done hidden tabindex="-1">
+          <p class="h4">Заявка собрана — осталось отправить</p>
+          <p class="measure small">Сайт статический, отправлять некому: заявка уходит вашим сообщением в мессенджер. Текст уже готов.</p>
+          <label class="sr-only" for="f-out">Текст заявки</label>
+          <textarea class="field__input form__out" id="f-out" data-form-out readonly rows="5"></textarea>
+          <div class="btn-row">
+            <a class="btn btn--primary" href="https://t.me/LTCG_Armenia" target="_blank" rel="noopener noreferrer" data-send-tg><svg aria-hidden="true"><use href="#i-tg"/></svg> Открыть Telegram и вставить</a>
+            <!-- WhatsApp у компании НЕ ПОДТВЕРЖДЁН — вторая кнопка снимается, если номер не подтвердится. -->
+            <a class="btn btn--outline" href="https://wa.me/37494184014" target="_blank" rel="noopener noreferrer" data-wa data-send-wa><svg aria-hidden="true"><use href="#i-wa"/></svg> Открыть WhatsApp с текстом</a>
+            <button class="btn btn--outline" type="button" data-copy>Скопировать текст</button>
+          </div>
+          <p class="small" role="status" aria-live="polite" data-copy-msg></p>
+        </div>
+      </div>
+
+      <aside class="tile tile--hero" data-reveal>
+        <p class="tile__meta"><b>08</b> Что будет дальше</p>
+        <ol class="next" role="list">
+          <li><span><b>Ответ живого человека</b>Не бота: кто отвечает и в какой срок — появится здесь после подтверждения.</span></li>
+          <li><span><b>Разбор ситуации</b>Что нужно, что нет, где риск — до того, как вы что-то платите.</span></li>
+          <li><span><b>План с датами</b>Список документов и шаги; цена из калькулятора — цена в договоре.</span></li>
+        </ol>
+        <hr class="rule">
+        <p class="small">Адрес и карта появятся после решения по офису. Оплата в рублях и российский номер — после решения по партнёрскому контуру.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══ Футер ════════════════════════════════════════════════════ -->
+<footer class="ftr" aria-label="Подвал">
+  <div class="wrap">
+    <div class="bento ftr__bento" role="list">
+
+      <section class="tile ftr__tile ftr__tile--brand" data-span="4" role="listitem" aria-labelledby="f-brand">
+        <a class="brand ftr__brandlink" href="./home-ru.html" data-path="" aria-label="LTCG — на главную">
+          <picture>
+            <source type="image/avif" srcset="assets/logo/ltcg-lockup@2x.avif 2x, assets/logo/ltcg-lockup@3x.avif 3x">
+            <source type="image/webp" srcset="assets/logo/ltcg-lockup@2x.webp 2x, assets/logo/ltcg-lockup@3x.webp 3x">
+            <img class="brand-logo" src="assets/logo/ltcg-lockup@2x.png" width="57" height="38" alt="LTCG" decoding="async">
+          </picture>
+        </a>
+        <h2 class="sr-only" id="f-brand">Контакты</h2>
+        <address class="ftr__addr">
+          <span>Legal and Tax Consulting Group LLC · Ереван</span>
+          <a class="ftr__phone" href="tel:+37494184014">+374 94 184 014</a>
+          <span><a href="https://wa.me/37494184014" target="_blank" rel="noopener noreferrer" data-wa>WhatsApp</a> · <a href="https://t.me/LTCG_Armenia" target="_blank" rel="noopener noreferrer">Telegram @LTCG_Armenia</a></span>
+          <span class="ftr__quiet">Реквизиты, email, часы: <span class="tbc tbc--quiet"><svg aria-hidden="true"><use href="#i-pending"/></svg>уточняем</span></span>
+        </address>
+      </section>
+
+      <nav class="tile ftr__tile ftr__tile--nav" data-span="4" role="listitem" aria-labelledby="f-moments">
+        <h2 class="ftr__h" id="f-moments">По моменту</h2>
+        <ul class="ftr__list" role="list">
+          <li><a href="./home-ru.html#pre-move">Ещё не переехал</a></li>
+          <li><a href="./home-ru.html#arrived">Только приехал</a></li>
+          <li><a href="./home-ru.html#legalizing">Легализуюсь</a></li>
+          <li><a href="./home-ru.html#working">Работаю</a></li>
+          <li><a href="./home-ru.html#settled">Живу и планирую</a></li>
+          <li><a href="./home-ru.html#moving-on">Двигаюсь дальше</a></li>
+          <li><a href="./noyabr.html">Подаю по новым правилам</a></li>
+        </ul>
+      </nav>
+
+      <section class="tile ftr__tile" data-span="4" role="listitem" aria-labelledby="f-site">
+        <h2 class="ftr__h" id="f-site">Сайт</h2>
+        <p class="ftr__quiet">Политика обработки данных — <span class="tbc tbc--quiet"><svg aria-hidden="true"><use href="#i-pending"/></svg>текст</span></p>
+        <nav class="ftr__langs" aria-label="Язык сайта">
+          <span aria-disabled="true" lang="hy">Հայերեն</span>
+          <a href="./home-ru.html" lang="ru" aria-current="page">Русский</a>
+          <span aria-disabled="true" lang="en">English</span>
+        </nav>
+        <p class="ftr__quiet">Армянская и английская версии готовятся.</p>
+      </section>
+
+      <section class="tile ftr__tile ftr__tile--legal" data-span="12" role="listitem" aria-labelledby="f-legal">
+        <h2 class="sr-only" id="f-legal">Правовая оговорка</h2>
+        <p class="ftr__note">Услуги носят консультационный и сопроводительный характер; решения о выдаче ВНЖ и открытии счетов принимают государственные органы и банки. Формулировку подтверждает клиент.</p>
+        <div class="ftr__credit">
+          <p class="ftr__copy">© 2026 Legal and Tax Consulting Group LLC</p>
+          <p class="ftr__by">Сайт спроектирован и собран студией
+            <a class="ftr__vkv" href="https://vkvstudio.com" target="_blank" rel="noopener noreferrer">
+              <picture><source type="image/webp" srcset="assets/logo/vkv-studio.webp"><img src="assets/logo/vkv-studio.png" width="256" height="180" alt="" loading="lazy" decoding="async"></picture>
+              <span>VKV Studio</span>
+            </a>
+            <span class="ftr__dom">vkvstudio.com</span>
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</footer>
+
+<!-- мобильный док: после хиро -->
+<nav class="dock glass" aria-label="Быстрые действия">
+  <a href="tel:+37494184014"><svg aria-hidden="true"><use href="#i-phone"/></svg>Позвонить</a>
+  <a href="https://t.me/LTCG_Armenia" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-tg"/></svg>Telegram</a>
+  <!-- WhatsApp не подтверждён — см. комментарий у формы -->
+  <a href="https://wa.me/37494184014" target="_blank" rel="noopener noreferrer" data-wa><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a>
+  <a class="is-primary" href="#calc"><svg aria-hidden="true"><use href="#i-calc"/></svg>Рассчитать</a>
+</nav>
+
+<script id="triGateBoot">
+  (function () {
+    'use strict';
+    var d = document, root = d.documentElement;
+    var SITE_ROOT = root.getAttribute('data-site-root') || '/';
+    d.querySelectorAll('.tri [data-path]').forEach(function (a) {
+      a.setAttribute('href', SITE_ROOT + (a.getAttribute('data-path') || ''));
+    });
+    var box = d.querySelector('[data-theme-toggle]');
+    if (box) {
+      var btns = box.querySelectorAll('.tri__theme-btn');
+      var read = function () { try { var v = localStorage.getItem('ltcg-theme'); return (v === 'light' || v === 'dark') ? v : 'auto'; } catch (e) { return 'auto'; } };
+      var paint = function (m) {
+        if (m === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', m);
+        btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === m)); });
+      };
+      btns.forEach(function (b) { b.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation();
+        var m = b.dataset.set; try { m === 'auto' ? localStorage.removeItem('ltcg-theme') : localStorage.setItem('ltcg-theme', m); } catch (err) {}
+        paint(m); }); });
+      paint(read()); box.hidden = false;
+    }
+  })();
+  </script>
+</body>
+</html>

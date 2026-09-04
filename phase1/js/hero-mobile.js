@@ -67,6 +67,9 @@
   function unlock() { if (locked)  { locked = false; html.classList.remove('hm-lock'); } }
   html.classList.add('hm-run');
   lock();
+  // Ворота стоят на месте по умолчанию (css/hero-mobile.css) — прячем их
+  // отсюда, раз уж скрипт жив и заставка сейчас пойдёт.
+  html.style.setProperty('--gate', '0');
 
   /* ── 2. Кривые ─────────────────────────────────────────────────────────
      Вход — ease-out, перетекание — ease-in-out: правило скила ui-ux-pro-max,
@@ -329,11 +332,27 @@
       head.style.setProperty('--brand-o', '1');
     }
   }
-  document.addEventListener('click', function (e) {
+  function onPick(e) {
     var a = e.target && e.target.closest ? e.target.closest('.tri__part[data-lang]') : null;
     if (!a || a.classList.contains('is-soon')) return;
     release();
-  }, true);
+    /* Страховка: нажатие должно ЧТО-ТО менять на экране. Штатно прокруткой
+       к первому блоку занимается js/home-ru.js, но если его нет, он не успел
+       или переход по якорю не состоялся, человек остаётся на тех же воротах
+       и делает вывод, что сайт не работает. Через 700 мс проверяем и доводим
+       сами. */
+    setTimeout(function () {
+      if (window.scrollY > 24) return;
+      var where = document.getElementById('where') ||
+                  document.querySelector('.hs') && document.querySelector('.hs').nextElementSibling;
+      if (!where) return;
+      window.scrollTo(0, Math.round(where.getBoundingClientRect().top + window.scrollY));
+    }, 700);
+  }
+  document.addEventListener('click', onPick, true);
+  // На iOS тап по крупной области надёжнее ловится через touchend: click там
+  // может не дойти, если палец чуть сместился по ходу нажатия.
+  document.addEventListener('touchend', onPick, true);
 
   // Тап по сцене — пропуск заставки. Не единственный способ: ссылка
   // «Пропустить анимацию» стоит первой в табе и на телефоне видима —

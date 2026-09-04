@@ -108,7 +108,11 @@
     cov = { s: s, ox: (vw - M.frame[0] * s) / 2, oy: (vh - M.frame[1] * s) / 2 };
 
     var LB = M.logoBox, bw = LB[2] - LB[0], bh = LB[3] - LB[1];
-    var lw = Math.min(vw * 0.64, 300), k = lw / bw, lh = bh * k;
+    // Предел ширины знака зависит от экрана: 300 px рассчитаны на телефон,
+    // а на вертикальном планшете (768 и шире) знак в 300 px теряется посреди
+    // пустого поля. Доля та же, потолок выше.
+    var cap = vw < 520 ? 300 : 420;
+    var lw = Math.min(vw * 0.64, cap), k = lw / bw, lh = bh * k;
     var gateH = screenEl ? screenEl.offsetHeight : vh * 0.46;
     pl = {
       k: k, lw: lw, lh: lh, LB: LB,

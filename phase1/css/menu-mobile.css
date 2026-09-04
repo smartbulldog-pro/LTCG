@@ -186,6 +186,13 @@ a.mnav__lang[aria-current="page"] {
 }
 span.mnav__lang { opacity: 0.5; }
 
+/* Планшет: колонка меню не растягивается на 1024 px — строка с одним словом
+   и полем в пол-экрана читается хуже, чем плотный список. */
+@media (min-width: 600px) {
+  .mnav__inner, .mnav > * { max-inline-size: 620px; margin-inline: auto; }
+  .mnav__item { font-size: 1.25rem; min-height: 58px; }
+}
+
 /* ── 3. Пока идёт заставка ────────────────────────────────────────────────
    Первый экран — заставка и выбор языка; меню там нечего открывать. */
 html.hm-run .hdr__menu,

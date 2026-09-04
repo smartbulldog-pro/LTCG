@@ -98,8 +98,12 @@
     .catch(function (err) { console.warn('[boot] menu-mobile', err); })
     .then(function () { if (hasSite) return load('js/site.js'); })
     .catch(function (err) { console.error('[boot] site', err); })
-    // рейка разделов справа: строится из разметки, ссылки настоящие, без неё страница цела
-    .then(function () { if (fine) return load('js/railnav.js'); })
+    // Рейка разделов справа: строится из разметки, ссылки настоящие, без неё
+    // страница цела. Не грузится там, где есть заставка: на узком экране рейке
+    // негде стоять, её работу делает меню шапки. Условие важно именно для iPad
+    // — он отвечает «hover: hover», и рейка строилась, чтобы тут же быть
+    // спрятанной стилями. Лишняя работа и лишний файл.
+    .then(function () { if (fine && !splash) return load('js/railnav.js'); })
     .catch(function (err) { console.warn('[boot] railnav', err); });
 
   /* Рабочий процесс — только ради установки на рабочий стол: Chrome на

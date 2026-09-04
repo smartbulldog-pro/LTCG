@@ -34,8 +34,15 @@
      2560x1440, ролик прохода по офису и скраб по закреплённому экрану, и на
      планшете это встаёт колом (владелец, 4 сентября: «на айпаде повис»).
      Палец такой сценой не управляет, а заставка на том же кадре — управляет.
-     Планшет с подключённой мышью даёт pointer: fine и остаётся на сцене. */
-  var splash = matchMedia('(max-width: 767px), (pointer: coarse) and (max-width: 1366px)').matches;
+
+     ПОЧЕМУ any-pointer, А НЕ pointer. Safari на iPad по умолчанию выдаёт
+     себя за настольный браузер и на запрос pointer отвечает fine, а на
+     hover — hover, хотя это планшет с пальцем. Гейт по `pointer: coarse`
+     проходил мимо iPad целиком: он получал десктопную сцену и замирал
+     (владелец: «не прошло на айпаде»). `any-pointer: coarse` спрашивает
+     иначе — «есть ли ХОТЬ ОДИН грубый указатель», и тач-экран честно
+     отвечает да. На настольной машине без сенсорного экрана — нет. */
+  var splash = matchMedia('(max-width: 767px), (any-pointer: coarse) and (max-width: 1366px)').matches;
   /* GSAP нужен ровно там, где есть десктопная сцена хиро. На устройствах с
      заставкой её нет, а reveal-анимации в site.js без GSAP деградируют
      штатно — «без GSAP всё видно». Планшет получал GSAP и ScrollTrigger без
@@ -105,6 +112,43 @@
     addEventListener('load', function () {
       navigator.serviceWorker.register(SITE_ROOT + 'sw.js')
         .catch(function (err) { console.warn('[boot] sw', err); });
+    });
+  }
+
+  /* Диагностика по адресу с ?diag=1 — плашка поверх экрана с тем, что видит
+     конкретное устройство. На планшете и телефоне консоль недоступна без
+     подключённого компьютера, а гадать о медиазапросах чужого Safari дорого:
+     iPad, например, отвечает на pointer «fine», хотя это планшет с пальцем.
+     Ничего не грузит и без параметра не выполняется. */
+  if (/[?&]diag=1/.test(location.search)) {
+    addEventListener('load', function () {
+      var q = function (m) { return matchMedia(m).matches ? 'да' : 'нет'; };
+      var rows = [
+        ['экран', innerWidth + '×' + innerHeight + ' · DPR ' + (devicePixelRatio || 1)],
+        ['точек касания', String(navigator.maxTouchPoints || 0)],
+        ['pointer: coarse', q('(pointer: coarse)')],
+        ['any-pointer: coarse', q('(any-pointer: coarse)')],
+        ['hover: hover', q('(hover: hover)')],
+        ['ГЕЙТ ЗАСТАВКИ', splash ? 'ДА' : 'НЕТ'],
+        ['GSAP', typeof gsap === 'undefined' ? 'нет' : 'есть'],
+        ['классы', h.className],
+        ['--gate', h.style.getPropertyValue('--gate') || '(не задан)']
+      ];
+      var sc = d.querySelector('.hs__screen');
+      if (sc) {
+        var r = sc.getBoundingClientRect();
+        rows.push(['ворота', 'верх ' + Math.round(r.top) + ', высота ' + Math.round(r.height)]);
+      }
+      rows.push(['скрипты', Array.prototype.map.call(d.querySelectorAll('script[src]'),
+        function (x) { return x.src.split('/').pop().split('?')[0]; }).join(' ')]);
+      var box = d.createElement('div');
+      box.setAttribute('style', 'position:fixed;inset:auto 8px 8px 8px;z-index:99999;' +
+        'background:#0b1a36;color:#FAE0A2;border:1px solid #F2C249;border-radius:12px;' +
+        'padding:10px 12px;font:12px/1.45 ui-monospace,monospace;max-height:52vh;overflow:auto');
+      box.innerHTML = rows.map(function (r) {
+        return '<div><b style="color:#fff">' + r[0] + ':</b> ' + String(r[1]) + '</div>';
+      }).join('') + '<div style="margin-top:8px;opacity:.7">снимок экрана этой плашки — всё, что нужно</div>';
+      d.body.appendChild(box);
     });
   }
 })();

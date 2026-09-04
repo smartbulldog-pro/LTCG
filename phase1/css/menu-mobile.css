@@ -6,7 +6,7 @@
    js/menu-mobile.js из самой страницы и из подвала — здесь только вид.
    ══════════════════════════════════════════════════════════════════════════ */
 
-@media (max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
+@media (max-width: 767px), (pointer: coarse) and (max-width: 1366px) {
 
 /* ── 1. Кнопка ────────────────────────────────────────────────────────────
    48×48 — выше минимума 44 по правилу «touch-target-size», с запасом на то,

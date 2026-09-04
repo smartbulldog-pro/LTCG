@@ -26,13 +26,16 @@
   var mobile = matchMedia('(max-width: 767px), ((max-height: 767px) and (pointer: coarse))').matches;
   var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
   var motion = !reduce && !mobile;
-  /* Заставка первого экрана. Шире, чем гейт GSAP: её берут телефон в любой
-     ориентации И вертикальный планшет, включая iPad. Причина простая — там
-     экран вертикальный, и десктопная сцена с монитором и проходом по офису
-     на нём не читается, а кадр Арарата обрезается в полоску неба.
-     Планшет в альбоме и планшет с подключённой мышью (pointer: fine)
-     остаются на десктопной сцене: у них и форма, и указатель десктопные. */
-  var splash = matchMedia('(max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse)').matches;
+  /* Заставка первого экрана. Шире, чем гейт GSAP: её берут ВСЕ устройства
+     с грубым указателем до 1366 px — телефон в любой ориентации и планшет
+     в любой, включая iPad Pro в альбоме.
+     Сперва планшет в альбоме оставался на десктопной сцене: форма экрана у
+     него десктопная. Оказалось, что дело не в форме — сцена держит canvas
+     2560x1440, ролик прохода по офису и скраб по закреплённому экрану, и на
+     планшете это встаёт колом (владелец, 4 сентября: «на айпаде повис»).
+     Палец такой сценой не управляет, а заставка на том же кадре — управляет.
+     Планшет с подключённой мышью даёт pointer: fine и остаётся на сцене. */
+  var splash = matchMedia('(max-width: 767px), (pointer: coarse) and (max-width: 1366px)').matches;
   var hasHero = !!d.querySelector('[data-hero-scroll]');
   var hasSite = h.hasAttribute('data-site');
 

@@ -1,0 +1,199 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   LTCG — menu-mobile.css · меню телефона и вертикального планшета
+   Подключается с тем же media, что и заставка: на десктопе не участвует.
+
+   Кнопка-бургер в шапке и полноэкранная панель. Содержимое собирает
+   js/menu-mobile.js из самой страницы и из подвала — здесь только вид.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
+
+/* ── 1. Кнопка ────────────────────────────────────────────────────────────
+   48×48 — выше минимума 44 по правилу «touch-target-size», с запасом на то,
+   что палец метит в кнопку, а не в три полоски внутри неё. */
+/* Класс свой, не `.burger`: под этим именем в site.css:664 живёт кнопка
+   ПРЕЖНЕГО меню (#menu в разметке home-ru.html) с иконками-спрайтами и
+   обработчиком в site.js:79. Прежнее меню оставлено как есть — оно просто
+   не открывается, потому что его кнопки в шапке больше нет. Одно имя на
+   две разные кнопки рано или поздно свело бы их стили. */
+body .hdr .hdr__menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0 0.5rem;
+  margin-inline-start: 0.25rem;
+  background: none;
+  border: 0;
+  color: var(--text);
+  font: 500 0.8125rem/1 var(--font-mono, ui-monospace, monospace);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.hdr__menu-box {
+  position: relative;
+  display: block;
+  inline-size: 22px;
+  block-size: 14px;
+  flex: none;
+}
+.hdr__menu-box i {
+  position: absolute;
+  left: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 240ms cubic-bezier(.16, 1, .3, 1), opacity 140ms ease;
+}
+.hdr__menu-box i:nth-child(1) { top: 0; }
+.hdr__menu-box i:nth-child(2) { top: 6.25px; }
+.hdr__menu-box i:nth-child(3) { top: 12.5px; }
+/* Открыто — полоски складываются в крест: движение объясняет, что кнопка
+   та же самая и закроет то, что открыла (правило «motion-meaning»). */
+.hdr__menu[aria-expanded="true"] .hdr__menu-box i:nth-child(1) { transform: translateY(6.25px) rotate(45deg); }
+.hdr__menu[aria-expanded="true"] .hdr__menu-box i:nth-child(2) { opacity: 0; }
+.hdr__menu[aria-expanded="true"] .hdr__menu-box i:nth-child(3) { transform: translateY(-6.25px) rotate(-45deg); }
+.hdr__menu-txt { display: none; }
+
+/* Кнопка расчёта в шапке на телефоне уступает место кнопке меню: то же
+   действие стоит в нижней панели быстрых действий, которая видна всегда,
+   а в строке шапки они вдвоём не помещаются. */
+body .hdr__cta { display: none; }
+body .hdr__chosen { display: none; }
+
+/* Шапка в три колонки (знак | середина | тема) рассчитана на десктоп, и
+   кнопка меню стала бы в ней четвёртой — сетка разъезжается. На узком
+   экране строка проще: знак слева, тема и меню справа. */
+body .hdr .hdr__in {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-inline: 1rem;
+}
+body .hdr .brand { margin-inline-end: auto; }
+body .hdr .themer { order: 2; }
+body .hdr .hdr__menu { order: 3; }
+body .hdr .themer__btn { inline-size: 40px; block-size: 40px; }
+
+/* ── 2. Панель ────────────────────────────────────────────────────────────
+   Полноэкранная: на узком экране выдвижная шторка в 80 % ширины оставляет
+   бессмысленную полосу сбоку, а список разделов всё равно занимает всё. */
+.mnav {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: calc(var(--header-height, 72px) + 0.5rem) 1.15rem calc(2rem + env(safe-area-inset-bottom));
+  background: var(--bg);
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 200ms ease, transform 260ms cubic-bezier(.16, 1, .3, 1);
+}
+.mnav.is-in { opacity: 1; transform: none; }
+html.mnav-on body.mnav-lock {
+  position: fixed;
+  inset-inline: 0;
+  width: 100%;
+  overflow: hidden;
+}
+/* Шапка остаётся сверху панели: кнопка закрытия — та же кнопка меню. */
+html.mnav-on body .hdr { z-index: 130; }
+
+.mnav__group { margin-block-end: 1.6rem; }
+.mnav__group:last-child { margin-block-end: 0; }
+.mnav__h {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3, var(--text-2));
+}
+.mnav__list { list-style: none; margin: 0; padding: 0; }
+.mnav__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  min-height: 52px;                    /* правило «touch-target-size» с запасом */
+  padding-block: 0.55rem;
+  border-block-end: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.125rem;
+  line-height: 1.3;
+}
+.mnav__list li:last-child .mnav__item { border-block-end: 0; }
+.mnav__no {
+  flex: none;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.75rem;
+  color: var(--gold-primary, #F2C249);
+  opacity: 0.75;
+}
+.mnav__item.is-here .mnav__t { color: var(--text-2); }
+.mnav__item.is-here::after {
+  content: 'вы здесь';
+  margin-inline-start: auto;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3, var(--text-2));
+  align-self: center;
+}
+
+/* Раздел, которого ещё нет: пункт виден, но не нажимается и честно
+   подписан. Прятать нельзя — человек должен знать, что тема на сайте
+   будет; ссылка в никуда хуже отсутствия ссылки. */
+.mnav__item.is-soon { color: var(--text-3, var(--text-2)); cursor: default; }
+.mnav__item.is-soon::after {
+  content: 'готовится';
+  margin-inline-start: auto;
+  align-self: center;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.mnav__langs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.mnav__lang {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+a.mnav__lang { color: var(--text); border-color: var(--gold-line); }
+a.mnav__lang[aria-current="page"] {
+  background: var(--gold-fill);
+  color: var(--gold-fill-text);
+  border-color: transparent;
+  font-weight: 600;
+}
+span.mnav__lang { opacity: 0.5; }
+
+/* ── 3. Пока идёт заставка ────────────────────────────────────────────────
+   Первый экран — заставка и выбор языка; меню там нечего открывать. */
+html.hm-run .hdr__menu,
+html.hm-gate .hdr__menu { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mnav { transition: none; }
+  .hdr__menu-box i { transition: none; }
+}
+
+}

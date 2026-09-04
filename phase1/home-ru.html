@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-skin="ru" data-site-root="./" data-site data-v="20260904mark" class="no-js">
+<html lang="ru" data-skin="ru" data-site-root="./" data-site data-v="20260904m3" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -15,6 +15,16 @@ try{var t=localStorage.getItem('ltcg-theme');if(t==='light'||t==='dark')h.setAtt
 <meta name="description" content="Legal and Tax Consulting Group, Ереван: ВНЖ, регистрация ИП и ООО, открытие счёта, соцкарта, юридический адрес, бухгалтерия. Вход по моменту вашей жизни, цена считается на странице, сроки известны до начала работы.">
 <meta name="theme-color" content="#0C1B3A">
 <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+<!-- «Вынести на рабочий стол»: манифест даёт Android и десктопному Chrome
+     имя, иконку и запуск без адресной строки; Apple манифест игнорирует и
+     читает свои meta — поэтому и то, и другое. -->
+<link rel="manifest" href="manifest.webmanifest?v=20260904m3">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LTCG">
+<meta name="mobile-web-app-capable" content="yes">
 
 <link rel="canonical" href="https://ltcg.am/">
 <link rel="alternate" hreflang="ru" href="https://ltcg.am/">
@@ -44,15 +54,19 @@ try{var t=localStorage.getItem('ltcg-theme');if(t==='light'||t==='dark')h.setAtt
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/onest-500-700-cyrillic.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/onest-500-700-latin.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/golos-text-400-cyrillic.woff2">
-<link rel="stylesheet" href="css/fonts.css?v=20260904mark">
-<link rel="stylesheet" href="css/site.css?v=20260904mark">
-<link rel="stylesheet" href="css/site-ru.css?v=20260904mark">
-<link rel="stylesheet" href="css/hero.css?v=20260904mark">
-<link rel="stylesheet" href="css/main-triptych.css?v=20260904mark">
-<link rel="stylesheet" href="css/home-ru.css?v=20260904fix35">
+<link rel="stylesheet" href="css/fonts.css?v=20260904m3">
+<link rel="stylesheet" href="css/site.css?v=20260904m3">
+<link rel="stylesheet" href="css/site-ru.css?v=20260904m3">
+<link rel="stylesheet" href="css/hero.css?v=20260904m3">
+<link rel="stylesheet" href="css/main-triptych.css?v=20260904m3">
+<link rel="stylesheet" href="css/home-ru.css?v=20260904m3">
+<!-- заставка первого экрана на телефоне. media на теге: на десктопе файл
+     скачивается с низким приоритетом и рендер не задерживает -->
+<link rel="stylesheet" media="(max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse)" href="css/hero-mobile.css?v=20260904m4">
+<link rel="stylesheet" media="(max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse)" href="css/menu-mobile.css?v=20260904m3">
 <!-- один загрузчик: гейты reduce / мобильный / указатель → GSAP + Lenis только при движении → хиро → site.js -->
-<script defer src="js/boot.js?v=20260904mark"></script>
-<script defer src="js/home-ru.js?v=20260904fix35"></script>
+<script defer src="js/boot.js?v=20260904m3"></script>
+<script defer src="js/home-ru.js?v=20260904m3"></script>
 
 <script type="application/ld+json">
 {
@@ -168,6 +182,15 @@ try{var t=localStorage.getItem('ltcg-theme');if(t==='light'||t==='dark')h.setAtt
       <span class="hdr__chosen" data-chosen hidden>Вы выбрали: <b data-chosen-name></b> <a href="./home-ru.html#contact" data-cta>Обсудить</a></span>
       <a class="btn btn--primary btn--sm hdr__cta" href="./home-ru.html#calc">Рассчитать стоимость <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
     </div>
+    <!-- Меню телефона. Кнопка стоит с hidden и открывается скриптом: без JS
+         меню не собирается, и мёртвой кнопки на экране быть не должно.
+         Содержимое панели js/menu-mobile.js берёт из самой страницы и из
+         подвала — второго списка разделов в разметке нет и разъехаться нечему. -->
+    <button class="hdr__menu" type="button" data-burger aria-expanded="false" aria-controls="mnav" hidden>
+      <span class="hdr__menu-box" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="hdr__menu-txt">Меню</span>
+    </button>
+
     <div class="themer" role="group" aria-label="Тема оформления" data-themer>
       <button class="themer__btn" type="button" data-theme-set="auto" aria-pressed="true" title="Как в системе"><svg aria-hidden="true"><use href="#i-auto"/></svg><span class="sr-only">Как в системе</span></button>
       <button class="themer__btn" type="button" data-theme-set="light" aria-pressed="false" title="Светлая тема"><svg aria-hidden="true"><use href="#i-sun"/></svg><span class="sr-only">Светлая тема</span></button>
@@ -225,16 +248,45 @@ try{var t=localStorage.getItem('ltcg-theme');if(t==='light'||t==='dark')h.setAtt
       <!-- слой 0: постер — LCP-элемент. Движок берёт из него первый битмап и накрывает canvas тем же кадром -->
       <div class="hs__poster" aria-hidden="true">
         <picture>
-          <source type="image/avif" media="(max-width: 767px)" sizes="100vw"
-                  srcset="assets/hero/lcp/A-m-540.avif 540w, assets/hero/lcp/A-m-864.avif 864w">
-          <source type="image/webp" media="(max-width: 767px)" sizes="100vw"
-                  srcset="assets/hero/lcp/A-m-540.webp 540w, assets/hero/lcp/A-m-864.webp 864w">
+          <!-- Телефон: вертикальный кадр 9:16. Он же фон заставки «Арарат → знак»
+               (js/hero-mobile.js) — одна картинка на экран, второй загрузки под
+               слой анимации нет. Горизонтальный кадр сюда не годится: при cover
+               на 390×844 от него остаётся полоса неба. -->
+          <source type="image/avif" media="(max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse)" sizes="100vw"
+                  srcset="assets/hero/m/ararat-540.avif 540w, assets/hero/m/ararat-720.avif 720w, assets/hero/m/ararat-1080.avif 1080w">
+          <source type="image/webp" media="(max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse)" sizes="100vw"
+                  srcset="assets/hero/m/ararat-540.webp 540w, assets/hero/m/ararat-720.webp 720w, assets/hero/m/ararat-1080.webp 1080w">
+          <source type="image/jpeg" media="(max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse)" sizes="100vw"
+                  srcset="assets/hero/m/ararat-540.jpg 540w, assets/hero/m/ararat-720.jpg 720w, assets/hero/m/ararat-1080.jpg 1080w">
           <source type="image/avif" sizes="100vw"
                   srcset="assets/hero/lcp/A-1280.avif 1280w, assets/hero/lcp/A-1920.avif 1920w, assets/hero/lcp/A-2560.avif 2560w">
           <source type="image/webp" sizes="100vw"
                   srcset="assets/hero/lcp/A-1280.webp 1280w, assets/hero/lcp/A-1920.webp 1920w, assets/hero/lcp/A-2560.webp 2560w">
           <img src="assets/hero/lcp/A-1280.jpg" width="2560" height="1440" alt="" fetchpriority="high" decoding="async" loading="eager">
         </picture>
+      </div>
+
+      <!-- слой M: заставка телефона — «Арарат → знак → выбор языка».
+           На десктопе не показывается (css/hero-mobile.css грузится с media),
+           движок к ней подаётся только на мобильном гейте boot.js.
+           Без JS остаётся пустым слоем поверх фотографии: экран цел. -->
+      <div class="hm" data-hero-mobile aria-hidden="true">
+        <div class="hm__veil"></div>
+        <svg class="hm__vec" aria-hidden="true" focusable="false">
+          <defs>
+            <!-- фирменный градиент знака, координаты из assets/hero/logo.json;
+                 userSpaceOnUse — заливка едет вместе с знаком и не «плывёт» -->
+            <linearGradient id="hmGold" gradientUnits="userSpaceOnUse"
+                            x1="206.69" y1="971.49" x2="903.97" y2="274.21">
+              <stop offset="0.32" stop-color="#C4922B"/>
+              <stop offset="0.55" stop-color="#F2C249"/>
+              <stop offset="0.79" stop-color="#FAE0A2"/>
+              <stop offset="1"    stop-color="#C4922B"/>
+            </linearGradient>
+          </defs>
+          <g class="hm__logo"></g>
+          <path class="hm__edge" d=""/>
+        </svg>
       </div>
 
       <!-- слой 1: фотоплиты + грейд -->

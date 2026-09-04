@@ -103,7 +103,20 @@
       var bottom = hs2.getBoundingClientRect().bottom;
       if (bottom > 80) document.body.classList.remove('is-landed');
     }, { passive: true });
+  
+  /* ── 4. Рейка гаснет над подвалом ───────────────────────────────────────
+     В подвале секций нет, показывать ей нечего, и она наезжает на правую
+     плитку. Наблюдатель ставит признак на body, CSS гасит с переходом. */
+  (function railOverFooter() {
+    var foot = document.querySelector('.ftr');
+    if (!foot || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        document.body.classList.toggle('is-at-footer', e.isIntersecting);
+      });
+    }, { threshold: 0 }).observe(foot);
   })();
+})();
   var ru = document.querySelector('.tri__part--ru');
   if (ru) {
     ru.addEventListener('click', function () {
@@ -120,4 +133,17 @@
       }, 16);
     }, true);
   }
+
+  /* ── 4. Рейка гаснет над подвалом ───────────────────────────────────────
+     В подвале секций нет, показывать ей нечего, и она наезжает на правую
+     плитку. Наблюдатель ставит признак на body, CSS гасит с переходом. */
+  (function railOverFooter() {
+    var foot = document.querySelector('.ftr');
+    if (!foot || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        document.body.classList.toggle('is-at-footer', e.isIntersecting);
+      });
+    }, { threshold: 0 }).observe(foot);
+  })();
 })();

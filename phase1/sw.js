@@ -1,94 +1,35 @@
 /* ============================================================
-   LTCG — sw.js · офлайн-оболочка для установленного приложения
-   Область действия — каталог, в котором лежит файл (phase1/), поэтому на
-   GitHub Pages он не претендует на весь домен.
+   LTCG — sw.js · САМОУДАЛЕНИЕ
 
-   ПОЛИТИКА. Страницы всегда идут в сеть: черновик правится по нескольку раз
-   в день, и человек должен видеть свежий, а не вчерашний. Кеш для них —
-   только запасной выход, когда сети нет. Статика (css, js, шрифты, кадры)
-   адресуется с ?v= и потому берётся из кеша сразу: её содержимое при том же
-   адресе не меняется никогда.
+   Здесь была офлайн-оболочка. Её пришлось снять: замерено на живом адресе
+   4 сентября — рабочий процесс отдавал страницу из своего кеша (в разметке
+   стояла версия ПРОШЛОЙ публикации), а ресурсы, которых в кеше не было,
+   получали Response.error(). Браузер видит это как сетевой сбой, поэтому
+   gsap, hero-scroll.js, site.js и railnav.js падали с 404, и от первого
+   экрана оставался тёмный прямоугольник со знаком в углу.
 
-   ЗАЧЕМ ВООБЩЕ. «Вынести на рабочий стол» без него открывает белый экран
-   в метро и в самолёте. Экран с горой, знаком и телефоном офиса — лучше.
+   Пока черновик правится по нескольку раз в день, любой кеш страниц вреднее,
+   чем польза от офлайна: человек открывает ссылку и видит вчерашнее.
+
+   Этот файл не кеширует ничего. Он снимает себя с регистрации, стирает все
+   кеши и перезагружает открытые вкладки — чтобы у тех, кто уже успел зайти,
+   прежний рабочий процесс ушёл сам, без чистки настроек браузера.
+
+   Установку на рабочий стол это не ломает: её даёт manifest.webmanifest —
+   имя, иконки и запуск без адресной строки. Без рабочего процесса пропадает
+   только работа без сети. Вернём, когда страницы перестанут меняться каждый
+   день, и уже с политикой «сеть всегда впереди, кеш — только запасной выход».
    ============================================================ */
-const V = 'ltcg-v1';
-const SHELL = [
-  './home-ru.html',
-  './noyabr.html',
-  './css/site.css',
-  './css/site-ru.css',
-  './css/hero.css',
-  './css/main-triptych.css',
-  './css/home-ru.css',
-  './css/hero-mobile.css',
-  './css/menu-mobile.css',
-  './js/boot.js',
-  './js/hero-static.js',
-  './js/hero-mobile.js',
-  './js/menu-mobile.js',
-  './js/site.js',
-  './assets/hero/m/ararat-540.avif',
-  './assets/hero/m/ararat-720.avif',
-  './assets/hero/m/morph.json',
-  './assets/hero/logo.svg',
-  './assets/icons/icon-192.png',
-  './manifest.webmanifest'
-];
-
-self.addEventListener('install', (e) => {
-  // Каждый файл кладётся отдельно: один недоступный адрес не должен рушить
-  // установку целиком — офлайн лучше частичный, чем никакой.
-  e.waitUntil((async () => {
-    const c = await caches.open(V);
-    await Promise.all(SHELL.map((u) => c.add(u).catch(() => {})));
-    self.skipWaiting();
-  })());
-});
+self.addEventListener('install', () => self.skipWaiting());
 
 self.addEventListener('activate', (e) => {
   e.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((k) => k !== V).map((k) => caches.delete(k)));
-    await self.clients.claim();
+    await Promise.all(keys.map((k) => caches.delete(k)));
+    await self.registration.unregister();
+    const clients = await self.clients.matchAll({ type: 'window' });
+    clients.forEach((c) => c.navigate(c.url));
   })());
 });
 
-self.addEventListener('fetch', (e) => {
-  const req = e.request;
-  if (req.method !== 'GET') return;
-  const url = new URL(req.url);
-  if (url.origin !== location.origin) return;
-
-  // Страницы — сеть вперёд, кеш на случай её отсутствия.
-  if (req.mode === 'navigate') {
-    e.respondWith((async () => {
-      try {
-        const net = await fetch(req);
-        const c = await caches.open(V);
-        c.put(req, net.clone());
-        return net;
-      } catch (err) {
-        const hit = await caches.match(req) || await caches.match('./home-ru.html');
-        return hit || Response.error();
-      }
-    })());
-    return;
-  }
-
-  // Остальное — кеш вперёд, сеть следом и дозапись.
-  e.respondWith((async () => {
-    const hit = await caches.match(req);
-    if (hit) return hit;
-    try {
-      const net = await fetch(req);
-      if (net.ok && net.type === 'basic') {
-        const c = await caches.open(V);
-        c.put(req, net.clone());
-      }
-      return net;
-    } catch (err) {
-      return hit || Response.error();
-    }
-  })());
-});
+// Ни одного перехвата: запросы идут в сеть напрямую, как без рабочего процесса.

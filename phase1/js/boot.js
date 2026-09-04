@@ -25,7 +25,7 @@
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var mobile = matchMedia('(max-width: 767px), ((max-height: 767px) and (pointer: coarse))').matches;
   var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  var motion = !reduce && !mobile;
+  var motion = !reduce && !mobile;   /* пересчитывается ниже, после splash */
   /* Заставка первого экрана. Шире, чем гейт GSAP: её берут ВСЕ устройства
      с грубым указателем до 1366 px — телефон в любой ориентации и планшет
      в любой, включая iPad Pro в альбоме.
@@ -36,6 +36,15 @@
      Палец такой сценой не управляет, а заставка на том же кадре — управляет.
      Планшет с подключённой мышью даёт pointer: fine и остаётся на сцене. */
   var splash = matchMedia('(max-width: 767px), (pointer: coarse) and (max-width: 1366px)').matches;
+  /* GSAP нужен ровно там, где есть десктопная сцена хиро. На устройствах с
+     заставкой её нет, а reveal-анимации в site.js без GSAP деградируют
+     штатно — «без GSAP всё видно». Планшет получал GSAP и ScrollTrigger без
+     движка сцены: триггеры считались поверх закреплённого экрана и замка
+     прокрутки, и первый экран замирал (владелец: «на айпаде анимация
+     проходит и дальше не переключается»). На телефоне этого не было именно
+     потому, что там GSAP не грузится вовсе. */
+  motion = motion && !splash;
+
   var hasHero = !!d.querySelector('[data-hero-scroll]');
   var hasSite = h.hasAttribute('data-site');
 

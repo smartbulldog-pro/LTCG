@@ -18,11 +18,13 @@
    две разные кнопки рано или поздно свело бы их стили. */
 body .hdr .hdr__menu {
   display: inline-flex;
+  min-inline-size: 44px;
+  justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  min-height: 48px;
-  padding: 0 0.5rem;
-  margin-inline-start: 0.25rem;
+  min-block-size: 48px;
+  padding: 0 0.35rem;
+  margin-inline-start: 0.15rem;
   background: none;
   border: 0;
   color: var(--text);
@@ -77,7 +79,14 @@ body .hdr .hdr__in {
 body .hdr .brand { margin-inline-end: auto; }
 body .hdr .themer { order: 2; }
 body .hdr .hdr__menu { order: 3; }
-body .hdr .themer__btn { inline-size: 40px; block-size: 40px; }
+/* 44 — минимум по правилу «touch-target-size». Ужимал до 40, чтобы влезла
+   кнопка меню; замер показал, что и при 44 строка помещается: знак 57 +
+   три кнопки 132 + меню 44 + поля = 265 при ширине экрана 375. */
+body .hdr .themer__btn { inline-size: 44px; block-size: 44px; }
+
+/* Ссылка «к содержанию» — для тех, кто ходит клавиатурой; на телефоне к нему
+   подключают и физическую. Правило «touch-target-size» действует и на неё. */
+body .skip { min-block-size: 44px; display: inline-flex; align-items: center; }
 
 /* ── 2. Панель ────────────────────────────────────────────────────────────
    Полноэкранная: на узком экране выдвижная шторка в 80 % ширины оставляет

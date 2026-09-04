@@ -149,6 +149,16 @@
     addEventListener('load', function () {
       var q = function (m) { return matchMedia(m).matches ? 'да' : 'нет'; };
       var rows = [
+        /* Первыми — три строки, отвечающие на вопрос «а ту ли страницу мы
+           вообще смотрим». Вчерашняя версия в установленном приложении даёт
+           ровно те же симптомы, что настоящая поломка, и отличить их иначе
+           нельзя: приложение выглядит как браузер, а метка версии нигде не
+           видна. */
+        ['ВЕРСИЯ СТРАНИЦЫ', V || '(нет)'],
+        ['открыто как', matchMedia('(display-mode: standalone)').matches
+          ? 'ПРИЛОЖЕНИЕ с рабочего стола' : 'вкладка браузера'],
+        ['страницу отдал', navigator.serviceWorker && navigator.serviceWorker.controller
+          ? 'рабочий процесс (возможен кеш)' : 'сеть напрямую'],
         ['экран', innerWidth + '×' + innerHeight + ' · DPR ' + (devicePixelRatio || 1)],
         ['точек касания', String(navigator.maxTouchPoints || 0)],
         ['pointer: coarse', q('(pointer: coarse)')],
@@ -166,6 +176,18 @@
       }
       rows.push(['скрипты', Array.prototype.map.call(d.querySelectorAll('script[src]'),
         function (x) { return x.src.split('/').pop().split('?')[0]; }).join(' ')]);
+      // (проверка версии добавляется после создания плашки — см. ниже)
+      fetch(SITE_ROOT + 'version.json', { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          var el = d.createElement('div');
+          el.style.marginTop = '6px';
+          el.innerHTML = (j.v === V)
+            ? '<b style="color:#7CE0A0">версия свежая</b>'
+            : '<b style="color:#FF8A8A">УСТАРЕЛА: на сервере ' + j.v + '</b>';
+          box.appendChild(el);
+        })
+        .catch(function () {});
       var box = d.createElement('div');
       box.setAttribute('style', 'position:fixed;inset:auto 8px 8px 8px;z-index:99999;' +
         'background:#0b1a36;color:#FAE0A2;border:1px solid #F2C249;border-radius:12px;' +
@@ -174,6 +196,18 @@
         return '<div><b style="color:#fff">' + r[0] + ':</b> ' + String(r[1]) + '</div>';
       }).join('') + '<div style="margin-top:8px;opacity:.7">снимок экрана этой плашки — всё, что нужно</div>';
       d.body.appendChild(box);
+      // Свежая ли версия — спрашиваем сервер прямо здесь, мимо всех кешей.
+      fetch(SITE_ROOT + 'version.json', { cache: 'no-store' })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          var el = d.createElement('div');
+          el.style.marginTop = '6px';
+          el.innerHTML = (j && j.v === V)
+            ? '<b style="color:#7CE0A0">версия свежая</b>'
+            : '<b style="color:#FF8A8A">УСТАРЕЛА: на сервере ' + (j && j.v) + '</b>';
+          box.appendChild(el);
+        })
+        .catch(function () {});
     });
   }
 })();

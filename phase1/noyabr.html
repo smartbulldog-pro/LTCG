@@ -36,7 +36,12 @@ try{var t=localStorage.getItem('ltcg-theme');if(t==='light'||t==='dark')h.setAtt
 <link rel="stylesheet" href="css/site-ru.css?v=20260904nov">
 <link rel="stylesheet" href="css/home-ru.css?v=20260904fix35">
 <link rel="stylesheet" href="css/noyabr.css?v=20260904fix35">
+<link rel="stylesheet" media="(max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse)" href="css/menu-mobile.css?v=20260904m3">
 <script defer src="js/site.js?v=20260904nov"></script>
+<!-- Меню узкого экрана. На этой странице нет boot.js (нет хиро и его гейтов),
+     поэтому модуль подключается прямо: он сам ничего не делает, пока в шапке
+     нет кнопки [data-burger]. -->
+<script defer src="js/menu-mobile.js?v=20260904m3"></script>
 </head>
 <body class="nov">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -90,6 +95,15 @@ try{var t=localStorage.getItem('ltcg-theme');if(t==='light'||t==='dark')h.setAtt
       <span class="hdr__chosen" data-chosen hidden>Вы выбрали: <b data-chosen-name></b> <a href="./home-ru.html#contact" data-cta>Обсудить</a></span>
       <a class="btn btn--primary btn--sm hdr__cta" href="./home-ru.html#calc">Рассчитать стоимость <svg aria-hidden="true"><use href="#i-chevron"/></svg></a>
     </div>
+    <!-- Меню телефона. Кнопка стоит с hidden и открывается скриптом: без JS
+         меню не собирается, и мёртвой кнопки на экране быть не должно.
+         Содержимое панели js/menu-mobile.js берёт из самой страницы и из
+         подвала — второго списка разделов в разметке нет и разъехаться нечему. -->
+    <button class="hdr__menu" type="button" data-burger aria-expanded="false" aria-controls="mnav" hidden>
+      <span class="hdr__menu-box" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="hdr__menu-txt">Меню</span>
+    </button>
+
     <div class="themer" role="group" aria-label="Тема оформления" data-themer>
       <button class="themer__btn" type="button" data-theme-set="auto" aria-pressed="true" title="Как в системе"><svg aria-hidden="true"><use href="#i-auto"/></svg><span class="sr-only">Как в системе</span></button>
       <button class="themer__btn" type="button" data-theme-set="light" aria-pressed="false" title="Светлая тема"><svg aria-hidden="true"><use href="#i-sun"/></svg><span class="sr-only">Светлая тема</span></button>

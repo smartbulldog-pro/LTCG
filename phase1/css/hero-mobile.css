@@ -1,0 +1,375 @@
+/* ══════════════════════════════════════════════════════════════════════════
+   LTCG — hero-mobile.css · первый экран на телефоне
+   Подключается с media="(max-width: 767px)": на десктопе файл не грузится
+   вовсе и рендер не задерживает. Обёртка внутри — на случай, если тег
+   когда-нибудь подключат без media.
+
+   ЧТО ЗДЕСЬ. Заставка «Арарат → знак» и ворота выбора языка, собранные в
+   один экран. Десктопная сцена (canvas, ролик офиса, монитор) на телефоне
+   не показывается и не грузится: движка для неё boot.js не подаёт.
+
+   ЗАМЕРЕНО на 390×844 до правок: .hs__screen с воротами стоял absolute с
+   inset-top 159 px — туда его на десктопе ставит движок как экран монитора,
+   а на телефоне движка нет, и панель просто накрывала кадр: от Арарата
+   оставалась полоска неба.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
+
+/* ── 1. Замок ─────────────────────────────────────────────────────────────
+   Пока язык не выбран, страница не прокручивается: заставка и ворота — один
+   экран, ниже него человеку сейчас делать нечего. overscroll-behavior гасит
+   резиновый отскок, из-за которого сцена «отлипала» от верха и показывала
+   белую полосу. Признак ставит js/hero-mobile.js и снимает только выбор
+   языка либо страховочный таймер — запереть человека сцена не умеет. */
+html.hm-lock,
+html.hm-lock body {
+  overflow: hidden;
+  overscroll-behavior: none;
+  height: 100%;
+  touch-action: pan-x;          /* вертикальный жест гасим, горизонтальный оставляем системе */
+}
+/* Safari на iOS одного overflow: hidden не слушается — страница продолжает
+   тянуться пальцем. Держит только выключение тела из потока. Безопасно
+   именно здесь: замок живёт лишь на самом верху страницы, прокручивать
+   назад нечего, и снимается он вместе с классом. */
+html.hm-lock body {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+}
+
+/* ── 2. Сцена ─────────────────────────────────────────────────────────────
+   svh, а не vh: на телефоне адресная строка при прокрутке съезжает, и vh
+   даёт высоту БОЛЬШЕ видимой — низ ворот уходил бы под край экрана. */
+body .hs {
+  position: relative;
+  height: 100vh;                 /* фолбэк: Safari умеет svh только с 15.4 */
+  min-height: 100vh;
+  height: 100svh;
+  min-height: 100svh;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg-void, #07122A);
+}
+body .hs__stage {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Постер — он же фон заставки и LCP-элемент. Вертикальный кадр приходит
+   из <source media="(max-width: 767px)"> в разметке: одна картинка на экран,
+   без второй загрузки под слой анимации. */
+body .hs__poster {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+body .hs__poster picture { display: block; height: 100%; }
+body .hs__poster img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;      /* та же матрица, что считает hero-mobile.js */
+}
+
+/* Слои десктопной сцены: на телефоне не рисуются и ничего не грузят. */
+body .hs__canvas,
+body .hs__svg,
+body .hs__grain,
+body .hs__video,
+body .hs__screen-glow,
+body .hs__hint { display: none; }
+
+/* Боковая рейка разделов: js/railnav.js её и так не строит без точного
+   указателя, но правило страхует от случая, когда скрипт подключат иначе.
+   На узком экране ей негде стоять — навигация уходит в меню шапки. */
+body .railnav { display: none; }
+
+/* ── 3. Слой заставки ─────────────────────────────────────────────────────
+   Ничего не перехватывает: тап-пропуск слушает сама секция, а ворота лежат
+   выше по z-index и свои нажатия получают. */
+.hm {
+  display: block;                /* по умолчанию выключен в css/home-ru.css */
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.hm__veil {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  /* Не сплошная заливка: сверху фотография остаётся читаемой, к низу уходит
+     в navy — там встают ворота, и текст на них должен лежать на плотном. */
+  background:
+    radial-gradient(120% 62% at 50% 30%, rgba(7, 18, 42, 0.10) 0%, rgba(7, 18, 42, 0.62) 100%),
+    linear-gradient(180deg,
+      rgba(7, 18, 42, 0.58) 0%,
+      rgba(7, 18, 42, 0.28) 26%,
+      rgba(9, 20, 42, 0.74) 62%,
+      rgba(9, 20, 42, 0.96) 100%);
+}
+.hm__vec {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Линия гребня. Обводка тонкая: на фотографии она должна читаться как луч
+   света по кромке, а не как обвод контура. Свечение — drop-shadow, а не
+   filter-стек: один проход композитора на кадр. */
+.hm__edge {
+  fill: none;
+  stroke: #F2C249;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgba(242, 194, 73, 0.55));
+}
+
+/* Знак. Градиент — из logo.json, userSpaceOnUse: координаты заданы в единицах
+   логотипа и едут вместе с transform группы, поэтому заливка не «плывёт»
+   при подъёме знака и не зависит от размера экрана. */
+.hm__logo { fill: url(#hmGold); }
+.hm__mt,
+.hm__sw,
+.hm__lt,
+.hm__tg { opacity: 0; }
+.hm__lt,
+.hm__tg { transform-box: fill-box; transform-origin: 50% 100%; }
+
+/* Ошибка сети: заставки нет, остаётся фотография с лёгкой вуалью — экран
+   выглядит законченным, а не сломанным. */
+.hm.is-off .hm__vec { display: none; }
+.hm.is-off .hm__veil { opacity: 0.55; }
+
+/* ── 4. Пропуск ───────────────────────────────────────────────────────────
+   Правило скила ui-ux-pro-max, «gesture-alternative»: на жест-пропуск
+   полагаться нельзя, у критичного действия должен быть видимый орган.
+   Ссылка первая в табе и на телефоне видима; гаснет вместе с заставкой. */
+body .hs__skip {
+  position: absolute;
+  z-index: 8;
+  inset: auto auto calc(1rem + env(safe-area-inset-bottom)) 50%;
+  transform: translateX(-50%);
+  clip: auto; clip-path: none;
+  width: auto; height: auto;
+  min-height: 44px;
+  display: inline-flex; align-items: center;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(250, 224, 162, 0.22);
+  background: rgba(7, 18, 42, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  font: 500 0.8125rem/1 var(--f-ru-mono, ui-monospace, monospace);
+  letter-spacing: 0.06em;
+  color: rgba(255, 243, 208, 0.92);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 240ms ease;
+}
+html.hm-gate body .hs__skip,
+html.hm-done body .hs__skip { opacity: 0; pointer-events: none; }
+
+/* ── 5. Шапка ─────────────────────────────────────────────────────────────
+   Во время заставки и на воротах её нет: первый экран — одно изображение,
+   и логотип на нём уже есть, свой, крупный. Появляется после выбора языка. */
+html.hm-run body .hdr,
+html.hm-gate body .hdr,
+html.hm-run body .site-head,
+html.hm-gate body .site-head { opacity: 0; pointer-events: none; }
+
+/* ── 6. Ворота ────────────────────────────────────────────────────────────
+   Не полноэкранный триптих, как на десктопе, а панель снизу: заставка и
+   выбор языка должны быть видны одновременно — знак сверху отвечает на
+   вопрос «кто это», кнопки внизу на вопрос «что делать».
+   Выезд считает js/hero-mobile.js переменной --gate на <html>. */
+body .hs__screen {
+  position: absolute;
+  inset: auto 0 0 auto;
+  left: 0; right: 0; top: auto;
+  z-index: 6;
+  height: auto;
+  min-height: 0;
+  transform: translateY(calc((1 - var(--gate, 0)) * 106%));
+  will-change: transform;
+  clip-path: none;
+}
+body .hs__screen .tri,
+body .tri--screen {
+  position: relative;
+  inset: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto;
+  block-size: auto;
+  min-block-size: 0;
+  gap: 0.5rem;
+  padding: 0.85rem 0.85rem calc(0.85rem + env(safe-area-inset-bottom));
+  overflow: visible;
+  background-image: none;
+  background:
+    linear-gradient(180deg, rgba(7, 18, 42, 0) 0%, rgba(7, 18, 42, 0.86) 12%, rgba(7, 18, 42, 0.97) 44%, rgba(7, 18, 42, 1) 100%);
+  border-radius: 0;
+}
+
+/* Каждая часть — строка: номер, название с аудиторией, действие.
+   Высота от 68 px: правило «touch-target-size», минимум 44 с запасом на то,
+   что палец попадает в строку, а не в её текст. */
+body .hs__screen .tri__part {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0.1rem 0.85rem;
+  min-height: 68px;
+  padding: 0.7rem 0.9rem;
+  padding-block-start: 0.7rem;              /* перебивает --r-crest у hy-части */
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+body .hs__screen .tri__name { grid-column: 1; grid-row: 1; font-size: 1.375rem; line-height: 1.15; }
+body .hs__screen .tri__aud  { grid-column: 1; grid-row: 2; font-size: 0.8125rem; line-height: 1.3; opacity: 0.74; }
+body .hs__screen .tri__act  { grid-column: 2; grid-row: 1 / span 2; align-self: center; min-height: 44px; }
+body .hs__screen .tri__name,
+body .hs__screen .tri__aud,
+body .hs__screen .tri__act { block-size: auto; min-block-size: 0; }
+
+/* Нумерация «I · 02 · № 03» — три типографские традиции, и работает она на
+   полосе во всю высоту, где у номера есть своя строка сетки. В строке 68 px
+   от неё остаётся огрызок у левого края. Языков три и они подписаны — снимаем. */
+body .hs__screen .tri__idx { display: none; }
+
+/* Сквозные линейки: .tri__aud и .tri__act вынесены за поля отрицательным
+   margin и рисуют общий шов через всю полосу. В компактной строке этот шов
+   превращается в обрубок рамки поперёк текста — отсюда «рамки» на кадре. */
+body .hs__screen .tri__aud,
+body .hs__screen .tri__act {
+  margin-inline: 0;
+  padding: 0;
+  border-block-start: 0;
+}
+body .hs__screen .tri__word { font-size: 0.8125rem; }
+body .hs__screen .tri__arw { inline-size: 1.35em; }
+
+/* Уголки гравюры у армянской части, градиентная кромка у английской и
+   пунктирная линейка над русской аудиторией рассчитаны на высокую полосу;
+   на строке от них остаются обрезки поперёк текста. */
+body .hs__screen .tri__part--hy .tri__scrim::after,
+body .hs__screen .tri__part--en::before,
+body .hs__screen .tri__part--ru .tri__aud::before { display: none; }
+
+/* Фактуры колонок остаются, но приглушены: на строке в 68 px гравюра по туфу
+   читается как грязь. Даём ровно столько, чтобы три языка отличались. */
+body .hs__screen .tri__art { opacity: calc(var(--art-op, 0.1) * 0.55); }
+body .hs__screen .tri__glass { display: none; }
+
+/* Полоса хрома: свой знак на панели не нужен — он уже стоит над ней во всю
+   ширину. Остаётся переключатель темы, и он уходит в правый угол панели —
+   в одну строку с подсказкой, а не отдельной полосой в 40 px. */
+body .hs__screen .tri__crest {
+  position: relative;
+  inset: auto;
+  order: -3;                                /* первой строкой панели, справа */
+  min-height: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+body .hs__screen .tri__mark { display: none; }
+body .hs__screen .tri__theme-btn {
+  inline-size: 44px; block-size: 44px;      /* правило «touch-target-size» */
+  display: inline-flex; align-items: center; justify-content: center;
+  /* Кнопки берут --chrome-ink, а он в мобильной ветке равен чернилам
+     армянской колонки: в светлой теме это тёмный цвет, и на navy-панели
+     иконки исчезали. Панель одна и тёмная — цвет тоже один. */
+  color: rgba(255, 243, 208, 0.72);
+}
+body .hs__screen .tri__theme-btn[aria-pressed="true"] { color: #F2C249; }
+
+/* Подсказка — заголовок панели, а не сноска: первая строка, статично,
+   слева от переключателя тем. */
+body .hs__screen .lang-hint {
+  position: relative;
+  inset: auto;
+  order: -2;
+  margin: 0;
+  /* Строка своя, не общая с кнопками тем: три подписи на трёх языках в
+     остаток ширины не влезали и разваливались на три строки — замерено. */
+  padding: 0 0.35rem 0.2rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+body .hs__screen .lang-hint__line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.55em;
+}
+body .hs__screen .lang-hint__back { display: none; }
+/* Цвет колонки рассчитан на её собственный фон (кремовый туф, бумага) и на
+   navy-панели тонет: замерено — подсказка была на экране, но не читалась.
+   На панели фон один, поэтому и цвет один. */
+/* Специфичность здесь считана, а не подобрана. В main-triptych.css стоит
+   `.tri .lang-hint.is-in .lang-hint__col[lang="hy"]` — это 0-5-0, и оно
+   перебивало правило без [lang]: в светлой теме подписи красились чернилами
+   СВОЕЙ колонки (кремовый туф, бумага) и тонули на navy-панели. Добавленный
+   [lang] даёт 0-5-1 и возвращает панели один цвет на все три подписи. */
+body .hs__screen .lang-hint .lang-hint__col[lang],
+body .hs__screen .lang-hint.is-in .lang-hint__col[lang] {
+  color: rgba(255, 243, 208, 0.66);
+  padding-inline: 0;
+  /* колонка объявлена как grid — разделитель встал бы отдельной строкой */
+  display: flex;
+  align-items: baseline;
+  gap: 0 0.55em;
+}
+/* Армянский в верхнем регистре читается плохо: у письма нет капительной
+   традиции, и заглавные ложатся сплошной стеной. Регистр — только латинице
+   и кириллице. */
+body .hs__screen .lang-hint__col[lang="hy"] { text-transform: none; letter-spacing: 0.04em; }
+body .hs__screen .lang-hint__col + .lang-hint__col::before {
+  content: '·';
+  margin-inline-end: 0.55em;
+  opacity: 0.5;
+}
+
+/* ── 7. После выбора ──────────────────────────────────────────────────────
+   Ворота остаются на месте — вверх к ним можно вернуться, как на десктопе.
+   Снимается только замок и прячется подсказка о пропуске. */
+html.hm-done body .hs { height: 100svh; }
+
+/* ── 8. Телефон в альбоме ─────────────────────────────────────────────────
+   Высоты мало: знак садится выше, панель ужимается, аудитория снимается —
+   она пояснение, а не выбор. */
+@media (max-height: 520px) and (orientation: landscape) {
+  body .hs__screen .tri { gap: 0.35rem; padding: 0.5rem 0.85rem calc(0.5rem + env(safe-area-inset-bottom)); }
+  body .hs__screen .tri__part { min-height: 52px; padding-block: 0.45rem; }
+  body .hs__screen .tri__name { font-size: 1.125rem; }
+  body .hs__screen .tri__aud { display: none; }
+  body .hs__screen .lang-hint { font-size: 0.6875rem; }
+}
+
+/* ── 9. Без движения ──────────────────────────────────────────────────────
+   Заставка отрабатывается мгновенно (js/hero-mobile.js сразу ставит конечный
+   кадр), здесь снимаются переходы, чтобы ворота не выезжали. */
+@media (prefers-reduced-motion: reduce) {
+  body .hs__screen { transform: none; }
+  body .hs__skip { transition: none; }
+}
+
+}

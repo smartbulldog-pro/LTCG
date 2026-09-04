@@ -26,6 +26,13 @@
   var mobile = matchMedia('(max-width: 767px), ((max-height: 767px) and (pointer: coarse))').matches;
   var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
   var motion = !reduce && !mobile;
+  /* Заставка первого экрана. Шире, чем гейт GSAP: её берут телефон в любой
+     ориентации И вертикальный планшет, включая iPad. Причина простая — там
+     экран вертикальный, и десктопная сцена с монитором и проходом по офису
+     на нём не читается, а кадр Арарата обрезается в полоску неба.
+     Планшет в альбоме и планшет с подключённой мышью (pointer: fine)
+     остаются на десктопной сцене: у них и форма, и указатель десктопные. */
+  var splash = matchMedia('(max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse)').matches;
   var hasHero = !!d.querySelector('[data-hero-scroll]');
   var hasSite = h.hasAttribute('data-site');
 
@@ -59,11 +66,31 @@
       .catch(function (err) { console.warn('[boot] motion libs unavailable, static tier', err); });
   }
   chain
-    .then(function () { if (hasHero) return load(mobile ? 'js/hero-static.js' : 'js/hero-scroll.js'); })
+    .then(function () { if (hasHero) return load(splash ? 'js/hero-static.js' : 'js/hero-scroll.js'); })
     .catch(function (err) { console.error('[boot] hero', err); })
+    // Заставка телефона — отдельным модулем поверх статической ветки: знак для
+    // <use> в шапке даёт hero-static.js, движение — hero-mobile.js. Грузится
+    // только там, где в разметке есть её слой: страницы без него не платят.
+    .then(function () { if (splash && d.querySelector('[data-hero-mobile]')) return load('js/hero-mobile.js'); })
+    .catch(function (err) { console.error('[boot] hero-mobile', err); })
+    // Меню узкого экрана: там нет ни боковой рейки, ни разделов в шапке —
+    // без него навигация начиналась только с подвала.
+    .then(function () { if (splash) return load('js/menu-mobile.js'); })
+    .catch(function (err) { console.warn('[boot] menu-mobile', err); })
     .then(function () { if (hasSite) return load('js/site.js'); })
     .catch(function (err) { console.error('[boot] site', err); })
     // рейка разделов справа: строится из разметки, ссылки настоящие, без неё страница цела
     .then(function () { if (fine) return load('js/railnav.js'); })
     .catch(function (err) { console.warn('[boot] railnav', err); });
+
+  /* Офлайн-оболочка. Только по https: на dev-сервере рабочий процесс держал
+     бы свой кеш и правки доезжали бы через раз — на отладке это дороже, чем
+     польза от офлайна. Регистрация после загрузки страницы, чтобы не
+     соперничать за сеть с тем, что человек видит прямо сейчас. */
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    addEventListener('load', function () {
+      navigator.serviceWorker.register(SITE_ROOT + 'sw.js')
+        .catch(function (err) { console.warn('[boot] sw', err); });
+    });
+  }
 })();

@@ -54,7 +54,10 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
-  if (new URL(req.url).origin !== location.origin) return;
+  const u = new URL(req.url);
+  if (u.origin !== location.origin) return;
+  // Метка версии читается мимо всех кешей — это её единственный смысл.
+  if (u.pathname.endsWith('/version.json')) return;
 
   e.respondWith((async () => {
     try {

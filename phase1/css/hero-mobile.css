@@ -353,6 +353,30 @@ body .hs__screen .lang-hint__col + .lang-hint__col::before {
    Снимается только замок и прячется подсказка о пропуске. */
 html.hm-done body .hs { height: 100svh; }
 
+/* ── 7-бис. Вертикальный планшет ──────────────────────────────────────────
+   Те же правила, но строки языков во всю ширину 768–1024 читаются как
+   растянутый телефон: строка в 900 px с двумя словами по краям. Панель
+   получает предел ширины и встаёт по центру — правило «line-length-control»
+   и «container-width» скила ui-ux-pro-max. */
+@media (min-width: 600px) {
+  body .hs__screen .tri {
+    max-inline-size: 620px;
+    margin-inline: auto;
+    gap: 0.7rem;
+    padding-inline: 1.5rem;
+  }
+  body .hs__screen .tri__part { min-height: 84px; padding: 1rem 1.35rem; border-radius: 16px; }
+  body .hs__screen .tri__name { font-size: 1.625rem; }
+  body .hs__screen .tri__aud { font-size: 0.9375rem; }
+  body .hs__screen .lang-hint { font-size: 0.75rem; }
+  /* Панель по центру, а фон — во всю ширину экрана: иначе под ней с боков
+     просвечивает фотография и панель выглядит вырезанной наклейкой. */
+  body .hs__screen {
+    background: linear-gradient(180deg, rgba(7, 18, 42, 0) 0%, rgba(7, 18, 42, 0.86) 12%, rgba(7, 18, 42, 0.97) 44%, rgba(7, 18, 42, 1) 100%);
+  }
+  body .hs__screen .tri { background: none; }
+}
+
 /* ── 8. Телефон в альбоме ─────────────────────────────────────────────────
    Высоты мало: знак садится выше, панель ужимается, аудитория снимается —
    она пояснение, а не выбор. */

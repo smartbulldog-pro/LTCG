@@ -277,6 +277,33 @@
     // открывает движок хиро в момент посадки экрана. Здесь движка нет, а
     // заголовок панели без неё пропадает — панель начиналась сразу с языков.
     seen(true);
+
+    /* Замок держится до выбора языка — но только пока выбор ВИДЕН. Если ворота
+       не поместились, не выехали или схлопнулись в ноль, человек получает
+       страницу, которая не листается и ничего не предлагает: снаружи это
+       выглядит как «повис». Тогда замок снимаем — пусть лучше первый экран
+       будет обычным, чем запертым. Меряем в следующем кадре: на этом ворота
+       ещё не разложены. */
+    requestAnimationFrame(function () {
+      if (!screenEl) { unlock(); return; }
+      var r = screenEl.getBoundingClientRect();
+      if (!r.height || r.top > window.innerHeight - 48) {
+        unlock();
+        html.classList.remove('hm-gate');
+        html.classList.add('hm-done');
+      }
+    });
+    // Тот же расчёт таймером: без кадров rAF не вызовется вовсе.
+    setTimeout(function () {
+      if (!locked || !screenEl) return;
+      var r = screenEl.getBoundingClientRect();
+      if (!r.height || r.top > window.innerHeight - 48) {
+        unlock();
+        html.classList.remove('hm-gate');
+        html.classList.add('hm-done');
+      }
+    }, 900);
+
     var hint = document.getElementById('triHint');
     // is-in — не украшение: без него подсказка объявлена с opacity 0
     // (main-triptych.css, ветка no-preference) и висит невидимой строкой.

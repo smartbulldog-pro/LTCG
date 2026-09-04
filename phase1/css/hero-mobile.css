@@ -14,7 +14,7 @@
    оставалась полоска неба.
    ══════════════════════════════════════════════════════════════════════════ */
 
-@media (max-width: 767px), (max-height: 767px) and (pointer: coarse), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse) {
+@media (max-width: 767px), (pointer: coarse) and (max-width: 1366px) {
 
 /* ── 1. Замок ─────────────────────────────────────────────────────────────
    Пока язык не выбран, страница не прокручивается: заставка и ворота — один

@@ -28,6 +28,9 @@
   if (!scene) return;
 
   var SITE_ROOT = html.getAttribute('data-site-root') || '/';
+  // Данные морфа и знак адресуем с версией страницы: без неё браузер отдаёт
+  // прежний гребень из кеша, и линия ложится мимо горы после каждой правки.
+  var VQ = html.getAttribute('data-v') ? '?v=' + html.getAttribute('data-v') : '';
   var NS = 'http://www.w3.org/2000/svg';
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -373,8 +376,8 @@
   }
 
   Promise.all([
-    fetch(SITE_ROOT + 'assets/hero/m/morph.json').then(function (r) { return r.json(); }),
-    fetch(SITE_ROOT + 'assets/hero/logo.svg').then(function (r) { return r.text(); })
+    fetch(SITE_ROOT + 'assets/hero/m/morph.json' + VQ).then(function (r) { return r.json(); }),
+    fetch(SITE_ROOT + 'assets/hero/logo.svg' + VQ).then(function (r) { return r.text(); })
   ]).then(function (res) {
     M = res[0];
     buildLogo(new DOMParser().parseFromString(res[1], 'image/svg+xml'));

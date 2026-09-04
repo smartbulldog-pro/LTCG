@@ -354,3 +354,70 @@ body.is-at-footer .railnav { display: none; }
   /* подсказка «листайте» садится на первый экран, а не на ворота */
   body .hs__hint { position: absolute; top: calc(56.25vw + 0.9rem); bottom: auto; }
 }
+
+/* ══ 17. МОБИЛЬНАЯ ВЁРСТКА ════════════════════════════════════════════════
+   Замерено на 390×844 до правок: горизонтального выезда нет, сетка бенто
+   схлопывается в колонку правильно, кегли тела 16 px — это всё в порядке.
+   Ломались три вещи, и все по правилам скила ui-ux-pro-max:
+
+   · «Touch Target Size», severity High: 16 целей нажатия ниже 44 px —
+     ссылки в карточках по 22–33 px, кнопки темы 40;
+   · «Touch Spacing»: зазор между фишками 6 px при минимуме 8;
+   · «Adaptive gutters»: вертикальный отступ секции 84 px — десктопный,
+     на телефоне съедает экран.
+   Ниже — только мобильная ветка, десктоп не затронут. */
+@media (max-width: 767px) {
+
+  /* Постер вылезал на 6 px с каждой стороны — картинка 387 при экране 375.
+     Обрезаем по контейнеру: горизонтальной прокрутки на телефоне быть не должно. */
+  body .hs__poster { overflow: hidden; }
+  body .hs__poster img { max-width: none; }
+
+  /* ── ритм страницы: отступы под экран, а не под десктоп ─────────────── */
+  body .section { padding-block: clamp(2.5rem, 8vw, 3.5rem); }
+  body .section__head { margin-bottom: 1.5rem; }
+  body .wrap { padding-inline: 1.25rem; }
+
+  /* ── плитка: больше места содержимому ───────────────────────────────── */
+  body .tile { padding: 1.25rem; gap: 0.875rem; }
+  body .tile__meta { font-size: 0.8125rem; }
+  body .state .tile__meta b { font-size: 1.25rem; }
+
+  /* ── касание: минимум 44 px у всего, что нажимается ─────────────────── */
+  body .tile a,
+  body .tile__foot a,
+  body .tile__read,
+  body .btn--link {
+    min-height: 44px;
+    display: inline-flex; align-items: center;
+  }
+  body .themer__btn { inline-size: 44px; block-size: 44px; }
+  body .chips { gap: 0.5rem; }               /* 8 px — минимум по правилу */
+  body .chip { min-height: 36px; display: inline-flex; align-items: center; }
+
+  /* ── действия в карточке: в столбец и во всю ширину ─────────────────── */
+  body .tile__foot {
+    flex-direction: column; align-items: stretch;
+    gap: 0.75rem; padding-top: 1rem;
+  }
+  body .tile__foot .btn { width: 100%; justify-content: center; min-height: 48px; }
+  body .tile__foot .btn--link { width: auto; align-self: flex-start; }
+
+  /* ── ворота языков: каждая треть — свой блок с воздухом ─────────────── */
+  body .tri__part { padding-block: 1.5rem; }
+  body .tri__act { min-height: 44px; display: inline-flex; align-items: center; }
+
+  /* ── датированная плитка 07: номер и дата в строку, текст ниже ──────── */
+  body .state--dated { display: grid; gap: 0.5rem; }
+
+  /* ── подвал: колонка, воздух между блоками ──────────────────────────── */
+  body .ftr { padding-block: 2.5rem 2rem; }
+  body .ftr__tile { padding: 1.25rem; }
+  body .ftr__credit { justify-items: start; text-align: left; }
+}
+
+/* Очень узкие экраны: 360 и меньше — ужимаем заголовок, иначе он лезет в три строки */
+@media (max-width: 380px) {
+  body .h1 { font-size: clamp(1.75rem, 8.5vw, 2rem); }
+  body .state__name { font-size: 1.5rem; }
+}

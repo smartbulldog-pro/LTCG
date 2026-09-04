@@ -1,0 +1,988 @@
+/* ============================================================================
+   main-triptych.css — ГЛАВНЫЙ ЭКРАН: ворота выбора языка «три кожи».
+
+   Экран лежит ВНУТРИ .hs__screen (экран монитора в конце скролл-хиро) и
+   разворачивается на весь вьюпорт при посадке. Та же разметка работает как
+   самостоятельный первый экран, если хиро не запустился (см. proto/tri-final.html).
+
+   ОДНА КОМПОЗИЦИЯ, ТРИ МИРА
+     HY  I   · неоклассика по туфу      — гравюра, антиква, прямые углы
+     RU  02  · тёмный прибор со стеклом — navy в обеих темах, швейцарский модуль
+     EN  № 03· редакционная бумага      — линейка, курсив, воздух
+   Связывают: один модуль сетки (--rows), одна базовая линия, один сквозной шов
+   на одной высоте, вторая сквозная линейка над действием, один знак, одно золото.
+
+   МАСШТАБ. Ни одного фиксированного пикселя в типографике: всё считается от
+   --page-scale через --tri-s. 1 = во весь вьюпорт; движок ставит меньше, когда
+   экран рисуется внутри рамки монитора. Меняется одно число — экран целиком.
+
+   ТЕМЫ. Полная светлая и полная тёмная у каждой из трёх частей. По умолчанию —
+   системная (prefers-color-scheme); ручной выбор — data-theme на <html>.
+   Вся палитра на переменных; в правилах компонентов литералов цвета нет.
+
+   Гость файла: только .tri* и .lang-hint. Требует <symbol id="hsLogoMark">
+   на странице и семейства Cormorant Garamond · Noto Serif Armenian · Onest ·
+   JetBrains Mono · Literata (см. шапку фрагмента).
+
+   Канон: docs/style_system.md §2.2, §2.3, §2.7, §4.1–4.4 · docs/vkv_bar.md
+          §1.2 (арт→скрим→копия), §1.3 (стекло 5 px), §1.4 (зерно на стекле),
+          §1.8 (движение), §1.13 (контраст), §1.15 (мобильный)
+   Обновлено: 2026-09-04
+   ========================================================================== */
+
+/* ── 0. Корневая тема: только color-scheme, палитра живёт на .tri ───────── */
+:root[data-theme="dark"]  { color-scheme: dark; }
+:root[data-theme="light"] { color-scheme: light; }
+
+/* ── 1. Токены — СВЕТЛАЯ тема (база) ─────────────────────────────────────
+   Тёплый ключ во всех трёх частях идёт из левого верхнего угла: фактуры
+   сняты при свете слева (assets/bg/manifest.json), свет продолжает кадр.  */
+.tri {
+  color-scheme: light;
+
+  /* золото бренда — единственный акцент */
+  --g-1: #C4922B;
+  --g-2: #F2C249;
+  --g-3: #FAE0A2;
+  --g-0: #593E10;
+
+  /* ── I · HY — туф при утреннем свете ── */
+  --hy-bg:        #EBDFCA;
+  --hy-art:       url('../assets/bg/bg-stone-tuf-1280.jpg');
+  --hy-art-op:    .58;
+  --hy-art-tint:  transparent;
+  --hy-art-blend: normal;
+  --hy-art-filter: contrast(.82) saturate(.8) brightness(1.03);
+  --hy-scrim:     235 223 202;
+  --hy-a1:        .88;
+  --hy-a2:        .62;
+  --hy-key:       radial-gradient(122% 96% at 0% 0%, rgba(255, 252, 242, .46), rgba(255, 252, 242, 0) 60%);
+  --hy-ink:       #201A11;
+  --hy-mut:       #4E432C;
+  --hy-gold:      #6B4C11;
+  --hy-line:      rgba(32, 26, 17, .26);
+  --hy-gline:     rgba(107, 76, 17, .46);
+  --hy-gline2:    rgba(107, 76, 17, .88);
+  --hy-etch:      rgba(107, 76, 17, .34);
+  --hy-slot:      rgba(196, 146, 43, .10);
+
+  /* ── II · RU — navy в обеих темах (style_system §4.1); светлая = дневной свет ── */
+  --ru-bg:        #10254B;
+  --ru-art:       url('../assets/bg/bg-dark-glass-1280.jpg');
+  --ru-art-op:    .52;
+  --ru-art-tint:  transparent;
+  --ru-art-blend: normal;
+  --ru-art-filter: saturate(.9) brightness(1.16);
+  --ru-scrim:     16 37 75;
+  --ru-a1:        .74;
+  --ru-a2:        .40;
+  --ru-key:       radial-gradient(118% 90% at 1% 0%, rgba(255, 240, 205, .17), rgba(255, 240, 205, 0) 58%);
+  --ru-glass:     rgba(224, 234, 250, .10);
+  --ru-edge:      rgba(255, 246, 222, .36);
+  --ru-grain:     .13;
+  --ru-ink:       #F4F7FC;
+  --ru-mut:       #BCC9DF;
+  --ru-gold:      #FAE0A2;
+  --ru-line:      rgba(250, 224, 162, .22);
+  --ru-gline:     rgba(250, 224, 162, .44);
+  --ru-gline2:    rgba(250, 224, 162, .92);
+
+  /* ── III · EN — кремовая бумага при косом свете ── */
+  --en-bg:        #FAF6EE;
+  --en-art:       url('../assets/bg/bg-paper-1280.jpg');
+  --en-art-op:    .70;
+  --en-art-tint:  transparent;
+  --en-art-blend: normal;
+  --en-art-filter: contrast(1) saturate(.76);
+  --en-scrim:     250 246 238;
+  --en-a1:        .88;
+  --en-a2:        .60;
+  --en-key:       radial-gradient(132% 102% at 0% 0%, rgba(255, 255, 255, .52), rgba(255, 255, 255, 0) 58%);
+  --en-ink:       #15202E;
+  --en-mut:       #454F60;
+  --en-gold:      #8A6414;
+  --en-line:      rgba(21, 32, 46, .24);
+  --en-gline:     rgba(138, 100, 20, .46);
+  --en-gline2:    rgba(138, 100, 20, .88);
+  --en-shade:     rgba(21, 32, 46, .11);
+
+  /* ── шов между частями и полоса хрома ── */
+  --seam:         rgba(12, 27, 58, .30);
+  --chrome-ink:   var(--ru-ink);
+  --chrome-mut:   var(--ru-mut);
+  --chrome-line:  rgba(250, 224, 162, .30);
+  --crest-bg:     #08142C;   /* глубже навахи русской колонки — ступень видна и над ней */
+  --mark-ink:     var(--g-2);
+  --hint-ink:     var(--ru-mut);
+  --hint-gold:    var(--ru-gold);
+}
+
+/* ── 2. Токены — ТЁМНАЯ тема ────────────────────────────────────────────
+   Один и тот же список в двух селекторах: системная тёмная (пока пользователь
+   не выбрал светлую руками) и явный выбор. Стиль части не меняется — меняются
+   вещество и тон: туф становится ночным туфом, бумага — бумагой под лампой,
+   navy остаётся navy.                                                     */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tri {
+    color-scheme: dark;
+
+    --hy-bg:        #1C1409;
+    --hy-art-op:    .90;
+    --hy-art-tint:  #2C2114;
+    --hy-art-blend: multiply;
+    --hy-art-filter: contrast(1.05) saturate(.74) brightness(1.08);
+    --hy-scrim:     28 20 9;
+    --hy-a1:        .86;
+    --hy-a2:        .58;
+    --hy-key:       radial-gradient(122% 96% at 0% 0%, rgba(242, 194, 73, .11), rgba(242, 194, 73, 0) 60%);
+    --hy-ink:       #F3EBDC;
+    --hy-mut:       #B7A88C;
+    --hy-gold:      #E7CB8E;
+    --hy-line:      rgba(243, 235, 220, .18);
+    --hy-gline:     rgba(231, 203, 142, .42);
+    --hy-gline2:    rgba(231, 203, 142, .88);
+    --hy-etch:      rgba(231, 203, 142, .32);
+    --hy-slot:      rgba(242, 194, 73, .085);
+
+    --ru-bg:        #0A1730;
+    --ru-art-op:    .64;
+    --ru-art-tint:  transparent;
+    --ru-art-blend: normal;
+    --ru-art-filter: saturate(.92) brightness(.92);
+    --ru-scrim:     10 23 48;
+    --ru-a1:        .80;
+    --ru-a2:        .46;
+    --ru-key:       radial-gradient(118% 90% at 1% 0%, rgba(242, 194, 73, .14), rgba(242, 194, 73, 0) 58%);
+    --ru-glass:     rgba(10, 23, 48, .42);
+    --ru-edge:      rgba(255, 243, 208, .26);
+    --ru-grain:     .22;
+    --ru-ink:       #F3F6FB;
+    --ru-mut:       #AEBCD3;
+    --ru-gold:      #FAE0A2;
+    --ru-line:      rgba(250, 224, 162, .20);
+    --ru-gline:     rgba(250, 224, 162, .38);
+    --ru-gline2:    rgba(250, 224, 162, .88);
+
+    --en-bg:        #100E0B;
+    --en-art-op:    .74;
+    --en-art-tint:  #23201A;
+    --en-art-blend: multiply;
+    --en-art-filter: contrast(.88) saturate(.4) brightness(1.02);
+    --en-scrim:     16 14 11;
+    --en-a1:        .86;
+    --en-a2:        .56;
+    --en-key:       radial-gradient(132% 102% at 0% 0%, rgba(255, 236, 196, .10), rgba(255, 236, 196, 0) 58%);
+    --en-ink:       #F0E8D8;
+    --en-mut:       #B4A88F;
+    --en-gold:      #E2C489;
+    --en-line:      rgba(240, 232, 216, .18);
+    --en-gline:     rgba(226, 196, 137, .42);
+    --en-gline2:    rgba(226, 196, 137, .88);
+    --en-shade:     rgba(0, 0, 0, .38);
+
+    --seam:         rgba(250, 224, 162, .24);
+    --chrome-line:  rgba(250, 224, 162, .32);
+    --crest-bg:     #060F22;
+  }
+}
+
+:root[data-theme="dark"] .tri {
+  color-scheme: dark;
+
+  --hy-bg:        #1C1409;
+  --hy-art-op:    .90;
+  --hy-art-tint:  #2C2114;
+  --hy-art-blend: multiply;
+  --hy-art-filter: contrast(1.05) saturate(.74) brightness(1.08);
+  --hy-scrim:     28 20 9;
+  --hy-a1:        .86;
+  --hy-a2:        .58;
+  --hy-key:       radial-gradient(122% 96% at 0% 0%, rgba(242, 194, 73, .11), rgba(242, 194, 73, 0) 60%);
+  --hy-ink:       #F3EBDC;
+  --hy-mut:       #B7A88C;
+  --hy-gold:      #E7CB8E;
+  --hy-line:      rgba(243, 235, 220, .18);
+  --hy-gline:     rgba(231, 203, 142, .42);
+  --hy-gline2:    rgba(231, 203, 142, .88);
+  --hy-etch:      rgba(231, 203, 142, .32);
+  --hy-slot:      rgba(242, 194, 73, .085);
+
+  --ru-bg:        #0A1730;
+  --ru-art-op:    .64;
+  --ru-art-tint:  transparent;
+  --ru-art-blend: normal;
+  --ru-art-filter: saturate(.92) brightness(.92);
+  --ru-scrim:     10 23 48;
+  --ru-a1:        .80;
+  --ru-a2:        .46;
+  --ru-key:       radial-gradient(118% 90% at 1% 0%, rgba(242, 194, 73, .14), rgba(242, 194, 73, 0) 58%);
+  --ru-glass:     rgba(10, 23, 48, .42);
+  --ru-edge:      rgba(255, 243, 208, .26);
+  --ru-grain:     .22;
+  --ru-ink:       #F3F6FB;
+  --ru-mut:       #AEBCD3;
+  --ru-gold:      #FAE0A2;
+  --ru-line:      rgba(250, 224, 162, .20);
+  --ru-gline:     rgba(250, 224, 162, .38);
+  --ru-gline2:    rgba(250, 224, 162, .88);
+
+  --en-bg:        #100E0B;
+  --en-art-op:    .74;
+  --en-art-tint:  #23201A;
+  --en-art-blend: multiply;
+  --en-art-filter: contrast(.88) saturate(.4) brightness(1.02);
+  --en-scrim:     16 14 11;
+  --en-a1:        .86;
+  --en-a2:        .56;
+  --en-key:       radial-gradient(132% 102% at 0% 0%, rgba(255, 236, 196, .10), rgba(255, 236, 196, 0) 58%);
+  --en-ink:       #F0E8D8;
+  --en-mut:       #B4A88F;
+  --en-gold:      #E2C489;
+  --en-line:      rgba(240, 232, 216, .18);
+  --en-gline:     rgba(226, 196, 137, .42);
+  --en-gline2:    rgba(226, 196, 137, .88);
+  --en-shade:     rgba(0, 0, 0, .38);
+
+  --seam:         rgba(250, 224, 162, .24);
+  --chrome-line:  rgba(250, 224, 162, .32);
+}
+
+/* ── 3. Каркас ворот — mobile-first: три горизонтальные полосы ───────────
+   Модуль один на все части: --rows. Ни одной строки высотой auto, поэтому
+   базовая линия совпадает во всех трёх без subgrid — работает везде.      */
+.tri {
+  /* единственная ручка масштаба */
+  --tri-s: var(--page-scale, 1);
+  --tri-base: clamp(0.875rem, 0.62rem + 0.55vw, 1.0625rem);
+
+  /* фактуры и стекло */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  --glass-h: 78%;
+
+  /* модуль экрана */
+  --pad-x: clamp(18px, 5vw, 52px);
+  --r-crest: calc(clamp(44px, 6.4vh, 60px) * var(--tri-s));
+  --r-foot: 0.85em;
+  --fs-name: 2.7em;
+  --rh-idx: 1.5em;
+  --rh-name: 3.15em;
+  --rh-aud: 3.6em;
+  --rh-act: 3.3em;
+  --air-1: 1fr;
+  --air-2: 0.34fr;
+  --rows: var(--air-1) var(--rh-idx) var(--rh-name) var(--rh-aud) var(--air-2) var(--rh-act) var(--r-foot);
+
+  /* шрифты частей */
+  --f-hy: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --f-hy-arm: 'Noto Serif Armenian', 'Cormorant Garamond', Georgia, serif;
+  --f-ru: 'Onest', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --f-ru-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', monospace;
+  --f-en: 'Literata', Georgia, 'Times New Roman', serif;
+
+  /* движение — словарь vkv_bar §1.8 */
+  --tri-ease: cubic-bezier(.16, 1, .3, 1);
+  --t-fast: 180ms;
+  --t-mid: 240ms;
+  --t-slow: 320ms;
+  --t-in: 640ms;
+
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  block-size: 100%;
+  min-block-size: 100svh;
+  overflow: hidden;
+  font-family: var(--f-ru);
+  font-size: calc(var(--tri-base) * var(--tri-s));
+  line-height: 1.5;
+  /* шов между полосами — общая линия, не принадлежит ни одной части */
+  background-image: linear-gradient(90deg,
+    transparent 0%, var(--seam) 12%, var(--seam) 88%, transparent 100%);
+}
+
+/* внутри экрана монитора: высоту задаёт контейнер, position — absolute */
+.tri--screen {
+  position: absolute;
+  inset: 0;
+  min-block-size: 0;
+}
+
+.tri .sr-only {
+  position: absolute;
+  inline-size: 1px; block-size: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── 4. Часть ────────────────────────────────────────────────────────── */
+.tri__part {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: var(--rows);
+  padding-inline: var(--pad-x);
+  text-decoration: none;
+  background-color: var(--bg);
+  color: var(--ink);
+}
+
+.tri__part--hy {
+  --bg: var(--hy-bg); --ink: var(--hy-ink); --mut: var(--hy-mut); --gold: var(--hy-gold);
+  --line: var(--hy-line); --gline: var(--hy-gline); --gline2: var(--hy-gline2);
+  --art: var(--hy-art); --art-op: var(--hy-art-op); --art-tint: var(--hy-art-tint);
+  --art-blend: var(--hy-art-blend); --art-filter: var(--hy-art-filter);
+  --scrim-rgb: var(--hy-scrim); --a1: var(--hy-a1); --a2: var(--hy-a2); --key: var(--hy-key);
+  --seam-ink: var(--hy-line); --rule-ink: var(--hy-line);
+}
+.tri__part--ru {
+  --bg: var(--ru-bg); --ink: var(--ru-ink); --mut: var(--ru-mut); --gold: var(--ru-gold);
+  --line: var(--ru-line); --gline: var(--ru-gline); --gline2: var(--ru-gline2);
+  --art: var(--ru-art); --art-op: var(--ru-art-op); --art-tint: var(--ru-art-tint);
+  --art-blend: var(--ru-art-blend); --art-filter: var(--ru-art-filter);
+  --scrim-rgb: var(--ru-scrim); --a1: var(--ru-a1); --a2: var(--ru-a2); --key: var(--ru-key);
+  /* шов над русской частью — золото полное: так помечен язык по умолчанию */
+  --seam-ink: var(--ru-gline2); --rule-ink: var(--ru-line);
+}
+.tri__part--en {
+  --bg: var(--en-bg); --ink: var(--en-ink); --mut: var(--en-mut); --gold: var(--en-gold);
+  --line: var(--en-line); --gline: var(--en-gline); --gline2: var(--en-gline2);
+  --art: var(--en-art); --art-op: var(--en-art-op); --art-tint: var(--en-art-tint);
+  --art-blend: var(--en-art-blend); --art-filter: var(--en-art-filter);
+  --scrim-rgb: var(--en-scrim); --a1: var(--en-a1); --a2: var(--en-a2); --key: var(--en-key);
+  --seam-ink: var(--en-line); --rule-ink: var(--en-line);
+}
+
+/* первая полоса уступает место знаку */
+.tri__part--hy { padding-block-start: var(--r-crest); }
+
+.tri__part:focus { outline: none; }
+.tri__part:focus-visible { outline: 2px solid var(--gold); outline-offset: -6px; }
+
+/* ── 5. Вещество: арт → скрим → (стекло у RU) → копия (vkv_bar §1.2) ──── */
+.tri__art,
+.tri__scrim,
+.tri__glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* фактура: тинт живёт в background-color и смешивается с кадром,
+   а не лежит непрозрачной заливкой поверх (иначе получается «молоко») */
+.tri__art {
+  z-index: -3;
+  background-color: var(--art-tint);
+  background-image: var(--art);
+  background-size: cover;
+  background-position: var(--art-pos, 30% center);
+  background-blend-mode: var(--art-blend);
+  opacity: var(--art-op);
+  filter: var(--art-filter);
+}
+
+/* скрим = два градиента по направлению света: тёплый ключ из левого верхнего
+   угла + подъём плотности к низу, где стоит копия (vkv_bar §1.13) */
+.tri__scrim {
+  z-index: -2;
+  background-image:
+    var(--key),
+    linear-gradient(to top,
+      rgb(var(--scrim-rgb) / var(--a1)) 0%,
+      rgb(var(--scrim-rgb) / var(--a2)) var(--scrim-stop, 64%),
+      rgb(var(--scrim-rgb) / 0) var(--scrim-end, 96%));
+}
+
+/* ── 6. Стекло с толщиной — только русская часть (vkv_bar §1.3) ─────────
+   Нижние две трети — настоящий лист стекла: над кромкой материал резкий,
+   под ней размытый. Пять пикселей размытия под текстом, не двадцать два. */
+.tri__glass {
+  inset: auto 0 0 0;
+  z-index: -1;
+  block-size: var(--glass-h);
+  background-color: var(--ru-glass);
+  border-block-start: 1px solid var(--ru-edge);
+}
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .tri__glass {
+    -webkit-backdrop-filter: blur(5px) saturate(1.14);
+    backdrop-filter: blur(5px) saturate(1.14);
+  }
+}
+/* зерно живёт НА СТЕКЛЕ, а не на секции: тает вместе с ним (vkv_bar §1.4) */
+.tri__glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain), var(--grain);
+  background-size: 120px 120px, 300px 300px;
+  mix-blend-mode: overlay;
+  opacity: var(--ru-grain);
+}
+
+/* ── 7. Швы между частями меняют вещество на каждом стыке ───────────────
+   камень — встык; у стекла кромка имеет толщину; бумага ложится с мягким краем */
+.tri__part--ru { box-shadow: inset 0 1px 0 var(--ru-edge); }
+.tri__part--en::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  block-size: 22px;
+  z-index: -1;
+  background-image: linear-gradient(180deg, var(--en-shade), transparent);
+  pointer-events: none;
+}
+
+/* ── 8. Содержимое части ─────────────────────────────────────────────── */
+.tri__idx {
+  grid-row: 2;
+  align-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  min-inline-size: 0;
+  color: var(--gold);
+}
+.tri__tick {
+  display: block;
+  block-size: 1px;
+  background-color: var(--gline);
+}
+.tri__ord { white-space: nowrap; }
+
+.tri__name {
+  grid-row: 3;
+  align-self: end;
+  display: block;
+  font-size: var(--fs-name);
+  line-height: 1.02;
+  color: var(--ink);
+}
+
+/* СКВОЗНОЙ ШОВ: одна высота, три вещества. Каждая часть рисует свой отрезок
+   сама — это border её строки сетки, а не линия поверх. Поэтому отрезки
+   продолжают друг друга и честно разрываются на вертикальном шве.        */
+.tri__aud {
+  grid-row: 4;
+  position: relative;
+  display: block;
+  margin-inline: calc(var(--pad-x) * -1);
+  padding: 0.85em var(--pad-x) 0;
+  border-block-start: 1px solid var(--seam-ink);
+  color: var(--mut);
+  font-size: 0.95em;
+  line-height: 1.45;
+}
+
+/* ВТОРАЯ СКВОЗНАЯ ЛИНЕЙКА — над действием, той же механикой */
+.tri__act {
+  grid-row: 6;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  margin-inline: calc(var(--pad-x) * -1);
+  padding: 0.85em var(--pad-x) 0;
+  border-block-start: 1px solid var(--rule-ink);
+  color: var(--gold);
+}
+.tri__word { white-space: nowrap; }
+.tri__arw {
+  inline-size: 1.5em;
+  block-size: 0.75em;
+  flex: none;
+}
+
+/* Черновой армянский до вычитки носителем: слот, а не готовый текст.
+   Не пунктир (читается как ошибка орфографии) — светлая золотая подложка. */
+.tri__part--hy .is-slot {
+  background-color: var(--hy-slot);
+  box-shadow: 0 0 0 0.1em var(--hy-slot);
+}
+
+/* ── 9. Ординал тремя голосами — одно слово, сказанное тремя эпохами ──── */
+
+/* I · антиква в широкой разрядке за короткой резьбой */
+.tri__part--hy .tri__tick { inline-size: 1.9em; }
+.tri__part--hy .tri__ord {
+  font-family: var(--f-hy);
+  font-weight: 500;
+  font-size: 0.8em;
+  letter-spacing: 0.34em;
+}
+.tri__part--hy .tri__name {
+  font-family: var(--f-hy-arm);
+  font-weight: 500;
+  font-size: calc(var(--fs-name) * 0.92);   /* армянский набор шире ~10 % */
+  letter-spacing: 0;
+}
+.tri__part--hy .tri__aud { font-family: var(--f-hy-arm); font-weight: 400; }
+.tri__part--hy .tri__word {
+  font-family: var(--f-hy-arm);
+  font-weight: 500;
+  font-size: 0.85em;
+  letter-spacing: 0.03em;
+}
+.tri__part--hy .tri__arw { stroke-width: 1; }
+
+/* II · моно-индекс за короткой линейкой; впереди — золотой квадрат 6 px:
+   единственная пометка языка по умолчанию, без карточки и без рамки */
+.tri__part--ru .tri__idx::before {
+  content: '';
+  inline-size: 6px;
+  block-size: 6px;
+  flex: none;
+  background-color: var(--gold);
+}
+.tri__part--ru .tri__tick { inline-size: 1.4em; }
+.tri__part--ru .tri__ord {
+  font-family: var(--f-ru-mono);
+  font-weight: 500;
+  font-size: 0.68em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.tri__part--ru .tri__name {
+  font-family: var(--f-ru);
+  font-weight: 600;
+  letter-spacing: -0.028em;
+}
+.tri__part--ru .tri__aud { font-family: var(--f-ru); font-weight: 400; }
+.tri__part--ru .tri__word {
+  font-family: var(--f-ru);
+  font-weight: 500;
+  font-size: 0.85em;
+  letter-spacing: 0.01em;
+}
+.tri__part--ru .tri__arw { stroke-width: 1.4; }
+/* ШВЕЙЦАРСКИЙ МОДУЛЬ ЖИВЁТ НА САМОЙ ЛИНИИ: двенадцать делений через 8.3333 %.
+   Модуль виден физически и при этом не заливает плоскость сеткой. */
+.tri__part--ru .tri__aud::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 6px;
+  background-image: repeating-linear-gradient(to right,
+    var(--gold) 0 1px, transparent 1px 8.3333%);
+  opacity: .5;
+  pointer-events: none;
+}
+
+/* III · номер рубрики курсивом на линейке во всю ширину колонки */
+.tri__part--en .tri__idx { flex-direction: row; }
+.tri__part--en .tri__tick { flex: 1 1 auto; background-color: var(--line); }
+.tri__part--en .tri__ord {
+  order: -1;
+  font-family: var(--f-en);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.85em;
+  letter-spacing: 0.02em;
+  color: var(--mut);
+}
+.tri__part--en .tri__name {
+  font-family: var(--f-en);
+  font-weight: 500;
+  font-size: calc(var(--fs-name) * 0.94);
+  letter-spacing: -0.02em;
+  font-variation-settings: 'opsz' 72;
+}
+.tri__part--en .tri__aud { font-family: var(--f-en); font-weight: 400; }
+.tri__part--en .tri__word {
+  font-family: var(--f-en);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.92em;
+  padding-block-end: 3px;
+  background-image: linear-gradient(var(--gline2), var(--gline2));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0 1px;
+}
+.tri__part--en .tri__arw { stroke-width: 0.9; }
+
+/* ── 10. Тиснение армянской части — короткие угловые засечки, не рамка ── */
+.tri__part--hy .tri__scrim::after {
+  content: '';
+  position: absolute;
+  inset: 14px;
+  background-image:
+    linear-gradient(var(--hy-etch), var(--hy-etch)),
+    linear-gradient(var(--hy-etch), var(--hy-etch)),
+    linear-gradient(var(--hy-etch), var(--hy-etch)),
+    linear-gradient(var(--hy-etch), var(--hy-etch));
+  background-repeat: no-repeat;
+  background-position: left top, left top, right bottom, right bottom;
+  background-size: 26px 1px, 1px 26px, 26px 1px, 1px 26px;
+}
+
+/* ── 11. Состояния: покой → hover → focus. Ничего бесконечного ────────── */
+.tri__part:hover .tri__tick,
+.tri__part:focus-visible .tri__tick { background-color: var(--gline2); }
+
+.tri__part--hy:hover .tri__scrim::after,
+.tri__part--hy:focus-visible .tri__scrim::after {
+  background-size: 44px 1px, 1px 44px, 44px 1px, 1px 44px;
+}
+.tri__part--hy:hover .tri__art,
+.tri__part--hy:focus-visible .tri__art { opacity: calc(var(--art-op) + .08); }
+
+.tri__part--ru:hover .tri__glass,
+.tri__part--ru:focus-visible .tri__glass {
+  border-block-start-color: var(--gline2);
+  box-shadow: inset 0 -150px 110px -130px var(--gold);
+}
+.tri__part--ru:hover .tri__aud::before,
+.tri__part--ru:focus-visible .tri__aud::before { opacity: .95; }
+.tri__part--ru:hover .tri__arw,
+.tri__part--ru:focus-visible .tri__arw { transform: translateX(4px); }
+
+.tri__part--en:hover .tri__tick,
+.tri__part--en:focus-visible .tri__tick { block-size: 2px; }
+.tri__part--en:hover .tri__word,
+.tri__part--en:focus-visible .tri__word { background-size: 100% 1px; }
+.tri__part--en:hover .tri__art,
+.tri__part--en:focus-visible .tri__art { opacity: calc(var(--art-op) + .06); }
+
+/* ── 12. Полоса хрома: знак + переключатель темы, один раз на весь экран ─
+   Переключатель стоит рядом со знаком, а не в углу английской колонки:
+   у него нет владельца-колонки и он ни с чем не сталкивается.            */
+.tri__crest {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 2;
+  margin: 0;
+  block-size: var(--r-crest);
+  display: flex;
+  align-items: center;
+  /* Знак слева, выбор темы справа — как в шапке сайта (.site-head в hero.css:
+     justify-content: space-between, padding-inline 1.5rem). Отступ взят тот же и в rem,
+     а не в единицах экрана: тогда при развороте монитора во весь вьюпорт знак приезжает
+     ровно туда, где он стоял в самом начале хиро, и переход читается как одно движение. */
+  justify-content: space-between;
+  gap: 1rem;
+  padding-inline: max(1.5rem, env(safe-area-inset-left)) max(1.5rem, env(safe-area-inset-right));
+  color: var(--chrome-ink);
+  pointer-events: none;
+}
+.tri__mark {
+  /* ТОТ ЖЕ файл и ТОТ ЖЕ размер, что в шапке сайта (hero.css: .site-head__brand .brand-logo,
+     57×38). Прежде здесь стоял векторный символ размером в em — он плавал вместе с масштабом
+     экрана, и знак в полосе выходил заметно крупнее знака в шапке. Фиксированные пиксели внутри
+     экрана масштабируются вместе с ним матрицей, а при развороте во весь вьюпорт совпадают
+     с шапкой пиксель в пиксель — знак выглядит стоящим на месте, а не подменённым. */
+  display: block;
+  flex: none;
+}
+.tri__mark img {
+  display: block;
+  width: 57px; height: 38px;
+  object-fit: contain;
+}
+
+.tri__theme {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-inline-start: 0.9em;
+  border-inline-start: 1px solid var(--chrome-line);
+  pointer-events: auto;
+}
+.tri__theme[hidden] { display: none; }
+.tri__theme-btn {
+  inline-size: 44px;
+  block-size: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-block-end: 2px solid transparent;
+  opacity: .62;
+  cursor: pointer;
+}
+.tri__theme-btn svg { inline-size: 17px; block-size: 17px; }
+.tri__theme-btn[aria-pressed="true"] {
+  opacity: 1;
+  border-block-end-color: var(--chrome-line);
+}
+.tri__theme-btn:focus-visible {
+  outline: 2px solid var(--mark-ink);
+  outline-offset: -3px;
+  opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tri__theme-btn:hover { opacity: 1; }
+}
+
+/* ── 13. Подсказка ворот: показывает движок, по умолчанию её нет ───────── */
+.tri .lang-hint {
+  position: absolute;
+  /* НАД панелями, а не под ними: это заголовок выбора, а не сноска. Инструкция внизу читается
+     как примечание и на экране выбора языка теряется — владелец: «вверх куда-то переместить». */
+  inset-block-start: 0.9em;
+  inset-inline: 0;
+  z-index: 2;
+  margin: 0;
+  padding-inline: var(--pad-x);
+  text-align: center;
+  font-family: var(--f-ru-mono);
+  font-size: 0.7em;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hint-ink);
+  pointer-events: none;
+}
+.tri .lang-hint[hidden] { display: none; }
+.tri .lang-hint.is-in { color: var(--hint-gold); }
+
+/* ── 14. Планшет и десктоп ≥ 768: триптих ───────────────────────────────
+   Три вертикальные колонки одной сетки. Тот же --rows, поэтому ординал,
+   автоним, шов и действие стоят в трёх колонках на одних высотах.        */
+@media (min-width: 768px) {
+  .tri {
+    --r-crest: calc(clamp(78px, 12.5vh, 128px) * var(--tri-s));
+    --r-foot: 1.6em;
+    --fs-name: 3.4em;
+    --rh-name: 3.9em;
+    --rh-aud: 3.9em;
+    --rh-act: 3.4em;
+    --air-1: 1.45fr;
+    --air-2: 0.55fr;
+    --glass-h: 66%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    background-image: linear-gradient(180deg,
+      transparent 0%, var(--seam) 10%, var(--seam) 90%, transparent 100%);
+  }
+
+  /* модуль: первая строка сетки — полоса знака, дальше общий ритм */
+  .tri__part {
+    grid-template-rows: var(--r-crest) var(--rows);
+    padding-block-start: 0;
+  }
+  .tri__idx  { grid-row: 3; }
+  .tri__name { grid-row: 4; }
+  .tri__aud  { grid-row: 5; }
+  .tri__act  { grid-row: 7; }
+
+  /* швы поворачиваются вместе с раскладкой */
+  .tri__part--ru { box-shadow: inset 1px 0 0 var(--ru-edge), inset -1px 0 0 var(--ru-edge); }
+  .tri__part--en::before {
+    inset: 0 auto 0 0;
+    block-size: auto;
+    inline-size: 22px;
+    background-image: linear-gradient(90deg, var(--en-shade), transparent);
+  }
+
+  /* горизонтальная линия хрома — одна на весь экран, идёт через все три */
+  .tri__crest::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 1px;
+    background-image: linear-gradient(90deg,
+      transparent, var(--seam) 10%, var(--seam) 90%, transparent);
+  }
+  .tri__mark { block-size: 2.6em; }
+
+  .tri .lang-hint { inset-block-start: 0.7em; }
+}
+
+/* ── 15. Мобильный — последний медиаблок перед движением (vkv_bar §1.15).
+   Хром лежит над первой полосой, поэтому берёт её тон.                   */
+@media (max-width: 767px) {
+  .tri {
+    --chrome-ink: var(--hy-ink);
+    --chrome-mut: var(--hy-mut);
+    --chrome-line: var(--hy-gline);
+    --mark-ink: var(--hy-gold);
+    --hint-ink: var(--en-mut);
+    --hint-gold: var(--en-gold);
+    padding-block-end: env(safe-area-inset-bottom);
+  }
+  .tri__crest { justify-content: flex-start; }
+}
+
+/* низкий вьюпорт (телефон в альбоме): ритм сжимается, раскладка не ломается */
+@media (max-height: 520px) and (pointer: coarse) {
+  .tri {
+    --fs-name: 2em;
+    --rh-name: 2.3em;
+    --rh-aud: 2.6em;
+    --rh-act: 2.5em;
+    --r-crest: calc(38px * var(--tri-s));
+  }
+  .tri__aud { font-size: 0.85em; }
+}
+
+/* ── 16. Движение: только вход и ответ на курсор. Ничего бесконечного ───
+   Разметка рендерится видимой; вход объявляется только при no-preference
+   и только на .is-choosing — в момент посадки экрана (vkv_bar §1.8).     */
+@media (prefers-reduced-motion: no-preference) {
+  .tri__tick { transition: inline-size var(--t-mid) var(--tri-ease), block-size var(--t-fast) var(--tri-ease), background-color var(--t-mid) var(--tri-ease); }
+  .tri__act, .tri__arw { transition: transform var(--t-mid) var(--tri-ease), color var(--t-mid) var(--tri-ease); }
+  .tri__art { transition: opacity var(--t-slow) var(--tri-ease); }
+  .tri__glass { transition: border-color var(--t-slow) var(--tri-ease), box-shadow var(--t-slow) var(--tri-ease); }
+  .tri__part--hy .tri__scrim::after { transition: background-size var(--t-slow) var(--tri-ease); }
+  .tri__part--ru .tri__aud::before { transition: opacity var(--t-mid) var(--tri-ease); }
+  .tri__part--en .tri__word { transition: background-size var(--t-mid) var(--tri-ease); }
+  .tri__theme-btn { transition: opacity var(--t-fast) var(--tri-ease), border-color var(--t-fast) var(--tri-ease); }
+
+  .tri.is-choosing .tri__idx,
+  .tri.is-choosing .tri__name,
+  .tri.is-choosing .tri__aud,
+  .tri.is-choosing .tri__act {
+    animation: tri-rise var(--t-in) var(--tri-ease) backwards;
+    animation-delay: calc(var(--p, 0) * 60ms + var(--i, 0) * 55ms);
+  }
+  .tri.is-choosing .tri__crest { animation: tri-fade var(--t-slow) var(--tri-ease) backwards; }
+  .tri.is-choosing .tri__theme { animation: tri-fade var(--t-slow) var(--tri-ease) 420ms backwards; }
+
+  .tri .lang-hint {
+    opacity: 0;
+    transform: translateY(0.5em);
+    transition: opacity var(--t-slow) var(--tri-ease), transform var(--t-slow) var(--tri-ease), color var(--t-mid) var(--tri-ease);
+  }
+  .tri .lang-hint.is-in { opacity: 1; transform: none; }
+}
+
+@keyframes tri-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes tri-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* вторая строка подсказки: прокрутка вверх — законный выход из ворот */
+.tri .lang-hint__back {
+  display: block;
+  margin-block-start: 0.35em;
+  font-size: 0.82em;
+  letter-spacing: 0.06em;
+  opacity: 0.62;
+}
+
+
+/* ══ ПРИБЫТИЕ: «долистал — теперь твой ход» ═══════════════════════════════
+   Жалоба владельца: «хиро долистывает до выбора языков, непонятно что уже можно нажимать».
+
+   Волна появления содержимого (tri-rise со стаггером по --p и --i) в файле УЖЕ ЕСТЬ —
+   см. блок выше под prefers-reduced-motion: no-preference. Дублировать её нельзя: своя база
+   с нулевой прозрачностью перебивает концовку той анимации, и панели остаются пустыми.
+   Здесь только то, чего не хватало для ответа на вопрос «а нажимать-то можно?». */
+
+/* 1. Панель стала нажимаемой — это должно быть видно, а не угадываться.
+      До ворот pointer-events выключены, курсор обязан меняться вместе с ними. */
+.tri--screen.is-choosing .tri__part { cursor: pointer; }
+
+/* 2. Стрелка активной панели зовёт. Только у активной, только после прибытия и только если
+      посетитель не просил убрать движение: иначе это украшение, а не приглашение. */
+@keyframes triBeckon {
+  0%, 62%, 100% { transform: translateX(0); }
+  80%           { transform: translateX(3px); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tri--screen.is-choosing .tri__part.is-active .tri__arw {
+    animation: triBeckon 2.8s cubic-bezier(0.16, 1, 0.3, 1) 1.2s infinite;
+  }
+  @media (hover: hover) {
+    .tri--screen.is-choosing .tri__part:hover .tri__arw { animation: none; }
+  }
+}
+
+/* 3. Подсказка приходит последней, когда волна уже улеглась: сначала «вот варианты»,
+      потом «выберите». Обратный порядок читается как инструкция к пустому экрану. */
+.tri--screen .lang-hint { transition-delay: 620ms; }
+@media (prefers-reduced-motion: reduce) {
+  .tri--screen .lang-hint { transition-delay: 0s; }
+}
+
+/* подсказка на трёх языках: строка выбора и отдельная строка про возврат */
+.tri .lang-hint__line { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 0 0.5em; }
+.tri .lang-hint__sep { opacity: 0.45; }
+.tri .lang-hint [lang="hy"] { font-family: var(--f-hy-arm, inherit); }
+@media (max-width: 47.99rem) {
+  .tri .lang-hint__line { gap: 0 0.35em; font-size: 0.95em; }
+}
+
+
+/* ══ ОБЩАЯ ШАПКА И ПОДПИСИ ПО КОЛОНКАМ ═══════════════════════════════════
+   Владелец: «лого и выбор тем теперь принадлежит русскому, не отбито никак логически,
+   что это общее, а не часть русской вкладки» и «покрупнее и каждый язык, под лого».
+
+   1. Знак и переключатель тем стоят по центру, а центр — это русская колонка. Пока полоса
+      ничем не отделена, она читается как шапка русского, а не как общее для всех трёх.
+      Лечится не переносом, а отбивкой: полоса получает свою линию во всю ширину и лёгкую
+      подложку, то есть перестаёт быть «внутри колонки» и становится хромом над всеми.
+   2. Подсказка была одной строкой мелким шрифтом на всю ширину — то есть тоже висела
+      над русским. Разложена на три ячейки по сетке колонок: каждая подпись стоит над своей
+      колонкой, на своём языке, и крупнее. */
+
+.tri__crest {
+  /* НАСТОЯЩАЯ ПОЛОСА, а не прозрачная область поверх колонок.
+     Пока полоса прозрачна, знак стоит по центру — то есть внутри русской колонки — и читается
+     как её шапка. Сплошной фон во всю ширину делает её отдельным слоем: одна и та же поверхность
+     проходит через все три колонки, и принадлежать одной из них уже не может.
+     Оттенок глубже навахи русской колонки, поэтому ступень видна и над ней тоже. */
+  background: var(--crest-bg);
+  border-block-end: 1px solid var(--chrome-line, rgba(128, 128, 128, 0.22));
+  /* НИКАКОГО backdrop-filter: полоса живёт внутри экрана, который на подлёте преобразован
+     матрицей 3D, и размытие подложки там пересчитывается каждый кадр. Замеры этого дня
+     показали, что именно такие эффекты съедали бюджет на 2.5K. Отбивку даёт линия и градиент —
+     они бесплатны для композитора. */
+}
+
+/* подписи: сетка колонок триптиха, каждая над своей.
+   Обе строки — и «выберите язык», и «вверх к началу» — стоят в своей колонке на своём языке.
+   Раньше вторая строка была русской для всех трёх, то есть армянин и англичанин читали
+   инструкцию на чужом языке ровно там, где им предлагают выбрать свой. */
+.tri .lang-hint {
+  inset-block-start: calc(var(--r-crest) + 0.55em);
+  font-size: 0.86em;
+  letter-spacing: 0.14em;
+  padding-inline: 0;
+}
+.tri .lang-hint__line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.9em 0;
+  justify-items: center;
+}
+.tri .lang-hint__col {
+  display: grid;
+  gap: 0.3em;
+  justify-items: center;
+  padding-inline: var(--pad-x);
+  min-width: 0;
+}
+.tri .lang-hint__pick { display: block; }
+.tri .lang-hint__back { display: block; font-size: 0.78em; opacity: 0.62; margin: 0; }
+/* Каждая подпись берёт чернила СВОЕЙ колонки. Раньше все три красились в --hint-ink,
+   а он объявлен как var(--ru-mut) — светло-голубой. На кремовом туфе и на бумаге он почти
+   не читался: владелец «не видно надписей». Один цвет на три разных фона не работает. */
+.tri .lang-hint__col[lang="hy"] { color: var(--hy-mut); font-family: var(--f-hy-arm, inherit); letter-spacing: 0.08em; }
+.tri .lang-hint__col[lang="ru"] { color: var(--ru-mut); }
+.tri .lang-hint__col[lang="en"] { color: var(--en-mut); }
+.tri .lang-hint.is-in .lang-hint__col[lang="hy"] { color: var(--hy-ink); }
+.tri .lang-hint.is-in .lang-hint__col[lang="ru"] { color: var(--ru-ink); }
+.tri .lang-hint.is-in .lang-hint__col[lang="en"] { color: var(--en-ink); }
+
+@media (min-width: 48rem) {
+  .tri .lang-hint__line { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+  .tri .lang-hint { font-size: 0.95em; }
+}

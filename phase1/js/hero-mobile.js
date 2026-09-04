@@ -275,6 +275,7 @@
   function finish() {
     if (ended) return;
     ended = true;
+    html.style.setProperty('--gate', '1');   // ворота на месте при любом исходе
     if (raf) { cancelAnimationFrame(raf); raf = 0; }
     if (guard) { clearTimeout(guard); guard = 0; }
     html.classList.remove('hm-run');
@@ -350,9 +351,11 @@
     }, 700);
   }
   document.addEventListener('click', onPick, true);
-  // На iOS тап по крупной области надёжнее ловится через touchend: click там
-  // может не дойти, если палец чуть сместился по ходу нажатия.
-  document.addEventListener('touchend', onPick, true);
+  /* touchend здесь стоял и снят. Он приходит РАНЬШЕ click и срабатывает от
+     любого отпускания пальца над плиткой языка — в том числе когда человек
+     просто ведёт пальцем по панели. То есть выбор языка мог случиться без
+     выбора. Ловим только click: он приходит после того, как браузер сам
+     решил, что это было нажатие, а не жест. */
 
   // Тап по сцене — пропуск заставки. Не единственный способ: ссылка
   // «Пропустить анимацию» стоит первой в табе и на телефоне видима —
@@ -406,6 +409,9 @@
     scene.classList.add('is-off');
     html.classList.remove('hm-run');
     html.classList.add('hm-gate');
+    // Ворота обратно на место: при старте мы их спрятали (--gate: 0), и без
+    // этой строки сбой загрузки оставлял человека с одной горой.
+    html.style.setProperty('--gate', '1');
     unlock();
   });
 })();
